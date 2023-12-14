@@ -9,7 +9,7 @@ from .. import ColumnConfig, BaseTable
 class ChatGptSenderTable(BaseTable[ChatGptSenderEntity]):
     @staticmethod
     def get_filepath() -> str:
-        return "./model/chat_gpt_model/data.csv"
+        return "./model/chat_gpt_sender/data.csv"
 
     @staticmethod
     def get_column_config_list() -> List[ColumnConfig]:
