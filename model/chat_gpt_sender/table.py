@@ -22,3 +22,11 @@ class ChatGptSenderTable(BaseTable[ChatGptSenderEntity]):
     @staticmethod
     def get_entiry_class() -> Type[ChatGptSenderEntity]:
         return ChatGptSenderEntity
+    
+    @classmethod
+    def get_user_entity(cls) -> ChatGptSenderEntity:
+        return cls.get_entity(column_name="key", value="user")
+    
+    @classmethod
+    def get_assistant_entity(cls) -> ChatGptSenderEntity:
+        return cls.get_entity(column_name="key", value="assistant")
