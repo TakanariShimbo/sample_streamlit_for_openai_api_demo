@@ -3,7 +3,7 @@ from typing import Any, List, Callable
 from openai import OpenAI, Stream
 from openai.types.chat import ChatCompletionChunk, ChatCompletionUserMessageParam
 
-from .open_ai_handler import OpenAiHandler
+from . import OpenAiHandler
 
 
 class ChatGptHandler(OpenAiHandler):
