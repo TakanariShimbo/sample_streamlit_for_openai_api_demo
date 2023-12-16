@@ -62,12 +62,8 @@ class ChatGptHandler(OpenAiHandler):
         initital_answer = "",
     ):
         answer = initital_answer
-        try:
-            while True:
-                chunk = next(streamly_answer)
-                answer_peace = chunk.choices[0].delta.content or ""  # type: ignore
-                answer += answer_peace
-                callback_func(answer)
-        except StopIteration:
-            pass
+        for  chunk in streamly_answer:
+            answer_peace = chunk.choices[0].delta.content or ""  # type: ignore
+            answer += answer_peace
+            callback_func(answer)
         return answer
