@@ -25,7 +25,7 @@ class ChatGptComponent(BaseComponent):
         with form_area:
             st.markdown("### Form")
 
-            selected_model_entity = st.selectbox(
+            selected_chat_gpt_model_entity = st.selectbox(
                 label="Model Type",
                 options=ChatGptModelTable.get_all_entities(),
                 format_func=lambda enetity: enetity.label_en,
@@ -48,13 +48,13 @@ class ChatGptComponent(BaseComponent):
         if is_run_pushed:
             ProcessersManagerSState.on_click_run(
                 form_area=form_area,
-                model_entity=selected_model_entity,
+                chat_gpt_model_entity=selected_chat_gpt_model_entity,
                 prompt=inputed_prompt,
             )
         elif is_rerun_pushed:
             ProcessersManagerSState.on_click_rerun(
                 form_area=form_area,
-                model_entity=selected_model_entity,
+                chat_gpt_model_entity=selected_chat_gpt_model_entity,
                 prompt=inputed_prompt,
             )
         elif is_reset_pushed:
