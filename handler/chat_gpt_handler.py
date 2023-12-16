@@ -31,10 +31,10 @@ class ChatGptHandler(OpenAiHandler):
         prompt: str,
         model_type: str = "gpt-3.5-turbo",
         chat_history: List[Any] = [],
-        display_func: Callable[[str], None] = print,
+        callback_func: Callable[[str], None] = print,
     ) -> str:
         streamly_answer = cls.query_streamly_answer(client=client, prompt=prompt, model_type=model_type, chat_history=chat_history)
-        answer = cls.display_streamly_answer(streamly_answer=streamly_answer, display_func=display_func)
+        answer = cls.display_streamly_answer(streamly_answer=streamly_answer, callback_func=callback_func)
         return answer
     
     @staticmethod
@@ -58,7 +58,7 @@ class ChatGptHandler(OpenAiHandler):
     @staticmethod
     def display_streamly_answer(
         streamly_answer: Stream[ChatCompletionChunk],
-        display_func: Callable[[str], None] = print,
+        callback_func: Callable[[str], None] = print,
         initital_answer = "",
     ):
         answer = initital_answer
@@ -67,7 +67,7 @@ class ChatGptHandler(OpenAiHandler):
                 chunk = next(streamly_answer)
                 answer_peace = chunk.choices[0].delta.content or ""  # type: ignore
                 answer += answer_peace
-                display_func(answer)
+                callback_func(answer)
         except StopIteration:
             pass
         return answer
