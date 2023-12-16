@@ -11,7 +11,7 @@ class ChatGptHandler(OpenAiHandler):
     def query_answer(
         client: OpenAI,
         prompt: str,
-        model_type: str,
+        model_type: str = "gpt-3.5-turbo",
         chat_history: List[Any] = [],
     ) -> str:
         copyed_chat_history = chat_history.copy()
@@ -29,7 +29,7 @@ class ChatGptHandler(OpenAiHandler):
         cls,
         client: OpenAI,
         prompt: str,
-        model_type: str,
+        model_type: str = "gpt-3.5-turbo",
         chat_history: List[Any] = [],
         display_func: Callable[[str], None] = print,
     ) -> str:
@@ -41,7 +41,7 @@ class ChatGptHandler(OpenAiHandler):
     def query_streamly_answer(
         client: OpenAI,
         prompt: str,
-        model_type: str,
+        model_type: str = "gpt-3.5-turbo",
         chat_history: List[Any] = [],
     ) -> Stream[ChatCompletionChunk]:
         copyed_chat_history = chat_history.copy()
