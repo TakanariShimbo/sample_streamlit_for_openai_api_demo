@@ -21,11 +21,11 @@ class MainProcesser(BaseProcesser[str]):
         return kwargs
 
     def pre_process(self, **kwargs) -> None:
-        st.markdown("#### History")
-        with st.chat_message(name="user"):
-            st.write(kwargs["form_schema"].prompt)
-        with st.chat_message(name="assistant"):
-            self.answer_area = st.empty()
+        with kwargs["history_area"]:
+            with st.chat_message(name="user"):
+                st.write(kwargs["form_schema"].prompt)
+            with st.chat_message(name="assistant"):
+                self.answer_area = st.empty()
 
     def post_process(self, **kwargs) -> None:
         self.answer_area.write(kwargs["answer"])

@@ -14,13 +14,26 @@ class ChatGptComponent(BaseComponent):
 
     @classmethod
     def main(cls) -> None:
+        """
+        TITLE
+        """
         contents = dedent(
             """
-            ### 🤖 OpenAI API Demo  
+            ## 🤖 OpenAI API Demo  
             """
         )
         st.markdown(contents)
 
+        """
+        History
+        """
+        history_area = st.container(border=True)
+        with history_area:
+            st.markdown("### History")
+
+        """
+        Form
+        """
         form_area = st.form(key="Form")
         with form_area:
             st.markdown("### Form")
@@ -34,6 +47,7 @@ class ChatGptComponent(BaseComponent):
 
             inputed_prompt = st.text_area(
                 label="Prompt",
+                placeholder="Input prompt here.",
                 key="ChatGptTextArea",
             )
 
@@ -48,12 +62,14 @@ class ChatGptComponent(BaseComponent):
         if is_run_pushed:
             ProcessersManagerSState.on_click_run(
                 form_area=form_area,
+                history_area=history_area,
                 chat_gpt_model_entity=selected_chat_gpt_model_entity,
                 prompt=inputed_prompt,
             )
         elif is_rerun_pushed:
             ProcessersManagerSState.on_click_rerun(
                 form_area=form_area,
+                history_area=history_area,
                 chat_gpt_model_entity=selected_chat_gpt_model_entity,
                 prompt=inputed_prompt,
             )
