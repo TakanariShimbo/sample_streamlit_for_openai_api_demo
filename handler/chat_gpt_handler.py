@@ -59,10 +59,15 @@ class ChatGptHandler(OpenAiHandler):
     def display_streamly_answer(
         streamly_answer: Stream[ChatCompletionChunk],
         display_func: Callable[[str], None] = print,
+        initital_answer = "",
     ):
-        answer = ""
-        for chunk in streamly_answer:
-            answer_peace = chunk.choices[0].delta.content or ""  # type: ignore
-            answer += answer_peace
-            display_func(answer)
+        answer = initital_answer
+        try:
+            while True:
+                chunk = next(streamly_answer)
+                answer_peace = chunk.choices[0].delta.content or ""  # type: ignore
+                answer += answer_peace
+                display_func(answer)
+        except StopIteration:
+            pass
         return answer
