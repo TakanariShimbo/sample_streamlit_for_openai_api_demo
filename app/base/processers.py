@@ -6,16 +6,16 @@ from typing import List, Type, Dict, Any
 class BaseProcesser(Thread, ABC):
     def __init__(self) -> None:
         super().__init__()
-        self._called = False
+        self._has_kwargs = False
 
     @property
     def kwargs(self) -> Dict[str, Any]:
         return self._kwargs
 
     def start_and_wait_to_complete(self, **kwargs) -> None:
-        if not self._called:
+        if not self._has_kwargs:
             self._kwargs = kwargs
-            self._called = True
+            self._has_kwargs = True
 
         self.pre_process(**self._kwargs)
 
