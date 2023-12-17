@@ -45,7 +45,7 @@ class BaseProcesser(Generic[T], Thread, ABC):
         super().__init__()
         self._queue_handler = QueueHandler[T](timeout_sec)
         self._has_inner_dict = False
-    
+
     def add_queue(self, content: T, is_finish: bool = False):
         self._queue_handler.send(content=content, is_finish=is_finish)
 
@@ -91,7 +91,7 @@ class BaseProcesser(Generic[T], Thread, ABC):
     @abstractmethod
     def post_process(self, outer_dict: Dict[str, Any], inner_dict: Dict[str, Any]) -> None:
         raise NotImplementedError("Subclasses must implement this method")
-    
+
     @abstractmethod
     def callback_process(self, content: T, outer_dict: Dict[str, Any], inner_dict: Dict[str, Any]) -> None:
         raise NotImplementedError("Subclasses must implement this method")
@@ -109,13 +109,20 @@ class BaseProcessersManager(ABC):
         self._inner_dict = {}
         self._outer_dict = {}
 
+    def init_processers(self, without_is_running=False) -> None:
+        self._processers = [processer_class() for processer_class in self._processer_class_list]
+        self._inner_dict = {}
+        self._outer_dict = {}
+        if not without_is_running:
+            self._is_running = False
+
     def run_all(self, **kwargs) -> None:
         is_running = self._is_running
         self._is_running = True
 
         # run pre-process
         if not is_running:
-            self._processers = [processer_class() for processer_class in self._processer_class_list]
+            self.init_processers(without_is_running=True)
             try:
                 self._outer_dict, self._inner_dict = self.pre_process_for_starting(**kwargs)
             except EarlyStopProcessException:
@@ -131,10 +138,6 @@ class BaseProcessersManager(ABC):
         # run post-process
         self.post_process(self._outer_dict, self._inner_dict)
 
-        self._is_running = False
-
-    def init_processers(self) -> None:
-        self._processers = [processer_class() for processer_class in self._processer_class_list]
         self._is_running = False
 
     @abstractmethod
