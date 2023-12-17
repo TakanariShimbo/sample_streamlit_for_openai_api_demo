@@ -51,6 +51,8 @@ class ChatGptComponent(BaseComponent):
                 key="ChatGptTextArea",
             )
 
+            message_area = st.empty()
+
             _, left_area, _, center_area, _, right_area, _ = st.columns([1, 3, 1, 3, 1, 3, 1])
             with left_area:
                 is_run_pushed = st.form_submit_button(label="RUN", type="primary", use_container_width=True)
@@ -61,14 +63,14 @@ class ChatGptComponent(BaseComponent):
 
         if is_run_pushed:
             ProcessersManagerSState.on_click_run(
-                form_area=form_area,
+                message_area=message_area,
                 history_area=history_area,
                 chat_gpt_model_entity=selected_chat_gpt_model_entity,
                 prompt=inputed_prompt,
             )
         elif is_rerun_pushed:
             ProcessersManagerSState.on_click_rerun(
-                form_area=form_area,
+                message_area=message_area,
                 history_area=history_area,
                 chat_gpt_model_entity=selected_chat_gpt_model_entity,
                 prompt=inputed_prompt,
