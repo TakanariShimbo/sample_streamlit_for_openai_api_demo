@@ -25,13 +25,6 @@ class ChatGptComponent(BaseComponent):
         st.markdown(contents)
 
         """
-        History
-        """
-        history_area = st.container(border=True)
-        with history_area:
-            st.markdown("#### History")
-
-        """
         Form
         """
         form_area = st.form(key="Form")
@@ -60,6 +53,13 @@ class ChatGptComponent(BaseComponent):
                 is_rerun_pushed = st.form_submit_button(label="RERUN", type="primary", use_container_width=True)
             with right_area:
                 is_reset_pushed = st.form_submit_button(label="RESET", type="secondary", use_container_width=True)
+
+        """
+        History
+        """
+        history_area = st.container(border=True)
+        with history_area:
+            st.markdown("#### History")
 
         if is_run_pushed:
             ProcessersManagerSState.on_click_run(
