@@ -29,7 +29,7 @@ class ChatGptComponent(BaseComponent):
         """
         history_area = st.container(border=True)
         with history_area:
-            st.markdown("### History")
+            st.markdown("#### History")
 
         """
         Form
