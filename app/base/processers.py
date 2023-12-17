@@ -1,7 +1,7 @@
 from abc import ABC, abstractmethod
 from queue import Queue, Empty
 from threading import Thread
-from typing import List, Type, Dict, Any, Generic, TypeVar, Optional
+from typing import Any, Dict, Generic, List, Optional, Tuple, Type, TypeVar
 
 
 T = TypeVar("T")
@@ -44,21 +44,18 @@ class BaseProcesser(Generic[T], Thread, ABC):
     def __init__(self, timeout_sec: float = 1.0) -> None:
         super().__init__()
         self._queue_handler = QueueHandler[T](timeout_sec)
-        self._has_kwargs = False
-
-    @property
-    def kwargs(self) -> Dict[str, Any]:
-        return self._kwargs
+        self._has_inner_dict = False
     
     def add_queue(self, content: T, is_finish: bool = False):
         self._queue_handler.send(content=content, is_finish=is_finish)
 
-    def start_and_wait_to_complete(self, **kwargs) -> None:
-        if not self._has_kwargs:
-            self._kwargs = kwargs
-            self._has_kwargs = True
+    def start_and_wait_to_complete(self, outer_dict: Dict[str, Any], inner_dict: Dict[str, Any]) -> Tuple[Dict[str, Any], Dict[str, Any]]:
+        self._outer_dict = outer_dict
+        if not self._has_inner_dict:
+            self._inner_dict = inner_dict
+            self._has_inner_dict = True
 
-        self.pre_process(**self._kwargs)
+        self.pre_process(self._outer_dict, self._inner_dict)
 
         try:
             self.start()
@@ -71,30 +68,32 @@ class BaseProcesser(Generic[T], Thread, ABC):
                 response = self._queue_handler.receive()
                 if response is None:
                     continue
-                self.callback_process(response.content)
+                self.callback_process(response.content, self._outer_dict, self._inner_dict)
                 if response.is_finish:
                     break
             self.join()
 
-        self.post_process(**self._kwargs)
+        self.post_process(self._outer_dict, self._inner_dict)
+
+        return self._outer_dict, self._inner_dict
 
     def run(self) -> None:
-        self._kwargs = self.main_process(**self._kwargs)
+        self.main_process(self._inner_dict)
 
     @abstractmethod
-    def main_process(self, **kwargs) -> Dict[str, Any]:
+    def main_process(self, inner_dict: Dict[str, Any]) -> None:
         raise NotImplementedError("Subclasses must implement this method")
 
     @abstractmethod
-    def pre_process(self, **kwargs) -> None:
+    def pre_process(self, outer_dict: Dict[str, Any], inner_dict: Dict[str, Any]) -> None:
         raise NotImplementedError("Subclasses must implement this method")
 
     @abstractmethod
-    def post_process(self, **kwargs) -> None:
+    def post_process(self, outer_dict: Dict[str, Any], inner_dict: Dict[str, Any]) -> None:
         raise NotImplementedError("Subclasses must implement this method")
     
     @abstractmethod
-    def callback_process(self, content: T, **kwargs) -> None:
+    def callback_process(self, content: T, outer_dict: Dict[str, Any], inner_dict: Dict[str, Any]) -> None:
         raise NotImplementedError("Subclasses must implement this method")
 
 
@@ -107,6 +106,8 @@ class BaseProcessersManager(ABC):
     def __init__(self, processer_class_list: List[Type[BaseProcesser]]) -> None:
         self._processer_class_list = processer_class_list
         self._is_running = False
+        self._inner_dict = {}
+        self._outer_dict = {}
 
     def run_all(self, **kwargs) -> None:
         is_running = self._is_running
@@ -116,21 +117,19 @@ class BaseProcessersManager(ABC):
         if not is_running:
             self._processers = [processer_class() for processer_class in self._processer_class_list]
             try:
-                self._kwargs = self.pre_process_for_starting(**kwargs)
+                self._outer_dict, self._inner_dict = self.pre_process_for_starting(**kwargs)
             except EarlyStopProcessException:
                 self._is_running = False
                 return
         else:
-            self.pre_process_for_running(**kwargs)
+            self._outer_dict = self.pre_process_for_running(**kwargs)
 
         # run main-processes
-        kwargs = self._kwargs
         for processer in self._processers:
-            processer.start_and_wait_to_complete(**kwargs)
-            kwargs = processer.kwargs
+            self._outer_dict, self._inner_dict = processer.start_and_wait_to_complete(self._outer_dict, self._inner_dict)
 
         # run post-process
-        self.post_process(**kwargs)
+        self.post_process(self._outer_dict, self._inner_dict)
 
         self._is_running = False
 
@@ -139,13 +138,13 @@ class BaseProcessersManager(ABC):
         self._is_running = False
 
     @abstractmethod
-    def pre_process_for_starting(self, **kwargs) -> Dict[str, Any]:
+    def pre_process_for_starting(self, **kwargs) -> Tuple[Dict[str, Any], Dict[str, Any]]:
         raise NotImplementedError("Subclasses must implement this method")
 
     @abstractmethod
-    def pre_process_for_running(self, **kwargs) -> None:
+    def pre_process_for_running(self, **kwargs) -> Dict[str, Any]:
         raise NotImplementedError("Subclasses must implement this method")
 
     @abstractmethod
-    def post_process(self, **kwargs) -> None:
+    def post_process(self, outer_dict: Dict[str, Any], inner_dict: Dict[str, Any]) -> None:
         raise NotImplementedError("Subclasses must implement this method")
