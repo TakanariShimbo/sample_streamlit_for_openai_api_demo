@@ -1,8 +1,8 @@
-from textwrap import dedent
-
 import streamlit as st
 
+from .component import HomeComponent
 from .. import BasePage, WakeupComponent, WakeupSState, ChatGptComponent
+from model import HomePageTable
 
 
 class HomePage(BasePage):
@@ -16,4 +16,14 @@ class HomePage(BasePage):
             WakeupComponent.display()
             st.rerun()
 
-        ChatGptComponent.display()
+        selected_page_entity = st.sidebar.selectbox(
+            label="Pages Selection",
+            options=HomePageTable.get_all_entities(),
+            format_func=lambda x: x.label_en,
+            key="PageSelectBox",
+        )
+
+        if selected_page_entity == HomePageTable.get_chat_gpt_entity():
+            ChatGptComponent.display()
+        else:
+            HomeComponent.display()
