@@ -49,7 +49,7 @@ class BaseProcesser(Generic[T], Thread, ABC):
     def add_queue(self, content: T, is_finish: bool = False):
         self._queue_handler.send(content=content, is_finish=is_finish)
 
-    def start_and_wait_to_complete(self, outer_dict: Dict[str, Any], inner_dict: Dict[str, Any]) -> Tuple[Dict[str, Any], Dict[str, Any]]:
+    def start_and_wait_to_complete(self, outer_dict: Dict[str, Any], inner_dict: Dict[str, Any]) -> None:
         self._outer_dict = outer_dict
         if not self._has_inner_dict:
             self._inner_dict = inner_dict
@@ -74,8 +74,6 @@ class BaseProcesser(Generic[T], Thread, ABC):
             self.join()
 
         self.post_process(self._outer_dict, self._inner_dict)
-
-        return self._outer_dict, self._inner_dict
 
     def run(self) -> None:
         self.main_process(self._inner_dict)
@@ -133,7 +131,7 @@ class BaseProcessersManager(ABC):
 
         # run main-processes
         for processer in self._processers:
-            self._outer_dict, self._inner_dict = processer.start_and_wait_to_complete(self._outer_dict, self._inner_dict)
+            processer.start_and_wait_to_complete(self._outer_dict, self._inner_dict)
 
         # run post-process
         self.post_process(self._outer_dict, self._inner_dict)
