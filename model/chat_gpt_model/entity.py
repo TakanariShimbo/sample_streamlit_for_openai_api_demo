@@ -22,9 +22,8 @@ class ChatGptModelEntity(BaseEntity):
     @property
     def label_jp(self) -> str:
         return self.__label_jp
-    
+
     def check_is_same_instance(self, other: Any) -> bool:
-        try:
-            return self.key == other.key
-        except:
+        if not isinstance(other, ChatGptModelEntity):
             return False
+        return self.key == other.key

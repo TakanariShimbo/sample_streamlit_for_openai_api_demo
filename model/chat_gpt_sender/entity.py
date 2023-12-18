@@ -24,7 +24,6 @@ class ChatGptSenderEntity(BaseEntity):
         return self.__label_jp
 
     def check_is_same_instance(self, other: Any) -> bool:
-        try:
-            return self.key == other.key
-        except:
+        if not isinstance(other, ChatGptSenderEntity):
             return False
+        return self.key == other.key
