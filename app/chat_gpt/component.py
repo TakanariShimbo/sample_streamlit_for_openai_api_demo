@@ -19,7 +19,7 @@ class ChatGptComponent(BaseComponent):
         """
         contents = dedent(
             """
-            ## 🤖 OpenAI API Demo  
+            ### 💬 ChatGPT
             """
         )
         st.markdown(contents)
