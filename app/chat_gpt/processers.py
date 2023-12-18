@@ -56,4 +56,3 @@ class ProcessersManager(BaseProcessersManager):
 
     def post_process(self, outer_dict: Dict[str, Any], inner_dict: Dict[str, Any]) -> None:
         outer_dict["message_area"].empty()
-        st.balloons()
