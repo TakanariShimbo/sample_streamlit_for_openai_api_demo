@@ -1,3 +1,5 @@
+from typing import Any
+
 import pandas as pd
 
 from .. import BaseEntity
@@ -20,3 +22,9 @@ class ChatGptModelEntity(BaseEntity):
     @property
     def label_jp(self) -> str:
         return self.__label_jp
+    
+    def check_is_same_instance(self, other: Any) -> bool:
+        try:
+            return self.key == other.key
+        except:
+            return False
