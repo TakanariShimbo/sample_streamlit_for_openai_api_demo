@@ -17,19 +17,14 @@ class ChatGptComponent(BaseComponent):
         """
         TITLE
         """
-        contents = dedent(
-            """
-            ### 💬 ChatGPT
-            """
-        )
-        st.markdown(contents)
+        st.markdown("### 💬 ChatGPT")
 
         """
         Form
         """
         form_area = st.form(key="Form")
         with form_area:
-            st.markdown("### Form")
+            st.markdown("#### Form")
 
             selected_chat_gpt_model_entity = st.selectbox(
                 label="Model Type",
