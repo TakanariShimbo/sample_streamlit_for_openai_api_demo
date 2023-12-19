@@ -1,4 +1,4 @@
-from typing import Any, List, Callable
+from typing import List, Callable
 
 from openai import OpenAI, Stream
 from openai.types.chat import (
@@ -67,9 +67,8 @@ class ChatGptHandler(OpenAiHandler):
     def display_streamly_answer(
         streamly_answer: Stream[ChatCompletionChunk],
         callback_func: Callable[[str], None] = print,
-        initital_answer="",
     ):
-        answer = initital_answer
+        answer = ""
         for chunk in streamly_answer:
             answer_peace = chunk.choices[0].delta.content or ""  # type: ignore
             answer += answer_peace
