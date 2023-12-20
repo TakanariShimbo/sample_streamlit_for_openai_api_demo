@@ -4,7 +4,7 @@ from .. import BaseSState
 class WakeupSState(BaseSState[bool]):
     @staticmethod
     def get_name() -> str:
-        return "WAKE_UP"
+        return "IS_WAKING_UP"
 
     @staticmethod
     def get_default() -> bool:
