@@ -5,7 +5,7 @@ from .. import BaseSState
 class ProcessersManagerSState(BaseSState[ProcessersManager]):
     @staticmethod
     def get_name() -> str:
-        return "PROCESSERS_MANAGER"
+        return "CHAT_GPT_PROCESSERS_MANAGER"
 
     @staticmethod
     def get_default() -> ProcessersManager:
