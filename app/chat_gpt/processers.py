@@ -3,6 +3,7 @@ from typing import Dict, Any, Tuple
 import streamlit as st
 
 from .schema import FormSchema
+from .chat_messages_s_states import ChatMessagesSState
 from .. import BaseProcesser, BaseProcessersManager, EarlyStopProcessException
 from model import DEFAULT_OPENAI_API_KEY
 from handler import ChatGptHandler
@@ -55,4 +56,5 @@ class ProcessersManager(BaseProcessersManager):
         return outer_dict
 
     def post_process(self, outer_dict: Dict[str, Any], inner_dict: Dict[str, Any]) -> None:
+        ChatMessagesSState.add_prompt_and_answer(prompt=inner_dict["form_schema"].prompt, answer=inner_dict["answer"])
         outer_dict["message_area"].empty()

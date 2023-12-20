@@ -2,7 +2,8 @@ from textwrap import dedent
 
 import streamlit as st
 
-from .s_states import ProcessersManagerSState
+from .processers_manager_s_states import ProcessersManagerSState
+from .chat_messages_s_states import ChatMessagesSState
 from .. import BaseComponent
 from model import ChatGptModelTable
 
@@ -10,6 +11,7 @@ from model import ChatGptModelTable
 class ChatGptComponent(BaseComponent):
     @classmethod
     def init(cls) -> None:
+        ChatMessagesSState.init()
         ProcessersManagerSState.init()
 
     @classmethod
@@ -47,7 +49,7 @@ class ChatGptComponent(BaseComponent):
             with center_area:
                 is_rerun_pushed = st.form_submit_button(label="RERUN", type="primary", use_container_width=True)
             with right_area:
-                is_reset_pushed = st.form_submit_button(label="RESET", type="secondary", use_container_width=True)
+                is_cancel_pushed = st.form_submit_button(label="CANCEL", type="secondary", use_container_width=True)
 
         """
         History
@@ -55,6 +57,7 @@ class ChatGptComponent(BaseComponent):
         history_area = st.container(border=True)
         with history_area:
             st.markdown("#### History")
+            ChatMessagesSState.display()
 
         if is_run_pushed:
             ProcessersManagerSState.on_click_run(
@@ -70,5 +73,5 @@ class ChatGptComponent(BaseComponent):
                 chat_gpt_model_entity=selected_chat_gpt_model_entity,
                 prompt=inputed_prompt,
             )
-        elif is_reset_pushed:
-            ProcessersManagerSState.on_click_reset()
+        elif is_cancel_pushed:
+            ProcessersManagerSState.on_click_cancel()

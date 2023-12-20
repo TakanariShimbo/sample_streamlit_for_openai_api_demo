@@ -1,4 +1,4 @@
-from typing import List, Callable
+from typing import Callable, List, Iterator, Tuple
 
 from openai import OpenAI, Stream
 from openai.types.chat import (
@@ -36,6 +36,12 @@ class ChatMessages:
     def duplicate(self) -> "ChatMessages":
         copied_chat_messages = self._chat_messages.copy()
         return ChatMessages(copied_chat_messages)
+    
+    def iterate(self) -> Iterator[Tuple[str, str]]:
+        for chat_message in self._chat_messages:
+            if chat_message["role"] == "system":
+                continue
+            yield chat_message["role"], chat_message["content"]  # type: ignore
 
 
 class ChatGptHandler(OpenAiHandler):

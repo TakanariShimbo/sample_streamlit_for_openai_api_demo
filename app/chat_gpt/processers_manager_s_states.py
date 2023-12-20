@@ -17,7 +17,7 @@ class ProcessersManagerSState(BaseSState[ProcessersManager]):
         processers_manager.run_all(**kwargs)
 
     @classmethod
-    def on_click_reset(cls) -> None:
+    def on_click_cancel(cls) -> None:
         processers_manager = cls.get()
         processers_manager.init_processers()
 
