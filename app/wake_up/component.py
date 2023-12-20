@@ -8,7 +8,7 @@ from handler.json_handler import JsonHandler
 
 
 class WakeupComponent(BaseComponent):
-    STREAMLIT_LOGO = JsonHandler.load("./static/lotties/streamlit_logo.json")
+    WAKE_UP_LOGO = JsonHandler.load("./static/lotties/streamlit_logo.json")
 
     @classmethod
     def init(cls) -> None:
@@ -16,6 +16,6 @@ class WakeupComponent(BaseComponent):
 
     @classmethod
     def main(cls) -> None:
-        st_lottie(cls.STREAMLIT_LOGO, key="STREAMLIT_LOGO_LOTTIE", speed=1.2, reverse=False, loop=False)
+        st_lottie(cls.WAKE_UP_LOGO, key="WAKE_UP_LOGO", speed=1.2, reverse=False, loop=False)
         sleep(4)
         WakeupSState.compolete_wakeup()
