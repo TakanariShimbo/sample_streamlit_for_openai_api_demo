@@ -16,6 +16,10 @@ class ChatMessages:
     def __init__(self, chat_messages: List[ChatCompletionMessageParam] = []) -> None:
         self._chat_messages = chat_messages
 
+    @property
+    def value(self) -> List[ChatCompletionMessageParam]:
+        return self._chat_messages
+
     def add_system_role(self, system_role: str) -> None:
         self._chat_messages.append(ChatCompletionSystemMessageParam(role="system", content=system_role))
 
@@ -25,13 +29,13 @@ class ChatMessages:
     def add_answer(self, answer: str) -> None:
         self._chat_messages.append(ChatCompletionAssistantMessageParam(role="assistant", content=answer))
 
+    def add_prompt_and_answer(self, prompt: str, answer: str) -> None:
+        self.add_prompt(prompt=prompt)
+        self.add_answer(answer=answer)
+
     def duplicate(self) -> "ChatMessages":
         copied_chat_messages = self._chat_messages.copy()
         return ChatMessages(copied_chat_messages)
-
-    @property
-    def value(self) -> List[ChatCompletionMessageParam]:
-        return self._chat_messages
 
 
 class ChatGptHandler(OpenAiHandler):
