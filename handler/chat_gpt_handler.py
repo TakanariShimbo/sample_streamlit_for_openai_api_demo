@@ -12,6 +12,28 @@ from openai.types.chat import (
 from . import OpenAiHandler
 
 
+class ChatMessages:
+    def __init__(self, chat_messages: List[ChatCompletionMessageParam] = []) -> None:
+        self._chat_messages = chat_messages
+
+    def add_system_role(self, system_role: str) -> None:
+        self._chat_messages.append(ChatCompletionSystemMessageParam(role="system", content=system_role))
+
+    def add_prompt(self, prompt: str) -> None:
+        self._chat_messages.append(ChatCompletionUserMessageParam(role="user", content=prompt))
+
+    def add_answer(self, answer: str) -> None:
+        self._chat_messages.append(ChatCompletionAssistantMessageParam(role="assistant", content=answer))
+
+    def duplicate(self) -> "ChatMessages":
+        copied_chat_messages = self._chat_messages.copy()
+        return ChatMessages(copied_chat_messages)
+
+    @property
+    def value(self) -> List[ChatCompletionMessageParam]:
+        return self._chat_messages
+
+
 class ChatGptHandler(OpenAiHandler):
     @classmethod
     def query_answer(
@@ -19,12 +41,12 @@ class ChatGptHandler(OpenAiHandler):
         client: OpenAI,
         prompt: str,
         model_type: str = "gpt-3.5-turbo",
-        chat_messages: List[ChatCompletionMessageParam] = [],
+        chat_messages: ChatMessages = ChatMessages(),
     ) -> str:
-        copyed_chat_messages = chat_messages.copy()
-        cls.add_prompt_to_messages(prompt=prompt, chat_messages=copyed_chat_messages)
+        copyed_chat_messages = chat_messages.duplicate()
+        copyed_chat_messages.add_prompt(prompt=prompt)
 
-        response = client.chat.completions.create(model=model_type, messages=copyed_chat_messages)
+        response = client.chat.completions.create(model=model_type, messages=copyed_chat_messages.value)
 
         answer = response.choices[0].message.content
         if not answer:
@@ -37,10 +59,10 @@ class ChatGptHandler(OpenAiHandler):
         client: OpenAI,
         prompt: str,
         model_type: str = "gpt-3.5-turbo",
-        chat_history: List[ChatCompletionMessageParam] = [],
+        chat_messages: ChatMessages = ChatMessages(),
         callback_func: Callable[[str], None] = print,
     ) -> str:
-        streamly_answer = cls.query_streamly_answer(client=client, prompt=prompt, model_type=model_type, chat_messages=chat_history)
+        streamly_answer = cls.query_streamly_answer(client=client, prompt=prompt, model_type=model_type, chat_messages=chat_messages)
         answer = cls.display_streamly_answer(streamly_answer=streamly_answer, callback_func=callback_func)
         return answer
 
@@ -50,14 +72,14 @@ class ChatGptHandler(OpenAiHandler):
         client: OpenAI,
         prompt: str,
         model_type: str = "gpt-3.5-turbo",
-        chat_messages: List[ChatCompletionMessageParam] = [],
+        chat_messages: ChatMessages = ChatMessages(),
     ) -> Stream[ChatCompletionChunk]:
-        copyed_chat_messages = chat_messages.copy()
-        cls.add_prompt_to_messages(prompt=prompt, chat_messages=copyed_chat_messages)
+        copyed_chat_messages = chat_messages.duplicate()
+        copyed_chat_messages.add_prompt(prompt=prompt)
 
         streamly_answer = client.chat.completions.create(
             model=model_type,
-            messages=copyed_chat_messages,
+            messages=copyed_chat_messages.value,
             stream=True,
         )
 
@@ -74,24 +96,3 @@ class ChatGptHandler(OpenAiHandler):
             answer += answer_peace
             callback_func(answer)
         return answer
-
-    @staticmethod
-    def add_system_role_to_messages(
-        system_role: str,
-        chat_messages: List[ChatCompletionMessageParam],
-    ) -> None:
-        chat_messages.append(ChatCompletionSystemMessageParam(role="system", content=system_role))
-
-    @staticmethod
-    def add_prompt_to_messages(
-        prompt: str,
-        chat_messages: List[ChatCompletionMessageParam],
-    ) -> None:
-        chat_messages.append(ChatCompletionUserMessageParam(role="user", content=prompt))
-
-    @staticmethod
-    def add_answer_to_messages(
-        answer: str,
-        chat_messages: List[ChatCompletionMessageParam],
-    ) -> None:
-        chat_messages.append(ChatCompletionAssistantMessageParam(role="assistant", content=answer))
