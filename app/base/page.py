@@ -8,7 +8,6 @@ class BasePage(ABC):
     @classmethod
     def display(cls) -> None:
         cls.set_config(title="OpenAI API Demo", icon="🤖")
-        cls.init()
         cls.main()
 
     @staticmethod
@@ -31,21 +30,6 @@ class BasePage(ABC):
             """
         )
         st.markdown(hide_streamlit_style, unsafe_allow_html=True)
-
-    @staticmethod
-    @abstractmethod
-    def get_title() -> str:
-        raise NotImplementedError("Subclasses must implement this method")
-
-    @staticmethod
-    @abstractmethod
-    def get_icon() -> str:
-        raise NotImplementedError("Subclasses must implement this method")
-
-    @classmethod
-    @abstractmethod
-    def init(cls) -> None:
-        raise NotImplementedError("Subclasses must implement this method")
 
     @classmethod
     @abstractmethod

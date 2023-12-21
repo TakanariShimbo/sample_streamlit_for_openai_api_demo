@@ -1,1 +1,1 @@
-from .page import HomePage
+from .component import HomeComponent

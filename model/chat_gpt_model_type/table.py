@@ -2,14 +2,14 @@ from typing import List, Type
 
 import pandas as pd
 
-from .entity import ChatGptModelEntity
+from .entity import ChatGptModelTypeEntity
 from .. import ColumnConfig, BaseTable
 
 
-class ChatGptModelTable(BaseTable[ChatGptModelEntity]):
+class ChatGptModelTypeTable(BaseTable[ChatGptModelTypeEntity]):
     @staticmethod
     def get_filepath() -> str:
-        return "./model/chat_gpt_model/data.csv"
+        return "./model/chat_gpt_model_type/data.csv"
 
     @staticmethod
     def get_column_config_list() -> List[ColumnConfig]:
@@ -20,5 +20,5 @@ class ChatGptModelTable(BaseTable[ChatGptModelEntity]):
         ]
     
     @staticmethod
-    def get_entiry_class() -> Type[ChatGptModelEntity]:
-        return ChatGptModelEntity
+    def get_entiry_class() -> Type[ChatGptModelTypeEntity]:
+        return ChatGptModelTypeEntity

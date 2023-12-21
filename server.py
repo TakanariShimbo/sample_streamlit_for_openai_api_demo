@@ -1,3 +1,3 @@
-from app import HomePage
+from app import MainPage
 
-HomePage.display()
+MainPage.display()

@@ -5,7 +5,7 @@ import pandas as pd
 from .. import BaseEntity
 
 
-class ChatGptSenderEntity(BaseEntity):
+class ChatGptModelTypeEntity(BaseEntity):
     def __init__(self, series: pd.Series):
         self.__key = series["key"]
         self.__label_en = series["label_en"]
@@ -24,6 +24,6 @@ class ChatGptSenderEntity(BaseEntity):
         return self.__label_jp
 
     def check_is_same_instance(self, other: Any) -> bool:
-        if not isinstance(other, ChatGptSenderEntity):
+        if not isinstance(other, ChatGptModelTypeEntity):
             return False
         return self.key == other.key

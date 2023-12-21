@@ -2,14 +2,14 @@ from typing import List, Type
 
 import pandas as pd
 
-from .entity import ChatGptSenderEntity
+from .entity import PageTypeEntity
 from .. import ColumnConfig, BaseTable
 
 
-class ChatGptSenderTable(BaseTable[ChatGptSenderEntity]):
+class PageTypeTable(BaseTable[PageTypeEntity]):
     @staticmethod
     def get_filepath() -> str:
-        return "./model/chat_gpt_sender/data.csv"
+        return "./model/page_type/data.csv"
 
     @staticmethod
     def get_column_config_list() -> List[ColumnConfig]:
@@ -18,15 +18,15 @@ class ChatGptSenderTable(BaseTable[ChatGptSenderEntity]):
             ColumnConfig(name="label_en", dtype=pd.StringDtype(), unique=True, non_null=True),
             ColumnConfig(name="label_jp", dtype=pd.StringDtype(), unique=True, non_null=True),
         ]
-    
+
     @staticmethod
-    def get_entiry_class() -> Type[ChatGptSenderEntity]:
-        return ChatGptSenderEntity
-    
+    def get_entiry_class() -> Type[PageTypeEntity]:
+        return PageTypeEntity
+
     @classmethod
-    def get_user_entity(cls) -> ChatGptSenderEntity:
-        return cls.get_entity(column_name="key", value="user")
-    
+    def get_home_entity(cls) -> PageTypeEntity:
+        return cls.get_entity(column_name="key", value="home")
+
     @classmethod
-    def get_assistant_entity(cls) -> ChatGptSenderEntity:
-        return cls.get_entity(column_name="key", value="assistant")
+    def get_chat_gpt_entity(cls) -> PageTypeEntity:
+        return cls.get_entity(column_name="key", value="chat_gpt")

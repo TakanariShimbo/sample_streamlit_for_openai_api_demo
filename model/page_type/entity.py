@@ -5,7 +5,7 @@ import pandas as pd
 from .. import BaseEntity
 
 
-class HomePageEntity(BaseEntity):
+class PageTypeEntity(BaseEntity):
     def __init__(self, series: pd.Series):
         self.__key = series["key"]
         self.__label_en = series["label_en"]
@@ -24,6 +24,6 @@ class HomePageEntity(BaseEntity):
         return self.__label_jp
 
     def check_is_same_instance(self, other: Any) -> bool:
-        if not isinstance(other, HomePageEntity):
+        if not isinstance(other, PageTypeEntity):
             return False
         return self.key == other.key
