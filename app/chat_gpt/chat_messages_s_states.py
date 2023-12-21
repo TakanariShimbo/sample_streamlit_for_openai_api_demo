@@ -14,13 +14,13 @@ class ChatMessagesSState(BaseSState[ChatMessages]):
         return ChatMessages()
 
     @classmethod
-    def add_prompt_and_answer(cls, prompt: str, answer: str) -> None:
+    def add_prompt_and_answer(cls, prompt: str, answer: str, user_name: str = "user", assistant_name: str = "assistant") -> None:
         chat_messages = cls.get()
-        chat_messages.add_prompt_and_answer(prompt=prompt, answer=answer)
+        chat_messages.add_prompt_and_answer(prompt=prompt, answer=answer, user_name=user_name, assistant_name=assistant_name)
 
     @classmethod
     def display(cls) -> None:
         chat_messages = cls.get()
-        for message_type, content in chat_messages.iterate():
-            with st.chat_message(name=message_type):
-                st.write(content)
+        for chat_message in chat_messages.iterate():
+            with st.chat_message(name=chat_message.name):
+                st.write(chat_message.content)

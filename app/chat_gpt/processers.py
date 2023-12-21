@@ -23,7 +23,7 @@ class MainProcesser(BaseProcesser[str]):
         with outer_dict["history_area"]:
             with st.chat_message(name="user"):
                 st.write(inner_dict["form_schema"].prompt)
-            with st.chat_message(name="assistant"):
+            with st.chat_message(name=inner_dict["form_schema"].chat_gpt_model_type):
                 outer_dict["answer_area"] = st.empty()
 
     def post_process(self, outer_dict: Dict[str, Any], inner_dict: Dict[str, Any]) -> None:
@@ -56,5 +56,5 @@ class ProcessersManager(BaseProcessersManager):
         return outer_dict
 
     def post_process(self, outer_dict: Dict[str, Any], inner_dict: Dict[str, Any]) -> None:
-        ChatMessagesSState.add_prompt_and_answer(prompt=inner_dict["form_schema"].prompt, answer=inner_dict["answer"])
+        ChatMessagesSState.add_prompt_and_answer(prompt=inner_dict["form_schema"].prompt, answer=inner_dict["answer"], assistant_name=inner_dict["form_schema"].chat_gpt_model_type)
         outer_dict["message_area"].empty()
