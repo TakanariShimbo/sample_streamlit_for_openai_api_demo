@@ -7,7 +7,7 @@ import streamlit as st
 class BasePage(ABC):
     @classmethod
     def display(cls) -> None:
-        cls.set_config(title="OpenAI API Demo", icon="🤖")
+        cls.set_config(title=cls.get_title(), icon=cls.get_icon())
         cls.main()
 
     @staticmethod
@@ -30,6 +30,16 @@ class BasePage(ABC):
             """
         )
         st.markdown(hide_streamlit_style, unsafe_allow_html=True)
+
+    @staticmethod
+    @abstractmethod
+    def get_title() -> str:
+        raise NotImplementedError("Subclasses must implement this method")
+
+    @staticmethod
+    @abstractmethod
+    def get_icon() -> str:
+        raise NotImplementedError("Subclasses must implement this method")
 
     @classmethod
     @abstractmethod

@@ -5,6 +5,14 @@ from model import PageTypeTable
 
 
 class MainPage(BasePage):
+    @staticmethod
+    def get_title() -> str:
+        return "OpenAI API Demo"
+
+    @staticmethod
+    def get_icon() -> str:
+        return "🤖"
+
     @classmethod
     def main(cls) -> None:
         WakeupComponent.display_and_rerun_only_first_time()
