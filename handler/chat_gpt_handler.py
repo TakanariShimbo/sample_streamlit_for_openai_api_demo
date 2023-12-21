@@ -23,17 +23,17 @@ class ChatMessages:
         return self._chat_messages
 
     def add_system_role(self, system_role: str) -> None:
-        self._chat_messages.append(ChatCompletionSystemMessageParam(role="system", content=system_role))
+        self._chat_messages.append(ChatCompletionSystemMessageParam(role="system", name="system", content=system_role))
 
-    def add_prompt(self, prompt: str) -> None:
-        self._chat_messages.append(ChatCompletionUserMessageParam(role="user", content=prompt))
+    def add_prompt(self, prompt: str, user_name: str = "user") -> None:
+        self._chat_messages.append(ChatCompletionUserMessageParam(role="user", name=user_name, content=prompt))
 
-    def add_answer(self, answer: str) -> None:
-        self._chat_messages.append(ChatCompletionAssistantMessageParam(role="assistant", content=answer))
+    def add_answer(self, answer: str, assistant_name: str = "assistant") -> None:
+        self._chat_messages.append(ChatCompletionAssistantMessageParam(role="assistant", name=assistant_name, content=answer))
 
-    def add_prompt_and_answer(self, prompt: str, answer: str) -> None:
-        self.add_prompt(prompt=prompt)
-        self.add_answer(answer=answer)
+    def add_prompt_and_answer(self, prompt: str, answer: str, user_name: str = "user", assistant_name: str = "assistant") -> None:
+        self.add_prompt(prompt=prompt, user_name=user_name)
+        self.add_answer(answer=answer, assistant_name=assistant_name)
 
     def duplicate(self) -> "ChatMessages":
         copied_chat_messages = self._chat_messages.copy()
