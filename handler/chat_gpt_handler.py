@@ -1,4 +1,4 @@
-from typing import Callable, List, Iterator, Tuple
+from typing import Callable, List, Iterator, Optional, Tuple
 
 from openai import OpenAI, Stream
 from openai.types.chat import (
@@ -13,7 +13,9 @@ from . import OpenAiHandler
 
 
 class ChatMessages:
-    def __init__(self, chat_messages: List[ChatCompletionMessageParam] = []) -> None:
+    def __init__(self, chat_messages: Optional[List[ChatCompletionMessageParam]] = None) -> None:
+        if chat_messages == None:
+            chat_messages = []
         self._chat_messages = chat_messages
 
     @property
