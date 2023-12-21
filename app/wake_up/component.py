@@ -9,7 +9,7 @@ from handler.json_handler import JsonHandler
 
 
 class WakeupComponent(BaseComponent):
-    WAKE_UP_LOGO = JsonHandler.load("./static/lotties/uniontool_logo.json")
+    WAKE_UP_LOGO = JsonHandler.load("./static/lotties/streamlit_logo.json")
 
     @classmethod
     def init(cls) -> None:
