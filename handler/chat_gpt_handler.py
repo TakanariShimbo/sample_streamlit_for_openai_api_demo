@@ -32,11 +32,11 @@ class ChatMessage:
 
     def to_chat_completion_message_param(self) -> ChatCompletionMessageParam:
         if self._role == "user":
-            return ChatCompletionUserMessageParam(role="user", name=self._name, content=self._content)
+            return ChatCompletionUserMessageParam(role="user", content=self._content)
         elif self._role == "assistant":
-            return ChatCompletionAssistantMessageParam(role="assistant", name=self._name, content=self._content)
+            return ChatCompletionAssistantMessageParam(role="assistant", content=self._content)
         elif self._role == "system":
-            return ChatCompletionSystemMessageParam(role="system", name=self._name, content=self._content)
+            return ChatCompletionSystemMessageParam(role="system", content=self._content)
         else:
             raise ValueError("user or assistant or system")
 
@@ -46,6 +46,9 @@ class ChatMessages:
         if chat_messages == None:
             chat_messages = []
         self._chat_messages = chat_messages
+
+    def to_chat_completion_message_params(self) -> List[ChatCompletionMessageParam]:
+        return [chat_message.to_chat_completion_message_param() for chat_message in self._chat_messages]
 
     def add_system_role(self, system_role: str) -> None:
         self._chat_messages.append(ChatMessage(role="system", name="system", content=system_role))
@@ -59,9 +62,6 @@ class ChatMessages:
     def add_prompt_and_answer(self, prompt: str, answer: str, user_name: str = "user", assistant_name: str = "assistant") -> None:
         self.add_prompt(prompt=prompt, user_name=user_name)
         self.add_answer(answer=answer, assistant_name=assistant_name)
-
-    def to_chat_completion_message_param_list(self) -> List[ChatCompletionMessageParam]:
-        return [chat_message.to_chat_completion_message_param() for chat_message in self._chat_messages]
 
     def duplicate(self) -> "ChatMessages":
         copied_chat_messages = self._chat_messages.copy()

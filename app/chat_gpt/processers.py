@@ -17,6 +17,7 @@ class MainProcesser(BaseProcesser[str]):
             prompt=inner_dict["form_schema"].prompt,
             model_type=inner_dict["form_schema"].chat_gpt_model_type,
             callback_func=self.add_queue,
+            chat_messages=inner_dict["chat_messages"],
         )
 
     def pre_process(self, outer_dict: Dict[str, Any], inner_dict: Dict[str, Any]) -> None:
@@ -42,6 +43,7 @@ class ProcessersManager(BaseProcessersManager):
         try:
             inner_dict = {}
             inner_dict["form_schema"] = FormSchema.from_entity(chat_gpt_model_entity=kwargs["chat_gpt_model_entity"], prompt=kwargs["prompt"])
+            inner_dict["chat_messages"] = ChatMessagesSState.get().to_chat_completion_message_params()
         except:
             outer_dict["message_area"].warning("Please input form corectly.")
             raise EarlyStopProcessException()
@@ -56,5 +58,9 @@ class ProcessersManager(BaseProcessersManager):
         return outer_dict
 
     def post_process(self, outer_dict: Dict[str, Any], inner_dict: Dict[str, Any]) -> None:
-        ChatMessagesSState.add_prompt_and_answer(prompt=inner_dict["form_schema"].prompt, answer=inner_dict["answer"], assistant_name=inner_dict["form_schema"].chat_gpt_model_type)
+        ChatMessagesSState.add_prompt_and_answer(
+            prompt=inner_dict["form_schema"].prompt,
+            answer=inner_dict["answer"],
+            assistant_name=inner_dict["form_schema"].chat_gpt_model_type,
+        )
         outer_dict["message_area"].empty()
