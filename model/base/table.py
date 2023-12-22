@@ -17,7 +17,7 @@ class BaseTable(Generic[E], ABC):
         self._table = table
 
     def get_all_entities(self) -> List[E]:
-        return [self.get_entiry_class()(series=row) for _, row in self._table.iterrows()]
+        return [self.get_entiry_class().init_from_series(series=row) for _, row in self._table.iterrows()]
 
     def get_entity(self, column_name: str, value: Any) -> E:
         mask = self._table.loc[:, column_name] == value
@@ -26,7 +26,7 @@ class BaseTable(Generic[E], ABC):
             raise ValueError(f"No rows found for {column_name}={value}")
         elif matching_entities.shape[0] > 1:
             raise ValueError(f"Multiple rows found for {column_name}={value}")
-        return self.get_entiry_class()(series=matching_entities.iloc[0])
+        return self.get_entiry_class().init_from_series(series=matching_entities.iloc[0])
 
     @classmethod
     def load_from_csv(cls: Type[T], filepath: str) -> T:

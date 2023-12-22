@@ -1,16 +1,20 @@
 from abc import ABC, abstractmethod
-from typing import Any
+from typing import Any, Type, TypeVar
 import pandas as pd
 
 
+E = TypeVar("E", bound="BaseEntity")
+
+
 class BaseEntity(ABC):
+    def __eq__(self, other):
+        return self.check_is_same(other=other)
+
     @abstractmethod
-    def __init__(self, series: pd.Series):
+    def check_is_same(self, other: Any) -> bool:
         raise NotImplementedError("Subclasses must implement this method")
 
-    def __eq__(self, other):
-        return self.check_is_same_instance(other=other)
-
+    @classmethod
     @abstractmethod
-    def check_is_same_instance(self, other: Any) -> bool:
+    def init_from_series(cls: Type[E], series: pd.Series) -> E:
         raise NotImplementedError("Subclasses must implement this method")
