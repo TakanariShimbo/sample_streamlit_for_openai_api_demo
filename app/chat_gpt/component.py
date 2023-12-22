@@ -5,7 +5,7 @@ import streamlit as st
 from .processers_manager_s_states import ProcessersManagerSState
 from .chat_messages_s_states import ChatMessagesSState
 from .. import BaseComponent
-from model import ChatGptModelTypeTable
+from model import CHAT_GPT_MODEL_TYPE_TABLE
 
 
 class ChatGptComponent(BaseComponent):
@@ -30,7 +30,7 @@ class ChatGptComponent(BaseComponent):
 
             selected_chat_gpt_model_entity = st.selectbox(
                 label="Model Type",
-                options=ChatGptModelTypeTable.get_all_entities(),
+                options=CHAT_GPT_MODEL_TYPE_TABLE.get_all_entities(),
                 format_func=lambda enetity: enetity.label_en,
                 key="ChatGptModelTypeSelectBox",
             )

@@ -1,2 +1,2 @@
 from .entity import PageTypeEntity
-from .table import PageTypeTable
+from .table import PAGE_TYPE_TABLE

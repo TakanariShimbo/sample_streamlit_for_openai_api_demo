@@ -1,7 +1,7 @@
 import streamlit as st
 
 from . import BasePage, HomeComponent, WakeupComponent, ChatGptComponent
-from model import PageTypeTable
+from model import PAGE_TYPE_TABLE
 
 
 class MainPage(BasePage):
@@ -19,12 +19,12 @@ class MainPage(BasePage):
 
         selected_page_entity = st.sidebar.selectbox(
             label="Pages Selection",
-            options=PageTypeTable.get_all_entities(),
+            options=PAGE_TYPE_TABLE.get_all_entities(),
             format_func=lambda x: x.label_en,
             key="PageSelectBox",
         )
 
-        if selected_page_entity == PageTypeTable.get_chat_gpt_entity():
+        if selected_page_entity == PAGE_TYPE_TABLE.get_chat_gpt_entity():
             ChatGptComponent.display()
         else:
             HomeComponent.display()

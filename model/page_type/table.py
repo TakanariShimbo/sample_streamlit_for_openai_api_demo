@@ -8,10 +8,6 @@ from .. import ColumnConfig, BaseTable
 
 class PageTypeTable(BaseTable[PageTypeEntity]):
     @staticmethod
-    def get_filepath() -> str:
-        return "./model/page_type/data.csv"
-
-    @staticmethod
     def get_column_config_list() -> List[ColumnConfig]:
         return [
             ColumnConfig(name="key", dtype=pd.StringDtype(), unique=True, non_null=True),
@@ -23,10 +19,11 @@ class PageTypeTable(BaseTable[PageTypeEntity]):
     def get_entiry_class() -> Type[PageTypeEntity]:
         return PageTypeEntity
 
-    @classmethod
-    def get_home_entity(cls) -> PageTypeEntity:
-        return cls.get_entity(column_name="key", value="home")
+    def get_home_entity(self) -> PageTypeEntity:
+        return self.get_entity(column_name="key", value="home")
 
-    @classmethod
-    def get_chat_gpt_entity(cls) -> PageTypeEntity:
-        return cls.get_entity(column_name="key", value="chat_gpt")
+    def get_chat_gpt_entity(self) -> PageTypeEntity:
+        return self.get_entity(column_name="key", value="chat_gpt")
+
+
+PAGE_TYPE_TABLE = PageTypeTable.create_from_csv(filepath="./model/page_type/data.csv")
