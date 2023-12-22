@@ -38,11 +38,11 @@ class BaseTable(Generic[E], ABC):
         return {column_config.name: column_config.dtype for column_config in cls.get_column_config_list()}
 
     def _validate(self, df: pd.DataFrame) -> None:
-        for column_config in self.get_column_config_list():
-            if column_config.unique and df[column_config.name].duplicated().any():
-                raise ValueError(f"Column {column_config.name} has duplicate values")
-            if column_config.non_null and df[column_config.name].isnull().any():
-                raise ValueError(f"Column {column_config.name} has null values")
+        for config in self.get_column_config_list():
+            if config.unique and df[config.name].duplicated().any():
+                raise ValueError(f"Column {config.name} has duplicate values")
+            if config.non_null and df[config.name].isnull().any():
+                raise ValueError(f"Column {config.name} has null values")
 
     @staticmethod
     @abstractmethod
