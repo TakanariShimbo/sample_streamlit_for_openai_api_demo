@@ -12,7 +12,7 @@ from openai.types.chat import (
 from . import OpenAiHandler
 
 
-class ChatMessage:
+class ChatGptMessage:
     def __init__(self, role: Literal["user", "assistant", "system"], name: str, content: str) -> None:
         self._role = role
         self._name = name
@@ -41,35 +41,35 @@ class ChatMessage:
             raise ValueError("user or assistant or system")
 
 
-class ChatMessages:
-    def __init__(self, chat_messages: Optional[List[ChatMessage]] = None) -> None:
-        if chat_messages == None:
-            chat_messages = []
-        self._chat_messages = chat_messages
+class ChatGptMessageList:
+    def __init__(self, chat_message_list: Optional[List[ChatGptMessage]] = None) -> None:
+        if chat_message_list == None:
+            chat_message_list = []
+        self._chat_message_list = chat_message_list
 
-    def to_chat_completion_message_params(self) -> List[ChatCompletionMessageParam]:
-        return [chat_message.to_chat_completion_message_param() for chat_message in self._chat_messages]
+    def to_chat_completion_message_param_list(self) -> List[ChatCompletionMessageParam]:
+        return [chat_message.to_chat_completion_message_param() for chat_message in self._chat_message_list]
 
     def add_system_role(self, system_role: str) -> None:
-        self._chat_messages.append(ChatMessage(role="system", name="system", content=system_role))
+        self._chat_message_list.append(ChatGptMessage(role="system", name="system", content=system_role))
 
     def add_prompt(self, prompt: str, user_name: str = "user") -> None:
-        self._chat_messages.append(ChatMessage(role="user", name=user_name, content=prompt))
+        self._chat_message_list.append(ChatGptMessage(role="user", name=user_name, content=prompt))
 
     def add_answer(self, answer: str, assistant_name: str = "assistant") -> None:
-        self._chat_messages.append(ChatMessage(role="assistant", name=assistant_name, content=answer))
+        self._chat_message_list.append(ChatGptMessage(role="assistant", name=assistant_name, content=answer))
 
     def add_prompt_and_answer(self, prompt: str, answer: str, user_name: str = "user", assistant_name: str = "assistant") -> None:
         self.add_prompt(prompt=prompt, user_name=user_name)
         self.add_answer(answer=answer, assistant_name=assistant_name)
 
-    def duplicate(self) -> "ChatMessages":
-        copied_chat_messages = self._chat_messages.copy()
-        return ChatMessages(copied_chat_messages)
+    def duplicate(self) -> "ChatGptMessageList":
+        copied_chat_message_list = self._chat_message_list.copy()
+        return ChatGptMessageList(copied_chat_message_list)
 
-    def iterate(self, include_system=False) -> Iterator[ChatMessage]:
-        for chat_message in self._chat_messages:
-            if include_system and chat_message.role == "system":
+    def iterate(self, include_system=False) -> Iterator[ChatGptMessage]:
+        for chat_message in self._chat_message_list:
+            if not include_system and chat_message.role == "system":
                 continue
             yield chat_message
 
@@ -81,11 +81,11 @@ class ChatGptHandler(OpenAiHandler):
         client: OpenAI,
         prompt: str,
         model_type: str = "gpt-3.5-turbo",
-        chat_messages: Optional[List[ChatCompletionMessageParam]] = None,
+        message_pram_list: Optional[List[ChatCompletionMessageParam]] = None,
     ) -> str:
         response = client.chat.completions.create(
             model=model_type,
-            messages=cls.get_chat_messages_added_prompt(prompt=prompt, chat_messages=chat_messages),
+            messages=cls.get_chat_messages_added_prompt(prompt=prompt, message_pram_list=message_pram_list),
         )
 
         answer = response.choices[0].message.content
@@ -99,10 +99,10 @@ class ChatGptHandler(OpenAiHandler):
         client: OpenAI,
         prompt: str,
         model_type: str = "gpt-3.5-turbo",
-        chat_messages: Optional[List[ChatCompletionMessageParam]] = None,
+        message_pram_list: Optional[List[ChatCompletionMessageParam]] = None,
         callback_func: Callable[[str], None] = print,
     ) -> str:
-        streamly_answer = cls.query_streamly_answer(client=client, prompt=prompt, model_type=model_type, chat_messages=chat_messages)
+        streamly_answer = cls.query_streamly_answer(client=client, prompt=prompt, model_type=model_type, message_pram_list=message_pram_list)
         answer = cls.display_streamly_answer(streamly_answer=streamly_answer, callback_func=callback_func)
         return answer
 
@@ -112,11 +112,11 @@ class ChatGptHandler(OpenAiHandler):
         client: OpenAI,
         prompt: str,
         model_type: str = "gpt-3.5-turbo",
-        chat_messages: Optional[List[ChatCompletionMessageParam]] = None,
+        message_pram_list: Optional[List[ChatCompletionMessageParam]] = None,
     ) -> Stream[ChatCompletionChunk]:
         streamly_answer = client.chat.completions.create(
             model=model_type,
-            messages=cls.get_chat_messages_added_prompt(prompt=prompt, chat_messages=chat_messages),
+            messages=cls.get_chat_messages_added_prompt(prompt=prompt, message_pram_list=message_pram_list),
             stream=True,
         )
 
@@ -135,10 +135,10 @@ class ChatGptHandler(OpenAiHandler):
         return answer
 
     @staticmethod
-    def get_chat_messages_added_prompt(prompt: str, chat_messages: Optional[List[ChatCompletionMessageParam]]) -> List[ChatCompletionMessageParam]:
-        if chat_messages == None:
-            chat_messages = []
+    def get_chat_messages_added_prompt(prompt: str, message_pram_list: Optional[List[ChatCompletionMessageParam]]) -> List[ChatCompletionMessageParam]:
+        if message_pram_list == None:
+            message_pram_list = []
 
-        copyed_chat_messages = chat_messages.copy()
+        copyed_chat_messages = message_pram_list.copy()
         copyed_chat_messages.append(ChatCompletionUserMessageParam(role="user", content=prompt))
         return copyed_chat_messages

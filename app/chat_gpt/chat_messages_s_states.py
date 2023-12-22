@@ -1,17 +1,17 @@
 import streamlit as st
 
 from .. import BaseSState
-from handler import ChatMessages
+from handler import ChatGptMessageList
 
 
-class ChatMessagesSState(BaseSState[ChatMessages]):
+class ChatMessagesSState(BaseSState[ChatGptMessageList]):
     @staticmethod
     def get_name() -> str:
         return "CHAT_GPT_CHAT_MESSAGES"
 
     @staticmethod
-    def get_default() -> ChatMessages:
-        return ChatMessages()
+    def get_default() -> ChatGptMessageList:
+        return ChatGptMessageList()
 
     @classmethod
     def add_prompt_and_answer(cls, prompt: str, answer: str, user_name: str = "user", assistant_name: str = "assistant") -> None:
