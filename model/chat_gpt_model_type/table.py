@@ -20,4 +20,4 @@ class ChatGptModelTypeTable(BaseTable[ChatGptModelTypeEntity]):
         return ChatGptModelTypeEntity
 
 
-CHAT_GPT_MODEL_TYPE_TABLE = ChatGptModelTypeTable.create_from_csv(filepath="./model/chat_gpt_model_type/data.csv")
+CHAT_GPT_MODEL_TYPE_TABLE = ChatGptModelTypeTable.load_from_csv(filepath="./model/chat_gpt_model_type/data.csv")

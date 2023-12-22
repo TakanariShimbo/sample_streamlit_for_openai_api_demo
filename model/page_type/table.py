@@ -26,4 +26,4 @@ class PageTypeTable(BaseTable[PageTypeEntity]):
         return self.get_entity(column_name="key", value="chat_gpt")
 
 
-PAGE_TYPE_TABLE = PageTypeTable.create_from_csv(filepath="./model/page_type/data.csv")
+PAGE_TYPE_TABLE = PageTypeTable.load_from_csv(filepath="./model/page_type/data.csv")

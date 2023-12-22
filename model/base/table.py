@@ -29,7 +29,7 @@ class BaseTable(Generic[E], ABC):
         return self.get_entiry_class()(series=matching_entities.iloc[0])
 
     @classmethod
-    def create_from_csv(cls: Type[T], filepath: str) -> T:
+    def load_from_csv(cls: Type[T], filepath: str) -> T:
         table = pd.read_csv(filepath, dtype=cls.get_dtypes())
         return cls(table)
 
