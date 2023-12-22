@@ -5,7 +5,7 @@ from streamlit_lottie import st_lottie
 
 from .s_states import WakeupSState
 from .. import BaseComponent
-from handler.json_handler import JsonHandler
+from controller import JsonHandler
 
 
 class WakeupComponent(BaseComponent):

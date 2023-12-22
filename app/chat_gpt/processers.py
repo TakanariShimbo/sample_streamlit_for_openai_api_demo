@@ -6,7 +6,7 @@ from .schema import FormSchema
 from .chat_messages_s_states import ChatMessagesSState
 from .. import BaseProcesser, BaseProcessersManager, EarlyStopProcessException
 from model import DEFAULT_OPENAI_API_KEY
-from handler import ChatGptHandler
+from controller import ChatGptHandler
 
 
 class MainProcesser(BaseProcesser[str]):

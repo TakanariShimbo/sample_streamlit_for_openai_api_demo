@@ -63,10 +63,6 @@ class ChatGptMessageList:
         self.add_prompt(prompt=prompt, user_name=user_name)
         self.add_answer(answer=answer, assistant_name=assistant_name)
 
-    def duplicate(self) -> "ChatGptMessageList":
-        copied_chat_message_list = self._chat_message_list.copy()
-        return ChatGptMessageList(copied_chat_message_list)
-
     def iterate(self, include_system=False) -> Iterator[ChatGptMessage]:
         for chat_message in self._chat_message_list:
             if not include_system and chat_message.role == "system":

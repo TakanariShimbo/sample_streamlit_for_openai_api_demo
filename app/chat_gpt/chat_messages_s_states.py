@@ -1,7 +1,7 @@
 import streamlit as st
 
 from .. import BaseSState
-from handler import ChatGptMessageList
+from controller import ChatGptMessageList
 
 
 class ChatMessagesSState(BaseSState[ChatGptMessageList]):
