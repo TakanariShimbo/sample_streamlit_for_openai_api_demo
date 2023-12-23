@@ -16,9 +16,13 @@ class BaseTable(Generic[E], ABC):
         self._validate(table)
         self._table = table
 
+    @property
+    def table(self) -> pd.DataFrame:
+        return self._table
+
     @classmethod
     def append_b_to_a(cls: Type[T], table_a: T, table_b: T) -> T:
-        table = pd.concat([table_a._table, table_b._table], ignore_index=True)
+        table = pd.concat([table_a.table, table_b.table], ignore_index=True)
         return cls(table)
 
     @classmethod
