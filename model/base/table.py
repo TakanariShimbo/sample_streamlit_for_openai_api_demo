@@ -20,22 +20,24 @@ class BaseTable(Generic[E], ABC):
     def append_b_to_a(cls: Type[T], table_a: T, table_b: T) -> T:
         table = pd.concat([table_a._table, table_b._table], ignore_index=True)
         return cls(table)
-    
+
     @classmethod
     def load_from_entity_list(cls: Type[T], entity_list: List[E]) -> T:
-        if len(entity_list) == 0:
-            series_dict = {config.name: pd.Series(dtype=config.dtype) for config in cls.get_column_config_list()}
-            table = pd.DataFrame(series_dict)
-        else:
-            entity_data_list = [entity.to_dict() for entity in entity_list]
-            dtype_dict = {config.name: config.dtype for config in cls.get_column_config_list()}
-            table = pd.DataFrame(entity_data_list).astype(dtype_dict)
+        entity_data_list = [entity.to_dict() for entity in entity_list]
+        dtype_dict = {config.name: config.dtype for config in cls.get_column_config_list()}
+        table = pd.DataFrame(entity_data_list).astype(dtype_dict)
         return cls(table)
 
     @classmethod
     def load_from_csv(cls: Type[T], filepath: str) -> T:
         dtype_dict = {config.name: config.dtype for config in cls.get_column_config_list()}
         table = pd.read_csv(filepath, dtype=dtype_dict)
+        return cls(table)
+
+    @classmethod
+    def create_empty_table(cls: Type[T]) -> T:
+        series_dict = {config.name: pd.Series(dtype=config.dtype) for config in cls.get_column_config_list()}
+        table = pd.DataFrame(series_dict)
         return cls(table)
 
     def get_all_entities(self) -> List[E]:
