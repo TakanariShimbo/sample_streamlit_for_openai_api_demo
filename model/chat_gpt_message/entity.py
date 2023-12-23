@@ -1,6 +1,4 @@
-from typing import Any, Dict
-
-import pandas as pd
+from typing import Any, List
 
 from .. import BaseEntity
 
@@ -23,20 +21,9 @@ class ChatGptMessageEntity(BaseEntity):
     def content(self) -> str:
         return self._content
 
-    def to_dict(self) -> Dict[str, Any]:
-        return {
-            "role": self.role,
-            "name": self.name,
-            "content": self.content,
-        }
-
     def check_is_same(self, other: Any) -> bool:
         return False
 
-    @classmethod
-    def init_from_series(cls, series: pd.Series) -> "ChatGptMessageEntity":
-        return cls(
-            role=series["role"],
-            name=series["name"],
-            content=series["content"],
-        )
+    @staticmethod
+    def get_column_name_list() -> List[str]:
+        return ["role", "name", "content"]

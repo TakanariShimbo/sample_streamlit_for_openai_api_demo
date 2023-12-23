@@ -1,6 +1,4 @@
-from typing import Any, Dict
-
-import pandas as pd
+from typing import Any, List
 
 from .. import BaseEntity
 
@@ -23,22 +21,11 @@ class ChatGptModelTypeEntity(BaseEntity):
     def label_jp(self) -> str:
         return self._label_jp
 
-    def to_dict(self) -> Dict[str, Any]:
-        return {
-            "key": self.key,
-            "label_en": self.label_en,
-            "label_jp": self.label_jp,
-        }
-
     def check_is_same(self, other: Any) -> bool:
         if not isinstance(other, ChatGptModelTypeEntity):
             return False
         return self.key == other.key
 
-    @classmethod
-    def init_from_series(cls, series: pd.Series) -> "ChatGptModelTypeEntity":
-        return cls(
-            key=series["key"],
-            label_en=series["label_en"],
-            label_jp=series["label_jp"],
-        )
+    @staticmethod
+    def get_column_name_list() -> List[str]:
+        return ["key", "label_en", "label_jp"]
