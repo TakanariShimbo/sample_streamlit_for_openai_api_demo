@@ -18,7 +18,7 @@ class BaseTable(Generic[E], ABC):
 
     @classmethod
     def append_b_to_a(cls: Type[T], table_a: T, table_b: T) -> T:
-        table = pd.concat([table_a._table, table_b._table])
+        table = pd.concat([table_a._table, table_b._table], ignore_index=True)
         return cls(table)
     
     @classmethod
