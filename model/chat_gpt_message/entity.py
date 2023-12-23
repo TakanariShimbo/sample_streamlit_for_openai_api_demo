@@ -1,4 +1,4 @@
-from typing import Any
+from typing import Any, Dict
 
 import pandas as pd
 
@@ -22,6 +22,13 @@ class ChatGptMessageEntity(BaseEntity):
     @property
     def content(self) -> str:
         return self._content
+
+    def to_dict(self) -> Dict[str, Any]:
+        return {
+            "role": self.role,
+            "name": self.name,
+            "content": self.content,
+        }
 
     def check_is_same(self, other: Any) -> bool:
         return False

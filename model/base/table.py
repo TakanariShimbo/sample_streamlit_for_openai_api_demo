@@ -16,6 +16,28 @@ class BaseTable(Generic[E], ABC):
         self._validate(table)
         self._table = table
 
+    @classmethod
+    def append_b_to_a(cls: Type[T], table_a: T, table_b: T) -> T:
+        table = pd.concat([table_a._table, table_b._table])
+        return cls(table)
+    
+    @classmethod
+    def load_from_entity_list(cls: Type[T], entity_list: List[E]) -> T:
+        if len(entity_list) == 0:
+            series_dict = {config.name: pd.Series(dtype=config.dtype) for config in cls.get_column_config_list()}
+            table = pd.DataFrame(series_dict)
+        else:
+            entity_data_list = [entity.to_dict() for entity in entity_list]
+            dtype_dict = {config.name: config.dtype for config in cls.get_column_config_list()}
+            table = pd.DataFrame(entity_data_list).astype(dtype_dict)
+        return cls(table)
+
+    @classmethod
+    def load_from_csv(cls: Type[T], filepath: str) -> T:
+        dtype_dict = {config.name: config.dtype for config in cls.get_column_config_list()}
+        table = pd.read_csv(filepath, dtype=dtype_dict)
+        return cls(table)
+
     def get_all_entities(self) -> List[E]:
         return [self.get_entiry_class().init_from_series(series=row) for _, row in self._table.iterrows()]
 
@@ -27,15 +49,6 @@ class BaseTable(Generic[E], ABC):
         elif matching_entities.shape[0] > 1:
             raise ValueError(f"Multiple rows found for {column_name}={value}")
         return self.get_entiry_class().init_from_series(series=matching_entities.iloc[0])
-
-    @classmethod
-    def load_from_csv(cls: Type[T], filepath: str) -> T:
-        table = pd.read_csv(filepath, dtype=cls.get_dtypes())
-        return cls(table)
-
-    @classmethod
-    def get_dtypes(cls) -> Dict[str, Any]:
-        return {column_config.name: column_config.dtype for column_config in cls.get_column_config_list()}
 
     def _validate(self, df: pd.DataFrame) -> None:
         for config in self.get_column_config_list():

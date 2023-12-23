@@ -1,4 +1,4 @@
-from typing import Any
+from typing import Any, Dict
 
 import pandas as pd
 
@@ -23,6 +23,13 @@ class PageTypeEntity(BaseEntity):
     def label_jp(self) -> str:
         return self._label_jp
 
+    def to_dict(self) -> Dict[str, Any]:
+        return {
+            "key": self.key,
+            "label_en": self.label_en,
+            "label_jp": self.label_jp,
+        }
+    
     def check_is_same(self, other: Any) -> bool:
         if not isinstance(other, PageTypeEntity):
             return False

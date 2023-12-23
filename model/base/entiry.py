@@ -1,5 +1,5 @@
 from abc import ABC, abstractmethod
-from typing import Any, Type, TypeVar
+from typing import Any, Dict, Type, TypeVar
 import pandas as pd
 
 
@@ -12,6 +12,10 @@ class BaseEntity(ABC):
 
     @abstractmethod
     def check_is_same(self, other: Any) -> bool:
+        raise NotImplementedError("Subclasses must implement this method")
+    
+    @abstractmethod
+    def to_dict(self) -> Dict[str, Any]:
         raise NotImplementedError("Subclasses must implement this method")
 
     @classmethod
