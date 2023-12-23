@@ -15,7 +15,7 @@ class BaseEntity(ABC):
 
     @classmethod
     def init_from_series(cls: Type[E], series: pd.Series) -> E:
-        kwargs = {name: getattr(series, name) for name in cls.get_column_name_list()}
+        kwargs = {name: series[name] for name in cls.get_column_name_list()}
         return cls(**kwargs)
 
     @abstractmethod

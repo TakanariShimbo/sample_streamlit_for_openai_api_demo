@@ -5,19 +5,16 @@ import streamlit as st
 from .schema import FormSchema
 from .chat_messages_s_states import ChatMessagesSState
 from .. import BaseProcesser, BaseProcessersManager, EarlyStopProcessException
-from model import DEFAULT_OPENAI_API_KEY
-from controller import ChatGptHandler
+from controller import ChatGptQueryManager
 
 
 class MainProcesser(BaseProcesser[str]):
     def main_process(self, inner_dict: Dict[str, Any]) -> None:
-        client = ChatGptHandler.generate_client(api_key=DEFAULT_OPENAI_API_KEY)
-        inner_dict["answer"] = ChatGptHandler.query_streamly_answer_and_display(
-            client=client,
+        inner_dict["answer"] = ChatGptQueryManager.query_streamly_answer_and_display(
             prompt=inner_dict["form_schema"].prompt,
             model_type=inner_dict["form_schema"].chat_gpt_model_type,
             callback_func=self.add_queue,
-            message_pram_list=inner_dict["message_param_list"],
+            message_entities=inner_dict["message_entities"],
         )
 
     def pre_process(self, outer_dict: Dict[str, Any], inner_dict: Dict[str, Any]) -> None:
@@ -43,7 +40,7 @@ class ProcessersManager(BaseProcessersManager):
         try:
             inner_dict = {}
             inner_dict["form_schema"] = FormSchema.from_entity(chat_gpt_model_entity=kwargs["chat_gpt_model_entity"], prompt=kwargs["prompt"])
-            inner_dict["message_param_list"] = ChatMessagesSState.get().to_chat_completion_message_param_list()
+            inner_dict["message_entities"] = ChatMessagesSState.get().get_all_message_entities()
         except:
             outer_dict["message_area"].warning("Please input form corectly.")
             raise EarlyStopProcessException()

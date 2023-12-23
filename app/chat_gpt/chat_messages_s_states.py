@@ -1,26 +1,26 @@
 import streamlit as st
 
 from .. import BaseSState
-from controller import ChatGptMessageList
+from controller import ChatGptMessagesManager
 
 
-class ChatMessagesSState(BaseSState[ChatGptMessageList]):
+class ChatMessagesSState(BaseSState[ChatGptMessagesManager]):
     @staticmethod
     def get_name() -> str:
-        return "CHAT_GPT_CHAT_MESSAGES"
+        return "CHAT_GPT_MESSAGES_MANAGER"
 
     @staticmethod
-    def get_default() -> ChatGptMessageList:
-        return ChatGptMessageList()
+    def get_default() -> ChatGptMessagesManager:
+        return ChatGptMessagesManager()
 
     @classmethod
     def add_prompt_and_answer(cls, prompt: str, answer: str, user_name: str = "user", assistant_name: str = "assistant") -> None:
-        chat_messages = cls.get()
-        chat_messages.add_prompt_and_answer(prompt=prompt, answer=answer, user_name=user_name, assistant_name=assistant_name)
+        manager = cls.get()
+        manager.add_prompt_and_answer(prompt=prompt, answer=answer, user_name=user_name, assistant_name=assistant_name)
 
     @classmethod
     def display(cls) -> None:
-        chat_messages = cls.get()
-        for chat_message in chat_messages.iterate():
-            with st.chat_message(name=chat_message.name):
-                st.write(chat_message.content)
+        manager = cls.get()
+        for message_entity in manager.iterate_all_message_entities():
+            with st.chat_message(name=message_entity.name):
+                st.write(message_entity.content)
