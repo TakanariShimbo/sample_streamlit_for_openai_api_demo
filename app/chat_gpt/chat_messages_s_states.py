@@ -21,6 +21,8 @@ class ChatMessagesSState(BaseSState[ChatGptMessagesManager]):
     @classmethod
     def display(cls) -> None:
         manager = cls.get()
-        for message_entity in manager.iterate_all_message_entities():
+        for message_entity in manager.get_all_message_entities():
+            if message_entity.role == "system":
+                continue
             with st.chat_message(name=message_entity.name):
                 st.write(message_entity.content)

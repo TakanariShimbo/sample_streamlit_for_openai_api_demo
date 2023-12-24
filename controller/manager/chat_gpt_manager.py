@@ -1,4 +1,4 @@
-from typing import Callable, List, Iterator
+from typing import Callable, List
 
 from .. import ChatGptHandler, convert_entity_to_message_param
 from model import ChatGptMessageEntity, ChatGptMessageTable, DEFAULT_OPENAI_API_KEY
@@ -19,12 +19,6 @@ class ChatGptMessagesManager:
 
     def get_all_message_entities(self) -> List[ChatGptMessageEntity]:
         return self._table.get_all_entities()
-
-    def iterate_all_message_entities(self, include_system=False) -> Iterator[ChatGptMessageEntity]:
-        for message_entity in self._table.get_all_entities():
-            if not include_system and message_entity.role == "system":
-                continue
-            yield message_entity
 
 
 class ChatGptQueryManager:
