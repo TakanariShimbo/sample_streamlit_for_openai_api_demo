@@ -1,0 +1,29 @@
+version: '3.8'
+
+services:
+  service_db_server:
+    image: postgres:14.8
+    container_name: container_db_server
+    ports: 
+      - "55432:5432"
+    env_file:
+      - ./db_server/.env
+    volumes:
+      - ./db_server/data:/var/lib/postgresql/data
+
+  service_app_server:
+    build: 
+      context: ./app_server
+      dockerfile: Dockerfile
+    image: python310_streamlit_for_openai_api:1.0
+    container_name: container_app_server
+    ports:
+      - 58501:8501
+    env_file:
+      - ./app_server/.env
+    volumes:
+      - ./app_server:/work
+    working_dir: /work
+    command: ["streamlit", "run", "server.py"]
+    depends_on:
+      - service_db_server
