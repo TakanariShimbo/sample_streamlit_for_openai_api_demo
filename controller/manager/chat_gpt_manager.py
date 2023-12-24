@@ -13,7 +13,6 @@ class ChatGptMessagesManager:
             ChatGptMessageEntity(role="user", name=user_name, content=prompt),
             ChatGptMessageEntity(role="assistant", name=assistant_name, content=answer),
         ]
-
         appended_table = ChatGptMessageTable.load_from_entities(entities=prompt_and_answer_entitys)
         self._table = ChatGptMessageTable.append_b_to_a(self._table, appended_table)
 
