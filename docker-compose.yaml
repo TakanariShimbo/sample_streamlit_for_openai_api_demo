@@ -19,8 +19,6 @@ services:
     container_name: container_app_server
     ports:
       - 58501:8501
-    env_file:
-      - ./app_server/.env
     volumes:
       - ./app_server:/work
     working_dir: /work
