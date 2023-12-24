@@ -19,3 +19,7 @@ class ChatGptMessageTable(BaseTable[ChatGptMessageEntity]):
     @staticmethod
     def get_entiry_class() -> Type[ChatGptMessageEntity]:
         return ChatGptMessageEntity
+
+    @staticmethod
+    def get_database_table_name() -> str:
+        return "chat_gpt_messages"

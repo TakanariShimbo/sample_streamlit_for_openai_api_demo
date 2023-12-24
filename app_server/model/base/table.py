@@ -1,7 +1,8 @@
 from abc import ABC, abstractmethod
-from typing import List, Any, TypeVar, Generic, Type
+from typing import List, Any, TypeVar, Generic, Optional, Type
 
 import pandas as pd
+from sqlalchemy import Engine
 
 from . import ColumnConfig
 from . import BaseEntity
@@ -33,7 +34,9 @@ class BaseTable(Generic[E], ABC):
         return cls(df)
 
     @classmethod
-    def load_from_csv(cls: Type[T], filepath: str) -> T:
+    def load_from_csv(cls: Type[T], filepath: Optional[str] = None) -> T:
+        if filepath == None:
+            filepath = cls.get_csv_filepath()
         dtype_dict = {config.name: config.dtype for config in cls.get_column_configs()}
         df = pd.read_csv(filepath, dtype=dtype_dict)
         return cls(df)
@@ -55,9 +58,15 @@ class BaseTable(Generic[E], ABC):
         elif matching_df.shape[0] > 1:
             raise ValueError(f"Multiple rows found for {column_name}={value}")
         return self.get_entiry_class().init_from_series(series=matching_df.iloc[0])
-    
-    def save_to_csv(self, filepath: str):
-        self._df.to_csv(filepath, index = False, mode="w")
+
+    def save_to_csv(self, filepath: Optional[str] = None):
+        if filepath == None:
+            filepath = self.get_csv_filepath()
+        self._df.to_csv(filepath, index=False, mode="a")
+
+    def save_to_database(self, database_engine: Engine):
+        table_name = self.get_database_table_name()
+        self._df.to_sql(table_name, database_engine, if_exists='append', index=False)
 
     def _validate(self, df: pd.DataFrame) -> None:
         for config in self.get_column_configs():
@@ -75,3 +84,12 @@ class BaseTable(Generic[E], ABC):
     @abstractmethod
     def get_entiry_class() -> Type[E]:
         raise NotImplementedError("Subclasses must implement this method")
+
+    @staticmethod
+    def get_csv_filepath() -> str:
+        raise NotImplementedError("Not implemented")
+
+    @staticmethod
+    def get_database_table_name() -> str:
+        raise NotImplementedError("Not implemented")
+

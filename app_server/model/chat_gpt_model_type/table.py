@@ -19,5 +19,9 @@ class ChatGptModelTypeTable(BaseTable[ChatGptModelTypeEntity]):
     def get_entiry_class() -> Type[ChatGptModelTypeEntity]:
         return ChatGptModelTypeEntity
 
+    @staticmethod
+    def get_csv_filepath() -> str:
+        return "./model/chat_gpt_model_type/data.csv"
 
-CHAT_GPT_MODEL_TYPE_TABLE = ChatGptModelTypeTable.load_from_csv(filepath="./model/chat_gpt_model_type/data.csv")
+
+CHAT_GPT_MODEL_TYPE_TABLE = ChatGptModelTypeTable.load_from_csv()
