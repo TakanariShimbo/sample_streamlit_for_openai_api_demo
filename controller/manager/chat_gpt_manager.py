@@ -1,4 +1,5 @@
 from typing import Callable, List
+from uuid import uuid4
 
 from .. import ChatGptHandler, convert_entity_to_message_param
 from model import ChatGptMessageEntity, ChatGptMessageTable, DEFAULT_OPENAI_API_KEY
@@ -7,11 +8,12 @@ from model import ChatGptMessageEntity, ChatGptMessageTable, DEFAULT_OPENAI_API_
 class ChatGptMessagesManager:
     def __init__(self):
         self._table = ChatGptMessageTable.create_empty_table()
+        self._room_id = str(uuid4())
 
-    def add_prompt_and_answer(self, prompt: str, answer: str, user_name: str = "user", assistant_name: str = "assistant") -> None:
+    def add_prompt_and_answer(self, prompt: str, answer: str, user_id: str = "user", assistant_id: str = "assistant") -> None:
         prompt_and_answer_entitys = [
-            ChatGptMessageEntity(role="user", name=user_name, content=prompt),
-            ChatGptMessageEntity(role="assistant", name=assistant_name, content=answer),
+            ChatGptMessageEntity(room_id=self._room_id, role="user", sender_id=user_id, content=prompt),
+            ChatGptMessageEntity(room_id=self._room_id, role="assistant", sender_id=assistant_id, content=answer),
         ]
         appended_table = ChatGptMessageTable.load_from_entities(entities=prompt_and_answer_entitys)
         self._table = ChatGptMessageTable.append_b_to_a(self._table, appended_table)

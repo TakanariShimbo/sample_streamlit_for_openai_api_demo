@@ -58,6 +58,6 @@ class ProcessersManager(BaseProcessersManager):
         ChatMessagesSState.add_prompt_and_answer(
             prompt=inner_dict["form_schema"].prompt,
             answer=inner_dict["answer"],
-            assistant_name=inner_dict["form_schema"].chat_gpt_model_type,
+            assistant_id=inner_dict["form_schema"].chat_gpt_model_type,
         )
         outer_dict["message_area"].empty()
