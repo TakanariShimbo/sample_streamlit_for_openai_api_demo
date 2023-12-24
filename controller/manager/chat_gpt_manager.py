@@ -29,13 +29,8 @@ class ChatGptQueryManager:
         message_entities: List[ChatGptMessageEntity],
         callback_func: Callable[[str], None],
     ) -> str:
-        message_params = []
-        for message_entity in message_entities:
-            message_param = convert_entity_to_message_param(role=message_entity.role, content=message_entity.content)
-            message_params.append(message_param)
-
         client = ChatGptHandler.generate_client(api_key=DEFAULT_OPENAI_API_KEY)
-
+        message_params = [convert_entity_to_message_param(role=message_entity.role, content=message_entity.content) for message_entity in message_entities]
         answer = ChatGptHandler.query_streamly_answer_and_display(
             client=client,
             prompt=prompt,
@@ -43,5 +38,4 @@ class ChatGptQueryManager:
             message_prams=message_params,
             callback_func=callback_func,
         )
-
         return answer
