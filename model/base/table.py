@@ -55,6 +55,9 @@ class BaseTable(Generic[E], ABC):
         elif matching_df.shape[0] > 1:
             raise ValueError(f"Multiple rows found for {column_name}={value}")
         return self.get_entiry_class().init_from_series(series=matching_df.iloc[0])
+    
+    def save_to_csv(self, filepath: str):
+        self._df.to_csv(filepath, index = False, mode="w")
 
     def _validate(self, df: pd.DataFrame) -> None:
         for config in self.get_column_configs():

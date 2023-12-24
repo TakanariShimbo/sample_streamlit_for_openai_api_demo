@@ -17,6 +17,7 @@ class ChatGptMessagesManager:
         ]
         appended_table = ChatGptMessageTable.load_from_entities(entities=prompt_and_answer_entitys)
         self._table = ChatGptMessageTable.append_b_to_a(self._table, appended_table)
+        self._table.save_to_csv(filepath=f"storage/chat_gpt_message/{self._room_id}.csv")
 
     def get_all_message_entities(self) -> List[ChatGptMessageEntity]:
         return self._table.get_all_entities()
