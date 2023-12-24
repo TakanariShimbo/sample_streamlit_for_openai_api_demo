@@ -11,11 +11,11 @@ class BaseEntity(ABC):
         return self.check_is_same(other=other)
 
     def to_dict(self) -> Dict[str, Any]:
-        return {name: getattr(self, name) for name in self.get_column_name_list()}
+        return {name: getattr(self, name) for name in self.get_column_names()}
 
     @classmethod
     def init_from_series(cls: Type[E], series: pd.Series) -> E:
-        kwargs = {name: series[name] for name in cls.get_column_name_list()}
+        kwargs = {name: series[name] for name in cls.get_column_names()}
         return cls(**kwargs)
 
     @abstractmethod
@@ -24,5 +24,5 @@ class BaseEntity(ABC):
 
     @staticmethod
     @abstractmethod
-    def get_column_name_list() -> List[str]:
+    def get_column_names() -> List[str]:
         raise NotImplementedError("Subclasses must implement this method")

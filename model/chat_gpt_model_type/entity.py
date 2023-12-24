@@ -27,5 +27,5 @@ class ChatGptModelTypeEntity(BaseEntity):
         return self.key == other.key
 
     @staticmethod
-    def get_column_name_list() -> List[str]:
+    def get_column_names() -> List[str]:
         return ["key", "label_en", "label_jp"]

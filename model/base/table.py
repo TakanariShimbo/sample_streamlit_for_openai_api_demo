@@ -26,21 +26,21 @@ class BaseTable(Generic[E], ABC):
         return cls(df)
 
     @classmethod
-    def load_from_entity_list(cls: Type[T], entity_list: List[E]) -> T:
-        entity_data_list = [entity.to_dict() for entity in entity_list]
-        dtype_dict = {config.name: config.dtype for config in cls.get_column_config_list()}
-        df = pd.DataFrame(entity_data_list).astype(dtype_dict)
+    def load_from_entities(cls: Type[T], entities: List[E]) -> T:
+        entities_data = [entity.to_dict() for entity in entities]
+        dtype_dict = {config.name: config.dtype for config in cls.get_column_configs()}
+        df = pd.DataFrame(entities_data).astype(dtype_dict)
         return cls(df)
 
     @classmethod
     def load_from_csv(cls: Type[T], filepath: str) -> T:
-        dtype_dict = {config.name: config.dtype for config in cls.get_column_config_list()}
+        dtype_dict = {config.name: config.dtype for config in cls.get_column_configs()}
         df = pd.read_csv(filepath, dtype=dtype_dict)
         return cls(df)
 
     @classmethod
     def create_empty_table(cls: Type[T]) -> T:
-        series_dict = {config.name: pd.Series(dtype=config.dtype) for config in cls.get_column_config_list()}
+        series_dict = {config.name: pd.Series(dtype=config.dtype) for config in cls.get_column_configs()}
         df = pd.DataFrame(series_dict)
         return cls(df)
 
@@ -57,7 +57,7 @@ class BaseTable(Generic[E], ABC):
         return self.get_entiry_class().init_from_series(series=matching_df.iloc[0])
 
     def _validate(self, df: pd.DataFrame) -> None:
-        for config in self.get_column_config_list():
+        for config in self.get_column_configs():
             if config.unique and df[config.name].duplicated().any():
                 raise ValueError(f"Column {config.name} has duplicate values")
             if config.non_null and df[config.name].isnull().any():
@@ -65,7 +65,7 @@ class BaseTable(Generic[E], ABC):
 
     @staticmethod
     @abstractmethod
-    def get_column_config_list() -> List[ColumnConfig]:
+    def get_column_configs() -> List[ColumnConfig]:
         raise NotImplementedError("Subclasses must implement this method")
 
     @staticmethod

@@ -25,5 +25,5 @@ class ChatGptMessageEntity(BaseEntity):
         return False
 
     @staticmethod
-    def get_column_name_list() -> List[str]:
+    def get_column_names() -> List[str]:
         return ["role", "name", "content"]

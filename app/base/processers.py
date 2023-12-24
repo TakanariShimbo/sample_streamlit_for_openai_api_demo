@@ -101,14 +101,14 @@ class EarlyStopProcessException(Exception):
 
 
 class BaseProcessersManager(ABC):
-    def __init__(self, processer_class_list: List[Type[BaseProcesser]]) -> None:
-        self._processer_class_list = processer_class_list
+    def __init__(self, processer_classes: List[Type[BaseProcesser]]) -> None:
+        self._processer_classes = processer_classes
         self._is_running = False
         self._inner_dict = {}
         self._outer_dict = {}
 
     def init_processers(self, without_is_running=False) -> None:
-        self._processers = [processer_class() for processer_class in self._processer_class_list]
+        self._processers = [processer_class() for processer_class in self._processer_classes]
         self._inner_dict = {}
         self._outer_dict = {}
         if not without_is_running:

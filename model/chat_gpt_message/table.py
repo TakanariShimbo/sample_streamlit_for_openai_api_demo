@@ -8,7 +8,7 @@ from .. import ColumnConfig, BaseTable
 
 class ChatGptMessageTable(BaseTable[ChatGptMessageEntity]):
     @staticmethod
-    def get_column_config_list() -> List[ColumnConfig]:
+    def get_column_configs() -> List[ColumnConfig]:
         return [
             ColumnConfig(name="role", dtype=pd.StringDtype(), unique=False, non_null=True, readonly=False),
             ColumnConfig(name="name", dtype=pd.StringDtype(), unique=False, non_null=True, readonly=False),
