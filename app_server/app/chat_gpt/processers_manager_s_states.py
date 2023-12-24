@@ -1,5 +1,5 @@
 from .processers import MainProcesser, ProcessersManager
-from .. import BaseSState
+from ..base import BaseSState
 
 
 class ProcessersManagerSState(BaseSState[ProcessersManager]):

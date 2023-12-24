@@ -2,7 +2,7 @@ from textwrap import dedent
 
 import streamlit as st
 
-from .. import BaseComponent
+from ..base import BaseComponent
 
 
 class HomeComponent(BaseComponent):

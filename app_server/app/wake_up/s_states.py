@@ -1,4 +1,4 @@
-from .. import BaseSState
+from ..base import BaseSState
 
 
 class WakeupSState(BaseSState[bool]):

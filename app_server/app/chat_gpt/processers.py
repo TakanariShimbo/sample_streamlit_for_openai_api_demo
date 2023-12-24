@@ -4,7 +4,7 @@ import streamlit as st
 
 from .schema import FormSchema
 from .chat_messages_s_states import ChatMessagesSState
-from .. import BaseProcesser, BaseProcessersManager, EarlyStopProcessException
+from ..base import BaseProcesser, BaseProcessersManager, EarlyStopProcessException
 from controller import ChatGptQueryManager
 
 

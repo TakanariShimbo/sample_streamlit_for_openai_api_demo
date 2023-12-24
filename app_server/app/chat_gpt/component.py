@@ -4,7 +4,7 @@ import streamlit as st
 
 from .processers_manager_s_states import ProcessersManagerSState
 from .chat_messages_s_states import ChatMessagesSState
-from .. import BaseComponent
+from ..base import BaseComponent
 from model import CHAT_GPT_MODEL_TYPE_TABLE
 
 

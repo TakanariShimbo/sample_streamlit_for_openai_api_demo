@@ -1,6 +1,6 @@
 from typing import Any, List
 
-from .. import BaseEntity
+from ..base import BaseEntity
 
 
 class PageTypeEntity(BaseEntity):

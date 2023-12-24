@@ -1,6 +1,7 @@
 import streamlit as st
 
-from . import BasePage, HomeComponent, WakeupComponent, ChatGptComponent
+from .base import BasePage
+from . import HomeComponent, WakeupComponent, ChatGptComponent
 from model import PAGE_TYPE_TABLE
 
 

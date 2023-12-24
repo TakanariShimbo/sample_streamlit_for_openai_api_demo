@@ -3,7 +3,7 @@ from typing import List, Type
 import pandas as pd
 
 from .entity import ChatGptMessageEntity
-from .. import ColumnConfig, BaseTable
+from ..base import ColumnConfig, BaseTable
 
 
 class ChatGptMessageTable(BaseTable[ChatGptMessageEntity]):

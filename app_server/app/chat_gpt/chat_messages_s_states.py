@@ -1,6 +1,6 @@
 import streamlit as st
 
-from .. import BaseSState
+from ..base import BaseSState
 from controller import ChatGptMessagesManager
 
 

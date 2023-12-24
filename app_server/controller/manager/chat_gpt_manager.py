@@ -1,7 +1,7 @@
 from typing import Callable, List
 from uuid import uuid4
 
-from .. import ChatGptHandler, convert_entity_to_message_param
+from ..handler import ChatGptHandler, convert_entity_to_message_param
 from model import ChatGptMessageEntity, ChatGptMessageTable, DEFAULT_OPENAI_API_KEY, DATABASE_ENGINE
 
 
