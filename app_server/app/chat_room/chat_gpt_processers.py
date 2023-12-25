@@ -3,7 +3,7 @@ from typing import Dict, Any, Tuple
 import streamlit as st
 
 from .schema import FormSchema
-from .chat_messages_s_states import ChatRoomSState
+from .chat_room_s_states import ChatRoomSState
 from ..base import BaseProcesser, BaseProcessersManager, EarlyStopProcessException
 from controller import ChatGptManager
 

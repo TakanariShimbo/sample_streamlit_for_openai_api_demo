@@ -11,7 +11,7 @@ class ChatRoomSState(BaseSState[ChatRoomManager]):
 
     @staticmethod
     def get_default() -> ChatRoomManager:
-        return ChatRoomManager.init_as_new()
+        return ChatRoomManager.init_as_continue()
 
     @classmethod
     def add_prompt_and_answer(cls, prompt: str, answer: str, user_id: str = "user", assistant_id: str = "assistant") -> None:

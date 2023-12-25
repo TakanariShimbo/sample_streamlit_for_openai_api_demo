@@ -2,8 +2,8 @@ from textwrap import dedent
 
 import streamlit as st
 
-from .processers_manager_s_states import ChatGptProcesserSState
-from .chat_messages_s_states import ChatRoomSState
+from .chat_gpt_processer_s_states import ChatGptProcesserSState
+from .chat_room_s_states import ChatRoomSState
 from ..base import BaseComponent
 from model import CHAT_GPT_MODEL_TYPE_TABLE
 

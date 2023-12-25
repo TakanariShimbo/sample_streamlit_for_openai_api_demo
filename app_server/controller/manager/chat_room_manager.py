@@ -20,7 +20,7 @@ class ChatRoomManager:
         return cls(chat_message_table=chat_message_table, room_id=room_id)
 
     @classmethod
-    def init_as_continue(cls, room_id: str) -> "ChatRoomManager":
+    def init_as_continue(cls, room_id: str = "b414c711-8635-4d9e-9b15-90e5cbd835a1") -> "ChatRoomManager":
         chat_message_table = ChatMessageTable.load_specified_room_from_database(database_engine=DATABASE_ENGINE, room_id=room_id)
         return cls(chat_message_table=chat_message_table, room_id=room_id)
 
