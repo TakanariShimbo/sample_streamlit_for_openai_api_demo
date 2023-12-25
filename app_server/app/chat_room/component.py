@@ -19,7 +19,7 @@ class ChatRoomComponent(BaseComponent):
         """
         TITLE
         """
-        st.markdown("### 💬 ChatGPT")
+        st.markdown("### 💬 ChatRoom")
 
         """
         Form
