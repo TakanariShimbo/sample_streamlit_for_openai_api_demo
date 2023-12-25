@@ -1,18 +1,18 @@
 import streamlit as st
 
 from .base import BasePage
-from . import HomeComponent, WakeupComponent, ChatGptComponent
+from . import HomeComponent, WakeupComponent, ChatRoomComponent
 from model import PAGE_TYPE_TABLE
 
 
 class MainPage(BasePage):
     @staticmethod
     def get_title() -> str:
-        return "OpenAI API Demo"
+        return "ChatGPT Demo"
 
     @staticmethod
     def get_icon() -> str:
-        return "🤖"
+        return "🧠"
 
     @classmethod
     def main(cls) -> None:
@@ -25,7 +25,7 @@ class MainPage(BasePage):
             key="PageSelectBox",
         )
 
-        if selected_page_entity == PAGE_TYPE_TABLE.get_chat_gpt_entity():
-            ChatGptComponent.display()
+        if selected_page_entity == PAGE_TYPE_TABLE.get_chat_room_entity():
+            ChatRoomComponent.display()
         else:
             HomeComponent.display()

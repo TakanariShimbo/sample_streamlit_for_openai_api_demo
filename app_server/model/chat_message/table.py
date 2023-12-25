@@ -2,11 +2,11 @@ from typing import List, Type
 
 import pandas as pd
 
-from .entity import ChatGptMessageEntity
+from .entity import ChatMessageEntity
 from ..base import ColumnConfig, BaseTable
 
 
-class ChatGptMessageTable(BaseTable[ChatGptMessageEntity]):
+class ChatMessageTable(BaseTable[ChatMessageEntity]):
     @staticmethod
     def get_column_configs() -> List[ColumnConfig]:
         return [
@@ -17,8 +17,8 @@ class ChatGptMessageTable(BaseTable[ChatGptMessageEntity]):
         ]
 
     @staticmethod
-    def get_entiry_class() -> Type[ChatGptMessageEntity]:
-        return ChatGptMessageEntity
+    def get_entiry_class() -> Type[ChatMessageEntity]:
+        return ChatMessageEntity
 
     @staticmethod
     def get_database_table_name() -> str:

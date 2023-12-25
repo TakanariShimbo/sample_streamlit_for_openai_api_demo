@@ -2,24 +2,24 @@ from typing import Callable, List
 from uuid import uuid4
 
 from ..handler import ChatGptHandler, convert_entity_to_message_param
-from model import ChatGptMessageEntity, ChatGptMessageTable, DEFAULT_OPENAI_API_KEY, DATABASE_ENGINE
+from model import ChatMessageEntity, ChatMessageTable, DEFAULT_OPENAI_API_KEY, DATABASE_ENGINE
 
 
-class ChatGptMessagesManager:
+class ChatMessagesManager:
     def __init__(self):
-        self._table = ChatGptMessageTable.create_empty_table()
+        self._table = ChatMessageTable.create_empty_table()
         self._room_id = str(uuid4())
 
     def add_prompt_and_answer(self, prompt: str, answer: str, user_id: str = "user", assistant_id: str = "assistant") -> None:
         prompt_and_answer_entitys = [
-            ChatGptMessageEntity(room_id=self._room_id, role="user", sender_id=user_id, content=prompt),
-            ChatGptMessageEntity(room_id=self._room_id, role="assistant", sender_id=assistant_id, content=answer),
+            ChatMessageEntity(room_id=self._room_id, role="user", sender_id=user_id, content=prompt),
+            ChatMessageEntity(room_id=self._room_id, role="assistant", sender_id=assistant_id, content=answer),
         ]
-        appended_table = ChatGptMessageTable.load_from_entities(entities=prompt_and_answer_entitys)
+        appended_table = ChatMessageTable.load_from_entities(entities=prompt_and_answer_entitys)
         appended_table.save_to_database(database_engine=DATABASE_ENGINE)
-        self._table = ChatGptMessageTable.append_b_to_a(self._table, appended_table)
+        self._table = ChatMessageTable.append_b_to_a(self._table, appended_table)
 
-    def get_all_message_entities(self) -> List[ChatGptMessageEntity]:
+    def get_all_message_entities(self) -> List[ChatMessageEntity]:
         return self._table.get_all_entities()
 
 
@@ -28,7 +28,7 @@ class ChatGptQueryManager:
     def query_streamly_answer_and_display(
         prompt: str,
         model_type: str,
-        message_entities: List[ChatGptMessageEntity],
+        message_entities: List[ChatMessageEntity],
         callback_func: Callable[[str], None],
     ) -> str:
         client = ChatGptHandler.generate_client(api_key=DEFAULT_OPENAI_API_KEY)

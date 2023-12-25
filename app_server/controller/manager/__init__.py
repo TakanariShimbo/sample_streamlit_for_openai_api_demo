@@ -1,1 +1,1 @@
-from .chat_gpt_manager import ChatGptMessagesManager, ChatGptQueryManager
+from .chat_gpt_manager import ChatMessagesManager, ChatGptQueryManager

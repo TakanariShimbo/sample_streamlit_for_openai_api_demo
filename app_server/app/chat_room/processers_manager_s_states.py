@@ -1,15 +1,15 @@
-from .processers import MainProcesser, ProcessersManager
+from .processers import MainProcesser, MainProcessersManager
 from ..base import BaseSState
 
 
-class ProcessersManagerSState(BaseSState[ProcessersManager]):
+class ProcessersManagerSState(BaseSState[MainProcessersManager]):
     @staticmethod
     def get_name() -> str:
-        return "CHAT_GPT_PROCESSERS_MANAGER"
+        return "MAIN_PROCESSERS_MANAGER"
 
     @staticmethod
-    def get_default() -> ProcessersManager:
-        return ProcessersManager([MainProcesser])
+    def get_default() -> MainProcessersManager:
+        return MainProcessersManager([MainProcesser])
 
     @classmethod
     def on_click_run(cls, **kwargs) -> None:

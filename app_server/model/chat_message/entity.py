@@ -3,7 +3,7 @@ from typing import Any, List
 from ..base import BaseEntity
 
 
-class ChatGptMessageEntity(BaseEntity):
+class ChatMessageEntity(BaseEntity):
     def __init__(self, room_id: str, role: str, sender_id: str, content: str) -> None:
         self._room_id = room_id
         self._role = role

@@ -31,7 +31,7 @@ class MainProcesser(BaseProcesser[str]):
         outer_dict["answer_area"].write(content)
 
 
-class ProcessersManager(BaseProcessersManager):
+class MainProcessersManager(BaseProcessersManager):
     def pre_process_for_starting(self, **kwargs) -> Tuple[Dict[str, Any], Dict[str, Any]]:
         outer_dict = {}
         outer_dict["message_area"] = kwargs["message_area"]

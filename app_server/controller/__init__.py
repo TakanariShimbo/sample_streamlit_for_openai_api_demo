@@ -1,2 +1,2 @@
 from .handler import JsonHandler
-from .manager import ChatGptMessagesManager, ChatGptQueryManager
+from .manager import ChatMessagesManager, ChatGptQueryManager

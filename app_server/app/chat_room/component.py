@@ -8,7 +8,7 @@ from ..base import BaseComponent
 from model import CHAT_GPT_MODEL_TYPE_TABLE
 
 
-class ChatGptComponent(BaseComponent):
+class ChatRoomComponent(BaseComponent):
     @classmethod
     def init(cls) -> None:
         ChatMessagesSState.init()

@@ -1,17 +1,17 @@
 import streamlit as st
 
 from ..base import BaseSState
-from controller import ChatGptMessagesManager
+from controller import ChatMessagesManager
 
 
-class ChatMessagesSState(BaseSState[ChatGptMessagesManager]):
+class ChatMessagesSState(BaseSState[ChatMessagesManager]):
     @staticmethod
     def get_name() -> str:
         return "CHAT_GPT_MESSAGES_MANAGER"
 
     @staticmethod
-    def get_default() -> ChatGptMessagesManager:
-        return ChatGptMessagesManager()
+    def get_default() -> ChatMessagesManager:
+        return ChatMessagesManager()
 
     @classmethod
     def add_prompt_and_answer(cls, prompt: str, answer: str, user_id: str = "user", assistant_id: str = "assistant") -> None:

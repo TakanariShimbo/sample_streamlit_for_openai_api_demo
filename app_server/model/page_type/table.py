@@ -26,8 +26,8 @@ class PageTypeTable(BaseTable[PageTypeEntity]):
     def get_home_entity(self) -> PageTypeEntity:
         return self.get_entity(column_name="key", value="home")
 
-    def get_chat_gpt_entity(self) -> PageTypeEntity:
-        return self.get_entity(column_name="key", value="chat_gpt")
+    def get_chat_room_entity(self) -> PageTypeEntity:
+        return self.get_entity(column_name="key", value="chat_room")
 
 
 PAGE_TYPE_TABLE = PageTypeTable.load_from_csv()
