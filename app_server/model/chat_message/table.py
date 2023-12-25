@@ -22,4 +22,4 @@ class ChatMessageTable(BaseTable[ChatMessageEntity]):
 
     @staticmethod
     def get_database_table_name() -> str:
-        return "chat_gpt_messages"
+        return "chat_messages"
