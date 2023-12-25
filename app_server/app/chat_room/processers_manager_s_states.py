@@ -1,15 +1,15 @@
-from .chat_gpt_query_processers import ChatGptQueryProcesser, ChatGptQueryProcesserManager
+from .chat_gpt_processers import ChatGptProcesser, ChatGptProcesserManager
 from ..base import BaseSState
 
 
-class ChatGptQueryProcessSState(BaseSState[ChatGptQueryProcesserManager]):
+class ChatGptProcesserSState(BaseSState[ChatGptProcesserManager]):
     @staticmethod
     def get_name() -> str:
-        return "CHAT_GPT_QUERY_PROCESSER_MANAGER"
+        return "CHAT_GPT_PROCESSER_MANAGER"
 
     @staticmethod
-    def get_default() -> ChatGptQueryProcesserManager:
-        return ChatGptQueryProcesserManager([ChatGptQueryProcesser])
+    def get_default() -> ChatGptProcesserManager:
+        return ChatGptProcesserManager([ChatGptProcesser])
 
     @classmethod
     def on_click_run(cls, **kwargs) -> None:

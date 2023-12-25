@@ -2,8 +2,8 @@ from textwrap import dedent
 
 import streamlit as st
 
-from .processers_manager_s_states import ChatGptQueryProcessSState
-from .chat_messages_s_states import ChatMessagesSState
+from .processers_manager_s_states import ChatGptProcesserSState
+from .chat_messages_s_states import ChatRoomSState
 from ..base import BaseComponent
 from model import CHAT_GPT_MODEL_TYPE_TABLE
 
@@ -11,8 +11,8 @@ from model import CHAT_GPT_MODEL_TYPE_TABLE
 class ChatRoomComponent(BaseComponent):
     @classmethod
     def init(cls) -> None:
-        ChatMessagesSState.init()
-        ChatGptQueryProcessSState.init()
+        ChatRoomSState.init()
+        ChatGptProcesserSState.init()
 
     @classmethod
     def main(cls) -> None:
@@ -57,21 +57,21 @@ class ChatRoomComponent(BaseComponent):
         history_area = st.container(border=True)
         with history_area:
             st.markdown("#### History")
-            ChatMessagesSState.display()
+            ChatRoomSState.display()
 
         if is_run_pushed:
-            ChatGptQueryProcessSState.on_click_run(
+            ChatGptProcesserSState.on_click_run(
                 message_area=message_area,
                 history_area=history_area,
                 chat_gpt_model_entity=selected_chat_gpt_model_entity,
                 prompt=inputed_prompt,
             )
         elif is_rerun_pushed:
-            ChatGptQueryProcessSState.on_click_rerun(
+            ChatGptProcesserSState.on_click_rerun(
                 message_area=message_area,
                 history_area=history_area,
                 chat_gpt_model_entity=selected_chat_gpt_model_entity,
                 prompt=inputed_prompt,
             )
         elif is_cancel_pushed:
-            ChatGptQueryProcessSState.on_click_cancel()
+            ChatGptProcesserSState.on_click_cancel()

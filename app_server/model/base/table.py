@@ -42,6 +42,15 @@ class BaseTable(Generic[E], ABC):
         return cls(df)
 
     @classmethod
+    def load_from_database(cls: Type[T], database_engine: Engine, sql: Optional[str] = None):
+        if sql == None:
+            table_name = cls.get_database_table_name()
+            sql = f"SELECT * FROM {table_name}"
+        dtype_dict = {config.name: config.dtype for config in cls.get_column_configs()}
+        df = pd.read_sql_query(sql=sql, con=database_engine, dtype=dtype_dict)
+        return cls(df)
+
+    @classmethod
     def create_empty_table(cls: Type[T]) -> T:
         series_dict = {config.name: pd.Series(dtype=config.dtype) for config in cls.get_column_configs()}
         df = pd.DataFrame(series_dict)
@@ -66,7 +75,7 @@ class BaseTable(Generic[E], ABC):
 
     def save_to_database(self, database_engine: Engine):
         table_name = self.get_database_table_name()
-        self._df.to_sql(table_name, database_engine, if_exists='append', index=False)
+        self._df.to_sql(name=table_name, con=database_engine, if_exists="append", index=False)
 
     def _validate(self, df: pd.DataFrame) -> None:
         for config in self.get_column_configs():
@@ -92,4 +101,3 @@ class BaseTable(Generic[E], ABC):
     @staticmethod
     def get_database_table_name() -> str:
         raise NotImplementedError("Not implemented")
-

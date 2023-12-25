@@ -3,14 +3,14 @@ from typing import Dict, Any, Tuple
 import streamlit as st
 
 from .schema import FormSchema
-from .chat_messages_s_states import ChatMessagesSState
+from .chat_messages_s_states import ChatRoomSState
 from ..base import BaseProcesser, BaseProcessersManager, EarlyStopProcessException
-from controller import ChatGptQueryManager
+from controller import ChatGptManager
 
 
-class ChatGptQueryProcesser(BaseProcesser[str]):
+class ChatGptProcesser(BaseProcesser[str]):
     def main_process(self, inner_dict: Dict[str, Any]) -> None:
-        inner_dict["answer"] = ChatGptQueryManager.query_streamly_answer_and_display(
+        inner_dict["answer"] = ChatGptManager.query_streamly_answer_and_display(
             prompt=inner_dict["form_schema"].prompt,
             model_type=inner_dict["form_schema"].chat_gpt_model_type,
             callback_func=self.add_queue,
@@ -31,7 +31,7 @@ class ChatGptQueryProcesser(BaseProcesser[str]):
         outer_dict["answer_area"].write(content)
 
 
-class ChatGptQueryProcesserManager(BaseProcessersManager):
+class ChatGptProcesserManager(BaseProcessersManager):
     def pre_process_for_starting(self, **kwargs) -> Tuple[Dict[str, Any], Dict[str, Any]]:
         outer_dict = {}
         outer_dict["message_area"] = kwargs["message_area"]
@@ -40,7 +40,7 @@ class ChatGptQueryProcesserManager(BaseProcessersManager):
         try:
             inner_dict = {}
             inner_dict["form_schema"] = FormSchema.from_entity(chat_gpt_model_entity=kwargs["chat_gpt_model_entity"], prompt=kwargs["prompt"])
-            inner_dict["message_entities"] = ChatMessagesSState.get().get_all_message_entities()
+            inner_dict["message_entities"] = ChatRoomSState.get().get_all_message_entities()
         except:
             outer_dict["message_area"].warning("Please input form corectly.")
             raise EarlyStopProcessException()
@@ -55,7 +55,7 @@ class ChatGptQueryProcesserManager(BaseProcessersManager):
         return outer_dict
 
     def post_process(self, outer_dict: Dict[str, Any], inner_dict: Dict[str, Any]) -> None:
-        ChatMessagesSState.add_prompt_and_answer(
+        ChatRoomSState.add_prompt_and_answer(
             prompt=inner_dict["form_schema"].prompt,
             answer=inner_dict["answer"],
             assistant_id=inner_dict["form_schema"].chat_gpt_model_type,
