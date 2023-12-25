@@ -8,7 +8,7 @@ from ..base import BaseProcesser, BaseProcessersManager, EarlyStopProcessExcepti
 from controller import ChatGptQueryManager
 
 
-class MainProcesser(BaseProcesser[str]):
+class ChatGptQueryProcesser(BaseProcesser[str]):
     def main_process(self, inner_dict: Dict[str, Any]) -> None:
         inner_dict["answer"] = ChatGptQueryManager.query_streamly_answer_and_display(
             prompt=inner_dict["form_schema"].prompt,
@@ -31,7 +31,7 @@ class MainProcesser(BaseProcesser[str]):
         outer_dict["answer_area"].write(content)
 
 
-class MainProcessersManager(BaseProcessersManager):
+class ChatGptQueryProcesserManager(BaseProcessersManager):
     def pre_process_for_starting(self, **kwargs) -> Tuple[Dict[str, Any], Dict[str, Any]]:
         outer_dict = {}
         outer_dict["message_area"] = kwargs["message_area"]

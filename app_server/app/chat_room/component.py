@@ -2,7 +2,7 @@ from textwrap import dedent
 
 import streamlit as st
 
-from .processers_manager_s_states import ProcessersManagerSState
+from .processers_manager_s_states import ChatGptQueryProcessSState
 from .chat_messages_s_states import ChatMessagesSState
 from ..base import BaseComponent
 from model import CHAT_GPT_MODEL_TYPE_TABLE
@@ -12,7 +12,7 @@ class ChatRoomComponent(BaseComponent):
     @classmethod
     def init(cls) -> None:
         ChatMessagesSState.init()
-        ProcessersManagerSState.init()
+        ChatGptQueryProcessSState.init()
 
     @classmethod
     def main(cls) -> None:
@@ -60,18 +60,18 @@ class ChatRoomComponent(BaseComponent):
             ChatMessagesSState.display()
 
         if is_run_pushed:
-            ProcessersManagerSState.on_click_run(
+            ChatGptQueryProcessSState.on_click_run(
                 message_area=message_area,
                 history_area=history_area,
                 chat_gpt_model_entity=selected_chat_gpt_model_entity,
                 prompt=inputed_prompt,
             )
         elif is_rerun_pushed:
-            ProcessersManagerSState.on_click_rerun(
+            ChatGptQueryProcessSState.on_click_rerun(
                 message_area=message_area,
                 history_area=history_area,
                 chat_gpt_model_entity=selected_chat_gpt_model_entity,
                 prompt=inputed_prompt,
             )
         elif is_cancel_pushed:
-            ProcessersManagerSState.on_click_cancel()
+            ChatGptQueryProcessSState.on_click_cancel()

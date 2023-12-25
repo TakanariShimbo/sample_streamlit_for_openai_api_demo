@@ -7,7 +7,7 @@ from controller import ChatMessagesManager
 class ChatMessagesSState(BaseSState[ChatMessagesManager]):
     @staticmethod
     def get_name() -> str:
-        return "CHAT_GPT_MESSAGES_MANAGER"
+        return "CHAT_MESSAGES_MANAGER"
 
     @staticmethod
     def get_default() -> ChatMessagesManager:
