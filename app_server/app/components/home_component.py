@@ -49,10 +49,11 @@ class HomeComponent(BaseComponent):
                 is_create_pushed = st.form_submit_button(label="CREATE", type="primary", use_container_width=True)
 
         if is_create_pushed:
-            chat_messages_manager = CreateProcesserSState.on_click_run(
-                message_area=message_area,
-                title=inputed_title,
-            )
+            with st.spinner("Creating room..."):
+                chat_messages_manager = CreateProcesserSState.on_click_run(
+                    message_area=message_area,
+                    title=inputed_title,
+                )
             if not chat_messages_manager:
                 return
 
