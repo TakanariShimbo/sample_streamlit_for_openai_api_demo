@@ -1,17 +1,17 @@
 import streamlit as st
 
 from ..base import BaseSState
-from controller import ChatRoomManager
+from controller import ChatMessageManager
 
 
-class ChatRoomSState(BaseSState[ChatRoomManager]):
+class ChatRoomSState(BaseSState[ChatMessageManager]):
     @staticmethod
     def get_name() -> str:
         return "CHAT_ROOM_MANAGER"
 
     @staticmethod
-    def get_default() -> ChatRoomManager:
-        return ChatRoomManager.init_as_continue()
+    def get_default() -> ChatMessageManager:
+        return ChatMessageManager.init_as_continue()
 
     @classmethod
     def add_prompt_and_answer(cls, prompt: str, answer: str, user_id: str = "user", assistant_id: str = "assistant") -> None:
