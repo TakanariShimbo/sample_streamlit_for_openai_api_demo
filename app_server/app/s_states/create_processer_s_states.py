@@ -1,8 +1,5 @@
-from typing import Optional
-
 from .create_processers import CreateProcesser, CreateProcesserManager
 from ..base import BaseSState
-from controller import ChatMessagesManager
 
 
 class CreateProcesserSState(BaseSState[CreateProcesserManager]):
@@ -15,9 +12,7 @@ class CreateProcesserSState(BaseSState[CreateProcesserManager]):
         return CreateProcesserManager([CreateProcesser])
 
     @classmethod
-    def on_click_run(cls, **kwargs) -> Optional[ChatMessagesManager]:
+    def on_click_run(cls, **kwargs) -> bool:
         processers_manager = cls.get()
-        processers_manager.run_all(**kwargs)
-        if not "manager" in processers_manager.inner_dict:
-            return None
-        return processers_manager.inner_dict["manager"]
+        is_success = processers_manager.run_all(**kwargs)
+        return is_success

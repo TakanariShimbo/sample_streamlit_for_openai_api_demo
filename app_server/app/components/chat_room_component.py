@@ -57,14 +57,14 @@ class ChatRoomComponent(BaseComponent):
             ChatMessagesSState.display()
 
         if is_run_pushed:
-            QueryProcesserSState.on_click_run(
+            is_success = QueryProcesserSState.on_click_run(
                 message_area=message_area,
                 history_area=history_area,
                 chat_gpt_model_entity=selected_chat_gpt_model_entity,
                 prompt=inputed_prompt,
             )
         elif is_rerun_pushed:
-            QueryProcesserSState.on_click_rerun(
+            is_success = QueryProcesserSState.on_click_rerun(
                 message_area=message_area,
                 history_area=history_area,
                 chat_gpt_model_entity=selected_chat_gpt_model_entity,

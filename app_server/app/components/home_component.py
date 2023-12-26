@@ -48,16 +48,12 @@ class HomeComponent(BaseComponent):
 
         if is_create_pushed:
             with st.spinner("Creating room..."):
-                chat_messages_manager = CreateProcesserSState.on_click_run(
+                is_success = CreateProcesserSState.on_click_run(
                     message_area=message_area,
                     title=inputed_title,
                 )
-            if not chat_messages_manager:
-                return
-
-            ChatMessagesSState.set(value=chat_messages_manager)
-            ComponentSState.set_chat_room_entity()
-            st.rerun()
+            if is_success:
+                st.rerun()
 
     @staticmethod
     def deinit() -> None:

@@ -122,7 +122,7 @@ class BaseProcessersManager(ABC):
         if not without_is_running:
             self._is_running = False
 
-    def run_all(self, **kwargs) -> None:
+    def run_all(self, **kwargs) -> bool:
         is_running = self._is_running
         self._is_running = True
 
@@ -133,7 +133,7 @@ class BaseProcessersManager(ABC):
                 self._outer_dict, self._inner_dict = self.pre_process_for_starting(**kwargs)
             except EarlyStopProcessException:
                 self._is_running = False
-                return
+                return False
         else:
             self._outer_dict = self.pre_process_for_running(**kwargs)
 
@@ -145,6 +145,7 @@ class BaseProcessersManager(ABC):
         self.post_process(self._outer_dict, self._inner_dict)
 
         self._is_running = False
+        return True
 
     @abstractmethod
     def pre_process_for_starting(self, **kwargs) -> Tuple[Dict[str, Any], Dict[str, Any]]:
