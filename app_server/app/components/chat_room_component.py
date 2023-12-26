@@ -11,8 +11,8 @@ class ChatRoomComponent(BaseComponent):
         ChatMessagesSState.init()
         QueryProcesserSState.init()
 
-    @staticmethod
-    def main() -> None:
+    @classmethod
+    def main(cls) -> None:
         """
         TITLE
         """

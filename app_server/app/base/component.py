@@ -12,9 +12,9 @@ class BaseComponent(ABC):
     def init() -> None:
         raise NotImplementedError("Subclasses must implement this method")
 
-    @staticmethod
+    @classmethod
     @abstractmethod
-    def main() -> None:
+    def main(cls) -> None:
         raise NotImplementedError("Subclasses must implement this method")
 
     @staticmethod

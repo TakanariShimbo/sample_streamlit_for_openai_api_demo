@@ -16,8 +16,8 @@ class WakeupComponent(BaseComponent):
     def init() -> None:
         pass
 
-    @staticmethod
-    def main() -> None:
+    @classmethod
+    def main(cls) -> None:
         st_lottie(WAKE_UP_LOGO, key="WakeUpLogo", speed=1.2, reverse=False, loop=False)
         sleep(4)
         ComponentSState.set_home_entity()

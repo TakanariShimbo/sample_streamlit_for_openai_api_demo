@@ -11,8 +11,8 @@ class HomeComponent(BaseComponent):
     def init() -> None:
         CreateProcesserSState.init()
 
-    @staticmethod
-    def main() -> None:
+    @classmethod
+    def main(cls) -> None:
         """
         TITLE
         """
@@ -53,6 +53,7 @@ class HomeComponent(BaseComponent):
                     title=inputed_title,
                 )
             if is_success:
+                cls.deinit()
                 st.rerun()
 
     @staticmethod
