@@ -3,8 +3,8 @@ from time import sleep
 import streamlit as st
 from streamlit_lottie import st_lottie
 
-from .s_states import WakeupSState
 from ..base import BaseComponent
+from ..wake_up import WakeupSState
 from controller import JsonHandler
 
 

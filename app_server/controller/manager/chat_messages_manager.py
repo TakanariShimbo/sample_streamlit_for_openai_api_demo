@@ -4,13 +4,13 @@ from uuid import uuid4
 from model import ChatRoomEntity, ChatRoomTable, ChatMessageEntity, ChatMessageTable, DATABASE_ENGINE
 
 
-class ChatMessageManager:
+class ChatMessagesManager:
     def __init__(self, chat_message_table: ChatMessageTable, room_id: str):
         self._table = chat_message_table
         self._room_id = room_id
 
     @classmethod
-    def init_as_new(cls, room_title: str = "sample") -> "ChatMessageManager":
+    def init_as_new(cls, room_title: str = "sample") -> "ChatMessagesManager":
         room_id = str(uuid4())
         chat_room_entity = ChatRoomEntity(room_id=room_id, title=room_title)
         room_table = ChatRoomTable.load_from_entities(entities=[chat_room_entity])
@@ -20,7 +20,7 @@ class ChatMessageManager:
         return cls(chat_message_table=chat_message_table, room_id=room_id)
 
     @classmethod
-    def init_as_continue(cls, room_id: str = "b414c711-8635-4d9e-9b15-90e5cbd835a1") -> "ChatMessageManager":
+    def init_as_continue(cls, room_id: str = "b414c711-8635-4d9e-9b15-90e5cbd835a1") -> "ChatMessagesManager":
         chat_message_table = ChatMessageTable.load_specified_room_from_database(database_engine=DATABASE_ENGINE, room_id=room_id)
         return cls(chat_message_table=chat_message_table, room_id=room_id)
 

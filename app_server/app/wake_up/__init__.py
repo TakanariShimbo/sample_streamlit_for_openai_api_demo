@@ -1,1 +1,1 @@
-from .component import WakeupComponent
+from .wake_up_s_states import WakeupSState

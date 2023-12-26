@@ -1,17 +1,14 @@
-from textwrap import dedent
-
 import streamlit as st
 
-from .chat_gpt_processer_s_states import ChatGptProcesserSState
-from .chat_room_s_states import ChatRoomSState
 from ..base import BaseComponent
+from ..chat_room import ChatGptProcesserSState, ChatMessagesSState
 from model import CHAT_GPT_MODEL_TYPE_TABLE
 
 
 class ChatRoomComponent(BaseComponent):
     @classmethod
     def init(cls) -> None:
-        ChatRoomSState.init()
+        ChatMessagesSState.init()
         ChatGptProcesserSState.init()
 
     @classmethod
@@ -57,7 +54,7 @@ class ChatRoomComponent(BaseComponent):
         history_area = st.container(border=True)
         with history_area:
             st.markdown("#### History")
-            ChatRoomSState.display()
+            ChatMessagesSState.display()
 
         if is_run_pushed:
             ChatGptProcesserSState.on_click_run(
