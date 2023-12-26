@@ -6,12 +6,12 @@ from ..base import BaseComponent
 
 
 class HomeComponent(BaseComponent):
-    @classmethod
-    def init(cls) -> None:
+    @staticmethod
+    def init() -> None:
         pass
 
-    @classmethod
-    def main(cls) -> None:
+    @staticmethod
+    def main() -> None:
         content = dedent(
             f"""
             ### 🏠 Home  

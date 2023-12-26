@@ -6,13 +6,13 @@ from model import CHAT_GPT_MODEL_TYPE_TABLE
 
 
 class ChatRoomComponent(BaseComponent):
-    @classmethod
-    def init(cls) -> None:
+    @staticmethod
+    def init() -> None:
         ChatMessagesSState.init()
         ChatGptProcesserSState.init()
 
-    @classmethod
-    def main(cls) -> None:
+    @staticmethod
+    def main() -> None:
         """
         TITLE
         """
