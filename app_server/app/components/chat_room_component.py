@@ -1,7 +1,7 @@
 import streamlit as st
 
 from ..base import BaseComponent
-from ..chat_room import ChatGptProcesserSState, ChatMessagesSState
+from ..chat_room import QueryProcesserSState, ChatMessagesSState
 from model import CHAT_GPT_MODEL_TYPE_TABLE
 
 
@@ -9,7 +9,7 @@ class ChatRoomComponent(BaseComponent):
     @staticmethod
     def init() -> None:
         ChatMessagesSState.init()
-        ChatGptProcesserSState.init()
+        QueryProcesserSState.init()
 
     @staticmethod
     def main() -> None:
@@ -21,7 +21,7 @@ class ChatRoomComponent(BaseComponent):
         """
         Form
         """
-        form_area = st.form(key="Form")
+        form_area = st.form(key="QueryForm")
         with form_area:
             st.markdown("#### Form")
 
@@ -35,7 +35,7 @@ class ChatRoomComponent(BaseComponent):
             inputed_prompt = st.text_area(
                 label="Prompt",
                 placeholder="Input prompt here.",
-                key="ChatGptTextArea",
+                key="PromptTextArea",
             )
 
             message_area = st.empty()
@@ -57,23 +57,23 @@ class ChatRoomComponent(BaseComponent):
             ChatMessagesSState.display()
 
         if is_run_pushed:
-            ChatGptProcesserSState.on_click_run(
+            QueryProcesserSState.on_click_run(
                 message_area=message_area,
                 history_area=history_area,
                 chat_gpt_model_entity=selected_chat_gpt_model_entity,
                 prompt=inputed_prompt,
             )
         elif is_rerun_pushed:
-            ChatGptProcesserSState.on_click_rerun(
+            QueryProcesserSState.on_click_rerun(
                 message_area=message_area,
                 history_area=history_area,
                 chat_gpt_model_entity=selected_chat_gpt_model_entity,
                 prompt=inputed_prompt,
             )
         elif is_cancel_pushed:
-            ChatGptProcesserSState.on_click_cancel()
+            QueryProcesserSState.on_click_cancel()
 
     @staticmethod
     def deinit() -> None:
         ChatMessagesSState.deinit()
-        ChatGptProcesserSState.deinit()
+        QueryProcesserSState.deinit()

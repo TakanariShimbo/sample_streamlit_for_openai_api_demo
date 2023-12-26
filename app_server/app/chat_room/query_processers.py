@@ -2,13 +2,13 @@ from typing import Dict, Any, Tuple
 
 import streamlit as st
 
-from .chat_form_schema import ChatFormSchema
+from .query_form_schema import QueryFormSchema
 from .chat_messages_s_states import ChatMessagesSState
 from ..base import BaseProcesser, BaseProcessersManager, EarlyStopProcessException
 from controller import ChatGptManager
 
 
-class ChatGptProcesser(BaseProcesser[str]):
+class QueryProcesser(BaseProcesser[str]):
     def main_process(self, inner_dict: Dict[str, Any]) -> None:
         inner_dict["answer"] = ChatGptManager.query_streamly_answer_and_display(
             prompt=inner_dict["form_schema"].prompt,
@@ -31,7 +31,7 @@ class ChatGptProcesser(BaseProcesser[str]):
         outer_dict["answer_area"].write(content)
 
 
-class ChatGptProcesserManager(BaseProcessersManager):
+class QueryProcesserManager(BaseProcessersManager):
     def pre_process_for_starting(self, **kwargs) -> Tuple[Dict[str, Any], Dict[str, Any]]:
         outer_dict = {}
         outer_dict["message_area"] = kwargs["message_area"]
@@ -39,7 +39,7 @@ class ChatGptProcesserManager(BaseProcessersManager):
 
         try:
             inner_dict = {}
-            inner_dict["form_schema"] = ChatFormSchema.from_entity(chat_gpt_model_entity=kwargs["chat_gpt_model_entity"], prompt=kwargs["prompt"])
+            inner_dict["form_schema"] = QueryFormSchema.from_entity(chat_gpt_model_entity=kwargs["chat_gpt_model_entity"], prompt=kwargs["prompt"])
             inner_dict["message_entities"] = ChatMessagesSState.get().get_all_message_entities()
         except:
             outer_dict["message_area"].warning("Please input form corectly.")

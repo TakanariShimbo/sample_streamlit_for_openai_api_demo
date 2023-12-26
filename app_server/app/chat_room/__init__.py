@@ -1,2 +1,2 @@
-from .chat_gpt_processer_s_states import ChatGptProcesserSState
+from .query_processer_s_states import QueryProcesserSState
 from .chat_messages_s_states import ChatMessagesSState
