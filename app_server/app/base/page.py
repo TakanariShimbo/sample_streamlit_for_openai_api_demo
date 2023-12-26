@@ -8,6 +8,7 @@ class BasePage(ABC):
     @classmethod
     def display(cls) -> None:
         cls.set_config(title=cls.get_title(), icon=cls.get_icon())
+        cls.init()
         cls.main()
 
     @staticmethod
@@ -41,7 +42,12 @@ class BasePage(ABC):
     def get_icon() -> str:
         raise NotImplementedError("Subclasses must implement this method")
 
-    @classmethod
+    @staticmethod
     @abstractmethod
-    def main(cls) -> None:
+    def init() -> None:
+        raise NotImplementedError("Subclasses must implement this method")
+
+    @staticmethod
+    @abstractmethod
+    def main() -> None:
         raise NotImplementedError("Subclasses must implement this method")

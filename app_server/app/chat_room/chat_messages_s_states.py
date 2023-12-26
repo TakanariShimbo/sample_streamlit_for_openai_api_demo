@@ -9,10 +9,6 @@ class ChatMessagesSState(BaseSState[ChatMessagesManager]):
     def get_name() -> str:
         return "CHAT_ROOM_MANAGER"
 
-    @staticmethod
-    def get_default() -> ChatMessagesManager:
-        return ChatMessagesManager.init_as_continue()
-
     @classmethod
     def add_prompt_and_answer(cls, prompt: str, answer: str, user_id: str = "user", assistant_id: str = "assistant") -> None:
         manager = cls.get()

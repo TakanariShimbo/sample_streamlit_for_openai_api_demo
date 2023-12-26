@@ -3,7 +3,7 @@ from typing import Any, List
 from ..base import BaseEntity
 
 
-class PageTypeEntity(BaseEntity):
+class ComponentTypeEntity(BaseEntity):
     def __init__(self, key: str, label_en: str, label_jp: str):
         self._key = key
         self._label_en = label_en
@@ -22,7 +22,7 @@ class PageTypeEntity(BaseEntity):
         return self._label_jp
 
     def check_is_same(self, other: Any) -> bool:
-        if not isinstance(other, PageTypeEntity):
+        if not isinstance(other, ComponentTypeEntity):
             return False
         return self.key == other.key
 
