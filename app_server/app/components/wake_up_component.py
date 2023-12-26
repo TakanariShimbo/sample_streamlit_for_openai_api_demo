@@ -4,7 +4,7 @@ import streamlit as st
 from streamlit_lottie import st_lottie
 
 from ..base import BaseComponent
-from ..main import ComponentSState
+from ..s_states import ComponentSState
 from controller import JsonHandler
 
 

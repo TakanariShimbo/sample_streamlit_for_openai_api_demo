@@ -1,7 +1,7 @@
 import streamlit as st
 
 from .base import BasePage
-from .main import ComponentSState
+from .s_states import ComponentSState
 from .components import HomeComponent, WakeupComponent, ChatRoomComponent
 from model import COMPONENT_TYPE_TABLE
 
@@ -28,10 +28,3 @@ class MainPage(BasePage):
             ChatRoomComponent.display()
         else:
             HomeComponent.display()
-
-        # selected_page_entity = st.sidebar.selectbox(
-        #     label="Pages Selection",
-        #     options=COMPONENT_TYPE_TABLE.get_all_entities(),
-        #     format_func=lambda x: x.label_en,
-        #     key="PageSelectBox",
-        # )

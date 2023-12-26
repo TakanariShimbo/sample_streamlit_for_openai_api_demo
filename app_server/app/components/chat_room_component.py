@@ -1,7 +1,7 @@
 import streamlit as st
 
 from ..base import BaseComponent
-from ..chat_room import QueryProcesserSState, ChatMessagesSState
+from ..s_states import QueryProcesserSState, ChatMessagesSState
 from model import CHAT_GPT_MODEL_TYPE_TABLE
 
 

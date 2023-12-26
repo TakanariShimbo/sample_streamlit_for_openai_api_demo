@@ -3,9 +3,7 @@ from textwrap import dedent
 import streamlit as st
 
 from ..base import BaseComponent
-from ..main import ComponentSState
-from ..home import CreateProcesserSState
-from ..chat_room import ChatMessagesSState
+from ..s_states import ComponentSState, CreateProcesserSState, ChatMessagesSState
 
 
 class HomeComponent(BaseComponent):
