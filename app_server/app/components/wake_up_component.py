@@ -23,3 +23,6 @@ class WakeupComponent(BaseComponent):
         ComponentSState.set_home_entity()
         st.rerun()
 
+    @staticmethod
+    def deinit() -> None:
+        pass

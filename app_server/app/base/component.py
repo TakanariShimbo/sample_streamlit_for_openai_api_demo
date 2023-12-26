@@ -16,3 +16,8 @@ class BaseComponent(ABC):
     @abstractmethod
     def main() -> None:
         raise NotImplementedError("Subclasses must implement this method")
+
+    @staticmethod
+    @abstractmethod
+    def deinit() -> None:
+        raise NotImplementedError("Subclasses must implement this method")

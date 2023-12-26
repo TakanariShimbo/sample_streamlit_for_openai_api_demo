@@ -25,3 +25,7 @@ class HomeComponent(BaseComponent):
             """
         )
         st.markdown(content)
+
+    @staticmethod
+    def deinit() -> None:
+        pass

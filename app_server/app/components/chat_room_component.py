@@ -72,3 +72,8 @@ class ChatRoomComponent(BaseComponent):
             )
         elif is_cancel_pushed:
             ChatGptProcesserSState.on_click_cancel()
+
+    @staticmethod
+    def deinit() -> None:
+        ChatMessagesSState.deinit()
+        ChatGptProcesserSState.deinit()
