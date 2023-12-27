@@ -4,8 +4,9 @@ import streamlit as st
 from streamlit_lottie import st_lottie_spinner
 
 from ..base import BaseComponent
-from ..s_states import CreateProcesserSState
-from controller import LottieManager
+from ..s_states import CreateProcesserSState, ChatMessagesSState, ComponentSState
+from controller import LottieManager, ChatMessagesManager
+from model import ChatRoomTable, DATABASE_ENGINE
 
 
 class HomeComponent(BaseComponent):
@@ -55,7 +56,18 @@ class HomeComponent(BaseComponent):
         """
         ENTER FORMS
         """
+        N = 5
+        selected_room_entity = None
         st.markdown("#### Enter Room")
+        chat_room_table = ChatRoomTable.load_from_database(database_engine=DATABASE_ENGINE)
+        for i, chat_room_entity in enumerate(chat_room_table.get_all_entities()[::-1][:N]):
+            with st.container(border=True):
+                title_area, button_area = st.columns([3, 1])
+                title_area.markdown(f"##### 📝 {chat_room_entity.title}")
+                is_pushed = button_area.button(label="ENTER", key=f"RoomEnterButton{i}", use_container_width=True)
+                if is_pushed:
+                    selected_room_entity = chat_room_entity
+                
 
         """
         CREATE PROCESS
@@ -68,6 +80,18 @@ class HomeComponent(BaseComponent):
                         title=inputed_title,
                     )
                 if is_success:
+                    cls.deinit()
+                    st.rerun()
+
+        """
+        CREATE PROCESS
+        """
+        if selected_room_entity != None:
+            with loading_area:
+                with st_lottie_spinner(animation_source=LottieManager.LOADING):
+                    chat_messages_manager = ChatMessagesManager.init_as_continue(room_id=selected_room_entity.room_id)
+                    ChatMessagesSState.set(value=chat_messages_manager)
+                    ComponentSState.set_chat_room_entity()
                     cls.deinit()
                     st.rerun()
 
