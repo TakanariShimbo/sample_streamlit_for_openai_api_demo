@@ -5,10 +5,7 @@ from streamlit_lottie import st_lottie
 
 from ..base import BaseComponent
 from ..s_states import ComponentSState
-from controller import JsonHandler
-
-
-WAKE_UP_LOGO = JsonHandler.load("./static/lotties/streamlit_logo.json")
+from controller import LottieManager
 
 
 class WakeupComponent(BaseComponent):
@@ -18,7 +15,7 @@ class WakeupComponent(BaseComponent):
 
     @classmethod
     def main(cls) -> None:
-        st_lottie(WAKE_UP_LOGO, key="WakeUpLogo", speed=1.2, reverse=False, loop=False)
+        st_lottie(LottieManager.WAKE_UP_LOGO, key="WakeUpLogo", speed=1.2, reverse=False, loop=False)
         sleep(4)
         ComponentSState.set_home_entity()
         st.rerun()

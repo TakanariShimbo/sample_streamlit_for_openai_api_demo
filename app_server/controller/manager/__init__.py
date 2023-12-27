@@ -1,2 +1,3 @@
+from .lottie_manager import LottieManager
 from .chat_messages_manager import ChatMessagesManager
 from .chat_gpt_manager import ChatGptManager
