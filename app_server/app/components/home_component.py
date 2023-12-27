@@ -22,8 +22,10 @@ class HomeComponent(BaseComponent):
             f"""
             ### 🏠 Home
             
-            #### About
-            Welcome to demo site of ChatGPT 🧠  
+            #### Overview
+            Welcome to demo site of ChatGPT.   
+            Experience the forefront of AI technology and explore the possibilities of the future.  
+            AI makes your daily life smarter and easier.  
             """
         )
 
@@ -32,9 +34,9 @@ class HomeComponent(BaseComponent):
         """
         Form
         """
-        form_area = st.form(key="CreateForm")
+        form_area = st.form(key="CreateForm", border=False)
         with form_area:
-            st.markdown("#### Form")
+            st.markdown("#### Create Room")
 
             inputed_title = st.text_input(
                 label="Title",
