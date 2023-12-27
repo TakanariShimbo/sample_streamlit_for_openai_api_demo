@@ -16,7 +16,7 @@ class HomeComponent(BaseComponent):
     @classmethod
     def main(cls) -> None:
         """
-        TITLE
+        TITLE AND OVERVIEW
         """
         content = dedent(
             f"""
@@ -32,10 +32,10 @@ class HomeComponent(BaseComponent):
         st.markdown(content)
 
         """
-        Form
+        CREATE FORM
         """
-        form_area = st.form(key="CreateForm", border=False)
-        with form_area:
+        create_form = st.form(key="CreateForm", border=False)
+        with create_form:
             st.markdown("#### Create Room")
 
             inputed_title = st.text_input(
@@ -52,6 +52,14 @@ class HomeComponent(BaseComponent):
 
             _, loading_area, _ = st.columns([1, 1, 1])
 
+        """
+        ENTER FORMS
+        """
+        st.markdown("#### Enter Room")
+
+        """
+        CREATE PROCESS
+        """
         if is_create_pushed:
             with loading_area:
                 with st_lottie_spinner(animation_source=LottieManager.LOADING):
