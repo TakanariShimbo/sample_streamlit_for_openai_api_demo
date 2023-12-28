@@ -1,8 +1,53 @@
+from typing import Optional
+
 import streamlit as st
+from streamlit.delta_generator import DeltaGenerator
 
 from ..base import BaseComponent
 from ..s_states import QueryProcesserSState, ChatMessagesSState
-from model import CHAT_GPT_MODEL_TYPE_TABLE
+from model import CHAT_GPT_MODEL_TYPE_TABLE, ChatGptModelTypeEntity
+
+
+class FormContents:
+    def __init__(
+        self,
+        chat_gpt_model_entity: Optional[ChatGptModelTypeEntity],
+        prompt: str,
+        message_area: DeltaGenerator,
+        is_run_pushed: bool,
+        is_rerun_pushed: bool,
+        is_cancel_pushed: bool,
+    ) -> None:
+        self._chat_gpt_model_entity = chat_gpt_model_entity
+        self._prompt = prompt
+        self._message_area = message_area
+        self._is_run_pushed = is_run_pushed
+        self._is_rerun_pushed = is_rerun_pushed
+        self._is_cancel_pushed = is_cancel_pushed
+
+    @property
+    def chat_gpt_model_entity(self):
+        return self._chat_gpt_model_entity
+
+    @property
+    def prompt(self):
+        return self._prompt
+
+    @property
+    def message_area(self):
+        return self._message_area
+
+    @property
+    def is_run_pushed(self):
+        return self._is_run_pushed
+
+    @property
+    def is_rerun_pushed(self):
+        return self._is_rerun_pushed
+
+    @property
+    def is_cancel_pushed(self):
+        return self._is_cancel_pushed
 
 
 class ChatRoomComponent(BaseComponent):
@@ -11,16 +56,12 @@ class ChatRoomComponent(BaseComponent):
         ChatMessagesSState.init()
         QueryProcesserSState.init()
 
-    @classmethod
-    def main(cls) -> None:
-        """
-        TITLE
-        """
+    @staticmethod
+    def _display_title() -> None:
         st.markdown("### 💬 ChatRoom")
 
-        """
-        Form
-        """
+    @staticmethod
+    def _display_form_and_get_content() -> FormContents:
         form_area = st.form(key="QueryForm")
         with form_area:
             st.markdown("#### Form")
@@ -48,30 +89,48 @@ class ChatRoomComponent(BaseComponent):
             with right_area:
                 is_cancel_pushed = st.form_submit_button(label="CANCEL", type="secondary", use_container_width=True)
 
-        """
-        History
-        """
+        return FormContents(
+            chat_gpt_model_entity=selected_chat_gpt_model_entity,
+            prompt=inputed_prompt,
+            message_area=message_area,
+            is_run_pushed=is_run_pushed,
+            is_rerun_pushed=is_rerun_pushed,
+            is_cancel_pushed=is_cancel_pushed,
+        )
+
+    @staticmethod
+    def _display_history() -> DeltaGenerator:
         history_area = st.container(border=True)
         with history_area:
             st.markdown("#### History")
             ChatMessagesSState.display()
+        return history_area
 
-        if is_run_pushed:
-            is_success = QueryProcesserSState.on_click_run(
-                message_area=message_area,
+    @staticmethod
+    def _run_query_process(form_contents: FormContents, history_area: DeltaGenerator) -> None:
+        if form_contents.is_run_pushed:
+            QueryProcesserSState.on_click_run(
+                message_area=form_contents.message_area,
                 history_area=history_area,
-                chat_gpt_model_entity=selected_chat_gpt_model_entity,
-                prompt=inputed_prompt,
+                chat_gpt_model_entity=form_contents.chat_gpt_model_entity,
+                prompt=form_contents.prompt,
             )
-        elif is_rerun_pushed:
-            is_success = QueryProcesserSState.on_click_rerun(
-                message_area=message_area,
+        elif form_contents.is_rerun_pushed:
+            QueryProcesserSState.on_click_rerun(
+                message_area=form_contents.message_area,
                 history_area=history_area,
-                chat_gpt_model_entity=selected_chat_gpt_model_entity,
-                prompt=inputed_prompt,
+                chat_gpt_model_entity=form_contents.chat_gpt_model_entity,
+                prompt=form_contents.prompt,
             )
-        elif is_cancel_pushed:
+        elif form_contents.is_cancel_pushed:
             QueryProcesserSState.on_click_cancel()
+
+    @classmethod
+    def main(cls) -> None:
+        cls._display_title()
+        form_contents = cls._display_form_and_get_content()
+        history_area = cls._display_history()
+        cls._run_query_process(form_contents=form_contents, history_area=history_area)
 
     @staticmethod
     def deinit() -> None:
