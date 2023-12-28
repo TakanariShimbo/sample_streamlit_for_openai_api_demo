@@ -23,8 +23,8 @@ class MainPage(BasePage):
     def main() -> None:
         current_component_entity = ComponentSState.get()
         if current_component_entity == COMPONENT_TYPE_TABLE.get_wake_up_entity():
-            WakeupComponent.display()
+            WakeupComponent.run()
         elif current_component_entity == COMPONENT_TYPE_TABLE.get_chat_room_entity():
-            ChatRoomComponent.display()
+            ChatRoomComponent.run()
         else:
-            HomeComponent.display()
+            HomeComponent.run()

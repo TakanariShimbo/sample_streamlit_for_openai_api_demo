@@ -3,7 +3,7 @@ from abc import ABC, abstractmethod
 
 class BaseComponent(ABC):
     @classmethod
-    def display(cls) -> None:
+    def run(cls) -> None:
         cls.init()
         cls.main()
 
