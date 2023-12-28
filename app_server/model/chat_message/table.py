@@ -15,6 +15,7 @@ class ChatMessageTable(BaseTable[ChatMessageEntity]):
             ColumnConfig(name="role", dtype=pd.StringDtype(), unique=False, non_null=True, readonly=False),
             ColumnConfig(name="account_id", dtype=pd.StringDtype(), unique=False, non_null=True, readonly=False),
             ColumnConfig(name="content", dtype=pd.StringDtype(), unique=False, non_null=True, readonly=False),
+            ColumnConfig(name="sent_at", dtype=pd.StringDtype(), unique=False, non_null=False, readonly=True),
         ]
 
     @staticmethod

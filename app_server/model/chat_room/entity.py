@@ -4,7 +4,7 @@ from ..base import BaseEntity
 
 
 class ChatRoomEntity(BaseEntity):
-    def __init__(self, room_id: str, account_id:str, title: str, created_at: Optional[str] = None) -> None:
+    def __init__(self, room_id: str, account_id: str, title: str, created_at: Optional[str] = None) -> None:
         self._room_id = room_id
         self._account_id = account_id
         self._title = title
@@ -13,7 +13,7 @@ class ChatRoomEntity(BaseEntity):
     @property
     def room_id(self) -> str:
         return self._room_id
-    
+
     @property
     def account_id(self) -> str:
         return self._account_id
@@ -21,7 +21,7 @@ class ChatRoomEntity(BaseEntity):
     @property
     def title(self) -> str:
         return self._title
-    
+
     @property
     def created_at(self) -> Optional[str]:
         created_at = self._created_at
