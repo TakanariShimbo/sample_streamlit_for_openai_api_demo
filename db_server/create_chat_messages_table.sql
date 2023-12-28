@@ -5,7 +5,9 @@
 
 CREATE TABLE chat_rooms (
     room_id VARCHAR(255) PRIMARY KEY,
+    account_id VARCHAR(255) NOT NULL,
     title VARCHAR(255) NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
 CREATE TABLE chat_messages (

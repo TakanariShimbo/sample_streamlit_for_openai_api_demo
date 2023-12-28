@@ -75,7 +75,8 @@ class BaseTable(Generic[E], ABC):
 
     def save_to_database(self, database_engine: Engine):
         table_name = self.get_database_table_name()
-        self._df.to_sql(name=table_name, con=database_engine, if_exists="append", index=False)
+        columns = [config.name for config in self.get_column_configs() if not config.readonly]
+        self._df.loc[:, columns].to_sql(name=table_name, con=database_engine, if_exists="append", index=False)
 
     def _validate(self, df: pd.DataFrame) -> None:
         for config in self.get_column_configs():
