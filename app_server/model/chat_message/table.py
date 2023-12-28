@@ -13,7 +13,7 @@ class ChatMessageTable(BaseTable[ChatMessageEntity]):
         return [
             ColumnConfig(name="room_id", dtype=pd.StringDtype(), unique=False, non_null=True, readonly=False),
             ColumnConfig(name="role", dtype=pd.StringDtype(), unique=False, non_null=True, readonly=False),
-            ColumnConfig(name="sender_id", dtype=pd.StringDtype(), unique=False, non_null=True, readonly=False),
+            ColumnConfig(name="account_id", dtype=pd.StringDtype(), unique=False, non_null=True, readonly=False),
             ColumnConfig(name="content", dtype=pd.StringDtype(), unique=False, non_null=True, readonly=False),
         ]
 

@@ -20,5 +20,5 @@ class ChatMessagesSState(BaseSState[ChatMessagesManager]):
         for message_entity in chat_messages_manager.get_all_message_entities():
             if message_entity.role == "system":
                 continue
-            with st.chat_message(name=message_entity.sender_id):
+            with st.chat_message(name=message_entity.account_id):
                 st.write(message_entity.content)

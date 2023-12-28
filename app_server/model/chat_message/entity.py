@@ -4,10 +4,10 @@ from ..base import BaseEntity
 
 
 class ChatMessageEntity(BaseEntity):
-    def __init__(self, room_id: str, role: str, sender_id: str, content: str) -> None:
+    def __init__(self, room_id: str, role: str, account_id: str, content: str) -> None:
         self._room_id = room_id
         self._role = role
-        self._sender_id = sender_id
+        self._account_id = account_id
         self._content = content
 
     @property
@@ -19,8 +19,8 @@ class ChatMessageEntity(BaseEntity):
         return self._role
 
     @property
-    def sender_id(self) -> str:
-        return self._sender_id
+    def account_id(self) -> str:
+        return self._account_id
 
     @property
     def content(self) -> str:
@@ -31,4 +31,4 @@ class ChatMessageEntity(BaseEntity):
 
     @staticmethod
     def get_column_names() -> List[str]:
-        return ["room_id", "role", "sender_id", "content"]
+        return ["room_id", "role", "account_id", "content"]

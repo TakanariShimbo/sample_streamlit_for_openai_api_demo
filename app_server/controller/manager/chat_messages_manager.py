@@ -26,8 +26,8 @@ class ChatMessagesManager:
 
     def add_prompt_and_answer(self, prompt: str, answer: str, user_id: str = "user", assistant_id: str = "assistant") -> None:
         prompt_and_answer_entitys = [
-            ChatMessageEntity(room_id=self._room_id, role="user", sender_id=user_id, content=prompt),
-            ChatMessageEntity(room_id=self._room_id, role="assistant", sender_id=assistant_id, content=answer),
+            ChatMessageEntity(room_id=self._room_id, role="user", account_id=user_id, content=prompt),
+            ChatMessageEntity(room_id=self._room_id, role="assistant", account_id=assistant_id, content=answer),
         ]
         appended_table = ChatMessageTable.load_from_entities(entities=prompt_and_answer_entitys)
         appended_table.save_to_database(database_engine=DATABASE_ENGINE)
