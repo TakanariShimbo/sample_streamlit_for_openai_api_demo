@@ -1,7 +1,8 @@
--- CREATE TABLE accounts (
---     account_id VARCHAR(255) PRIMARY KEY,
---     password VARCHAR(255) NOT NULL,
--- );
+CREATE TABLE accounts (
+    account_id VARCHAR(255) PRIMARY KEY,
+    hashed_password VARCHAR(255) NOT NULL,
+    registered_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
 
 CREATE TABLE chat_rooms (
     room_id VARCHAR(255) PRIMARY KEY,
