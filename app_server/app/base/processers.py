@@ -142,10 +142,10 @@ class BaseProcessersManager(ABC):
             processer.start_and_wait_to_complete(self._outer_dict, self._inner_dict)
 
         # run post-process
-        self.post_process(self._outer_dict, self._inner_dict)
+        is_success = self.post_process(self._outer_dict, self._inner_dict)
 
         self._is_running = False
-        return True
+        return is_success
 
     @abstractmethod
     def pre_process_for_starting(self, **kwargs) -> Tuple[Dict[str, Any], Dict[str, Any]]:
@@ -156,5 +156,5 @@ class BaseProcessersManager(ABC):
         raise NotImplementedError("Subclasses must implement this method")
 
     @abstractmethod
-    def post_process(self, outer_dict: Dict[str, Any], inner_dict: Dict[str, Any]) -> None:
+    def post_process(self, outer_dict: Dict[str, Any], inner_dict: Dict[str, Any]) -> bool:
         raise NotImplementedError("Subclasses must implement this method")

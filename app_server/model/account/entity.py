@@ -29,4 +29,4 @@ class AccountEntity(BaseEntity):
 
     @staticmethod
     def get_column_names() -> List[str]:
-        return ["account_id", "role", "hashed_password", "registered_at"]
+        return ["account_id", "hashed_password", "registered_at"]

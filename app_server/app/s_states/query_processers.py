@@ -54,7 +54,7 @@ class QueryProcesserManager(BaseProcessersManager):
         kwargs["message_area"].warning("RUNNING")
         return outer_dict
 
-    def post_process(self, outer_dict: Dict[str, Any], inner_dict: Dict[str, Any]) -> None:
+    def post_process(self, outer_dict: Dict[str, Any], inner_dict: Dict[str, Any]) -> bool:
         chat_messages_manager = ChatMessagesSState.get()
         chat_messages_manager.add_prompt_and_answer(
             prompt=inner_dict["form_schema"].prompt,
@@ -62,3 +62,4 @@ class QueryProcesserManager(BaseProcessersManager):
             assistant_id=inner_dict["form_schema"].chat_gpt_model_type,
         )
         outer_dict["message_area"].empty()
+        return True

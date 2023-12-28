@@ -1,27 +1,23 @@
-from textwrap import dedent
-from typing import Optional
-
 import streamlit as st
 from streamlit.delta_generator import DeltaGenerator
 from streamlit_lottie import st_lottie_spinner
 
 from ..base import BaseComponent
-from ..s_states import CreateProcesserSState, EnterProcesserSState
+from ..s_states import SignInProcesserSState
 from controller import LottieManager
-from model import ChatRoomTable, DATABASE_ENGINE
 
 
 class ActionResults:
     def __init__(
         self,
         account_id: str,
-        password: str,
+        raw_password: str,
         message_area: DeltaGenerator,
         loading_area: DeltaGenerator,
         is_pushed: bool,
     ) -> None:
         self._account_id = account_id
-        self._password = password
+        self._raw_password = raw_password
         self._message_area = message_area
         self._loading_area = loading_area
         self._is_pushed = is_pushed
@@ -31,8 +27,8 @@ class ActionResults:
         return self._account_id
 
     @property
-    def password(self):
-        return self._password
+    def raw_password(self):
+        return self._raw_password
 
     @property
     def message_area(self):
@@ -50,7 +46,7 @@ class ActionResults:
 class SignInComponent(BaseComponent):
     @staticmethod
     def init() -> None:
-        pass
+        SignInProcesserSState.init()
 
     @staticmethod
     def _display_title() -> None:
@@ -64,7 +60,7 @@ class SignInComponent(BaseComponent):
                 placeholder="Input account id here.",
                 key="AccountIdTextInput",
             )
-            inputed_password = st.text_input(
+            inputed_raw_password = st.text_input(
                 label="Password",
                 placeholder="Input password here.",
                 key="PasswordTextInput",
@@ -78,7 +74,7 @@ class SignInComponent(BaseComponent):
 
         return ActionResults(
             account_id=inputed_account_id,
-            password=inputed_password,
+            raw_password=inputed_raw_password,
             message_area=message_area,
             loading_area=loading_area,
             is_pushed=is_pushed,
@@ -91,11 +87,11 @@ class SignInComponent(BaseComponent):
 
         with action_results.loading_area:
             with st_lottie_spinner(animation_source=LottieManager.LOADING):
-                processers_manager = CreateProcesserSState.get()
+                processers_manager = SignInProcesserSState.get()
                 is_success = processers_manager.run_all(
                     message_area=action_results.message_area,
                     account_id=action_results.account_id,
-                    password=action_results.password,
+                    raw_password=action_results.raw_password,
                 )
         return is_success
 
@@ -110,4 +106,4 @@ class SignInComponent(BaseComponent):
 
     @staticmethod
     def deinit() -> None:
-        pass
+        SignInProcesserSState.deinit()

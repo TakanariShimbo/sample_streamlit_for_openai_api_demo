@@ -31,6 +31,7 @@ class EnterProcesserManager(BaseProcessersManager):
         outer_dict = {}
         return outer_dict
 
-    def post_process(self, outer_dict: Dict[str, Any], inner_dict: Dict[str, Any]) -> None:
+    def post_process(self, outer_dict: Dict[str, Any], inner_dict: Dict[str, Any]) -> bool:
         ChatMessagesSState.set(value=inner_dict["chat_message_manager"])
         ComponentSState.set_chat_room_entity()
+        return True

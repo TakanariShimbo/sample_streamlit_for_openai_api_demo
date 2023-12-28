@@ -9,7 +9,7 @@ from openai.types.chat import (
     ChatCompletionMessageParam,
 )
 
-from . import OpenAiHandler
+from .open_ai_handler import OpenAiHandler
 
 
 def convert_entity_to_message_param(role: str, content: str) -> ChatCompletionMessageParam:
