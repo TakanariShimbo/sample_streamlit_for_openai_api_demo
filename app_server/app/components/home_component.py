@@ -115,8 +115,8 @@ class HomeComponent(BaseComponent):
                 contents = dedent(
                     f"""
                     ###### 📝 {chat_room_entity.title}  
-                    👤 hahanan   
-                    🕛 2023/12/12
+                    👤 {chat_room_entity.account_id}   
+                    🕛 {chat_room_entity.created_at}
                     """
                 )
                 st.markdown(contents)
