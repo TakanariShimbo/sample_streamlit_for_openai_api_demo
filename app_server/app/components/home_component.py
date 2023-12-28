@@ -25,19 +25,19 @@ class CreateActionResults:
         self._is_pushed = is_pushed
 
     @property
-    def title(self):
+    def title(self) -> str:
         return self._title
 
     @property
-    def message_area(self):
+    def message_area(self) -> DeltaGenerator:
         return self._message_area
 
     @property
-    def loading_area(self):
+    def loading_area(self) -> DeltaGenerator:
         return self._loading_area
 
     @property
-    def is_pushed(self):
+    def is_pushed(self) -> bool:
         return self._is_pushed
 
 
@@ -51,11 +51,11 @@ class EditActionResults:
         self._loading_area = loading_area
 
     @property
-    def chat_room_entity(self):
+    def chat_room_entity(self) -> ChatRoomEntity:
         return self._chat_room_entity
 
     @property
-    def loading_area(self):
+    def loading_area(self) -> DeltaGenerator:
         return self._loading_area
 
 

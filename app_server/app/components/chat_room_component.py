@@ -26,27 +26,27 @@ class ActionResults:
         self._is_cancel_pushed = is_cancel_pushed
 
     @property
-    def chat_gpt_model_entity(self):
+    def chat_gpt_model_entity(self) -> Optional[ChatGptModelTypeEntity]:
         return self._chat_gpt_model_entity
 
     @property
-    def prompt(self):
+    def prompt(self) -> str:
         return self._prompt
 
     @property
-    def message_area(self):
+    def message_area(self) -> DeltaGenerator:
         return self._message_area
 
     @property
-    def is_run_pushed(self):
+    def is_run_pushed(self) -> bool:
         return self._is_run_pushed
 
     @property
-    def is_rerun_pushed(self):
+    def is_rerun_pushed(self) -> bool:
         return self._is_rerun_pushed
 
     @property
-    def is_cancel_pushed(self):
+    def is_cancel_pushed(self) -> bool:
         return self._is_cancel_pushed
 
 

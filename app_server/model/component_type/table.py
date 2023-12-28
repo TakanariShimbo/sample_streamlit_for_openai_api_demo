@@ -26,6 +26,9 @@ class ComponentTypeTable(BaseTable[ComponentTypeEntity]):
     def get_wake_up_entity(self) -> ComponentTypeEntity:
         return self.get_entity(column_name="key", value="wake_up")
 
+    def get_sign_in_entity(self) -> ComponentTypeEntity:
+        return self.get_entity(column_name="key", value="sign_in")
+    
     def get_home_entity(self) -> ComponentTypeEntity:
         return self.get_entity(column_name="key", value="home")
 
