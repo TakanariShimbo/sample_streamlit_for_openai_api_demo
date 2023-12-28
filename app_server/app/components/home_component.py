@@ -187,3 +187,4 @@ class HomeComponent(BaseComponent):
     @staticmethod
     def deinit() -> None:
         CreateProcesserSState.deinit()
+        EnterProcesserSState.deinit()
