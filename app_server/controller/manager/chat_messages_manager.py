@@ -10,9 +10,9 @@ class ChatMessagesManager:
         self._room_id = room_id
 
     @classmethod
-    def init_as_new(cls, title: str = "sample") -> "ChatMessagesManager":
+    def init_as_new(cls, title: str, account_id: str = "user") -> "ChatMessagesManager":
         room_id = str(uuid4())
-        chat_room_entity = ChatRoomEntity(room_id=room_id, title=title)
+        chat_room_entity = ChatRoomEntity(room_id=room_id, account_id=account_id, title=title)
         room_table = ChatRoomTable.load_from_entities(entities=[chat_room_entity])
         room_table.save_to_database(database_engine=DATABASE_ENGINE)
 
@@ -20,11 +20,11 @@ class ChatMessagesManager:
         return cls(chat_message_table=chat_message_table, room_id=room_id)
 
     @classmethod
-    def init_as_continue(cls, room_id: str = "b414c711-8635-4d9e-9b15-90e5cbd835a1") -> "ChatMessagesManager":
+    def init_as_continue(cls, room_id: str) -> "ChatMessagesManager":
         chat_message_table = ChatMessageTable.load_specified_room_from_database(database_engine=DATABASE_ENGINE, room_id=room_id)
         return cls(chat_message_table=chat_message_table, room_id=room_id)
 
-    def add_prompt_and_answer(self, prompt: str, answer: str, user_id: str = "user", assistant_id: str = "assistant") -> None:
+    def add_prompt_and_answer(self, prompt: str, answer: str, user_id: str, assistant_id: str) -> None:
         prompt_and_answer_entitys = [
             ChatMessageEntity(room_id=self._room_id, role="user", account_id=user_id, content=prompt),
             ChatMessageEntity(room_id=self._room_id, role="assistant", account_id=assistant_id, content=answer),

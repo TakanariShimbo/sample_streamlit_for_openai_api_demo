@@ -10,7 +10,7 @@ class ChatMessagesSState(BaseSState[ChatMessagesManager]):
         return "CHAT_MESSAGES_MANAGER"
 
     @classmethod
-    def add_prompt_and_answer(cls, prompt: str, answer: str, user_id: str = "user", assistant_id: str = "assistant") -> None:
+    def add_prompt_and_answer(cls, prompt: str, answer: str, user_id: str = "sample_user", assistant_id: str = "assistant") -> None:
         chat_messages_manager = cls.get()
         chat_messages_manager.add_prompt_and_answer(prompt=prompt, answer=answer, user_id=user_id, assistant_id=assistant_id)
 
