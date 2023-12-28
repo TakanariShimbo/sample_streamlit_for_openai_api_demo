@@ -21,7 +21,7 @@ class QueryProcesser(BaseProcesser[str]):
         with outer_dict["history_area"]:
             with st.chat_message(name="user"):
                 st.write(inner_dict["form_schema"].prompt)
-            with st.chat_message(name=inner_dict["form_schema"].chat_gpt_model_type):
+            with st.chat_message(name="assistant"):
                 outer_dict["answer_area"] = st.empty()
 
     def post_process(self, outer_dict: Dict[str, Any], inner_dict: Dict[str, Any]) -> None:
