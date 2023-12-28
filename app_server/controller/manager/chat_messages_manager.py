@@ -10,7 +10,7 @@ class ChatMessagesManager:
         self._room_id = room_id
 
     @classmethod
-    def init_as_new(cls, title: str, account_id: str = "user") -> "ChatMessagesManager":
+    def init_as_new(cls, title: str, account_id: str = "sample_user") -> "ChatMessagesManager":
         room_id = str(uuid4())
         chat_room_entity = ChatRoomEntity(room_id=room_id, account_id=account_id, title=title)
         room_table = ChatRoomTable.load_from_entities(entities=[chat_room_entity])
@@ -24,7 +24,7 @@ class ChatMessagesManager:
         chat_message_table = ChatMessageTable.load_specified_room_from_database(database_engine=DATABASE_ENGINE, room_id=room_id)
         return cls(chat_message_table=chat_message_table, room_id=room_id)
 
-    def add_prompt_and_answer(self, prompt: str, answer: str, user_id: str, assistant_id: str) -> None:
+    def add_prompt_and_answer(self, prompt: str, answer: str, user_id: str = "sample_user", assistant_id: str = "sample_assistant") -> None:
         prompt_and_answer_entitys = [
             ChatMessageEntity(room_id=self._room_id, role="user", account_id=user_id, content=prompt),
             ChatMessageEntity(room_id=self._room_id, role="assistant", account_id=assistant_id, content=answer),

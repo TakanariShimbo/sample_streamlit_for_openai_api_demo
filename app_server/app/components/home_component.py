@@ -146,7 +146,8 @@ class HomeComponent(BaseComponent):
 
         with create_action_results.loading_area:
             with st_lottie_spinner(animation_source=LottieManager.LOADING):
-                is_success = CreateProcesserSState.on_click_run(
+                processers_manager = CreateProcesserSState.get()
+                is_success = processers_manager.run_all(
                     message_area=create_action_results.message_area,
                     title=create_action_results.title,
                 )
@@ -159,8 +160,10 @@ class HomeComponent(BaseComponent):
 
         with edit_action_results.loading_area:
             with st_lottie_spinner(animation_source=LottieManager.LOADING):
-                is_success = EnterProcesserSState.on_click_run(room_id=edit_action_results.chat_room_entity.room_id)
-
+                processers_manager = EnterProcesserSState.get()
+                is_success = processers_manager.run_all(
+                    room_id=edit_action_results.chat_room_entity.room_id,
+                )
         return is_success
 
     @classmethod

@@ -55,7 +55,8 @@ class QueryProcesserManager(BaseProcessersManager):
         return outer_dict
 
     def post_process(self, outer_dict: Dict[str, Any], inner_dict: Dict[str, Any]) -> None:
-        ChatMessagesSState.add_prompt_and_answer(
+        chat_messages_manager = ChatMessagesSState.get()
+        chat_messages_manager.add_prompt_and_answer(
             prompt=inner_dict["form_schema"].prompt,
             answer=inner_dict["answer"],
             assistant_id=inner_dict["form_schema"].chat_gpt_model_type,

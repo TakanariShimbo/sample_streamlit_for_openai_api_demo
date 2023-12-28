@@ -11,8 +11,3 @@ class CreateProcesserSState(BaseSState[CreateProcesserManager]):
     def get_default() -> CreateProcesserManager:
         return CreateProcesserManager([CreateProcesser])
 
-    @classmethod
-    def on_click_run(cls, **kwargs) -> bool:
-        processers_manager = cls.get()
-        is_success = processers_manager.run_all(**kwargs)
-        return is_success

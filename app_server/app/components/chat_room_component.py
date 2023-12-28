@@ -103,27 +103,34 @@ class ChatRoomComponent(BaseComponent):
         history_area = st.container(border=True)
         with history_area:
             st.markdown("#### History")
-            ChatMessagesSState.display()
+            chat_messages_manager = ChatMessagesSState.get()
+            for message_entity in chat_messages_manager.get_all_message_entities():
+                if message_entity.role == "system":
+                    continue
+                with st.chat_message(name=message_entity.role):
+                    st.write(message_entity.content)
         return history_area
 
     @staticmethod
     def _execute_query_process(action_results: ActionResults, history_area: DeltaGenerator) -> None:
+        processer_manager = QueryProcesserSState.get()
         if action_results.is_run_pushed:
-            QueryProcesserSState.on_click_run(
+            processer_manager.run_all(
                 message_area=action_results.message_area,
                 history_area=history_area,
                 chat_gpt_model_entity=action_results.chat_gpt_model_entity,
                 prompt=action_results.prompt,
             )
         elif action_results.is_rerun_pushed:
-            QueryProcesserSState.on_click_rerun(
+            processer_manager.init_processers()
+            processer_manager.run_all(
                 message_area=action_results.message_area,
                 history_area=history_area,
                 chat_gpt_model_entity=action_results.chat_gpt_model_entity,
                 prompt=action_results.prompt,
             )
         elif action_results.is_cancel_pushed:
-            QueryProcesserSState.on_click_cancel()
+            processer_manager.init_processers()
 
     @classmethod
     def main(cls) -> None:

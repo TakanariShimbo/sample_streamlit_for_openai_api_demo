@@ -11,8 +11,3 @@ class EnterProcesserSState(BaseSState[EnterProcesserManager]):
     def get_default() -> EnterProcesserManager:
         return EnterProcesserManager([EnterProcesser])
 
-    @classmethod
-    def on_click_run(cls, **kwargs) -> bool:
-        processers_manager = cls.get()
-        is_success = processers_manager.run_all(**kwargs)
-        return is_success
