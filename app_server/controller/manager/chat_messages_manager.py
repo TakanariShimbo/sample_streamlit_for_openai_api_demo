@@ -10,7 +10,7 @@ class ChatMessagesManager:
         self._room_id = room_id
 
     @classmethod
-    def init_as_new(cls, title: str, account_id: str = "sample_user") -> "ChatMessagesManager":
+    def init_as_new(cls, title: str, account_id: str) -> "ChatMessagesManager":
         room_id = str(uuid4())
         chat_room_entity = ChatRoomEntity(room_id=room_id, account_id=account_id, title=title)
         room_table = ChatRoomTable.load_from_entities(entities=[chat_room_entity])

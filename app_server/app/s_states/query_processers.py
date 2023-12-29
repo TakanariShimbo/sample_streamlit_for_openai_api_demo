@@ -3,6 +3,7 @@ from typing import Dict, Any, Tuple
 import streamlit as st
 
 from .query_form_schema import QueryFormSchema
+from .account_s_states import AccountSState
 from .chat_messages_s_states import ChatMessagesSState
 from ..base import BaseProcesser, BaseProcessersManager, EarlyStopProcessException
 from controller import ChatGptManager
@@ -59,6 +60,7 @@ class QueryProcesserManager(BaseProcessersManager):
         chat_messages_manager.add_prompt_and_answer(
             prompt=inner_dict["form_schema"].prompt,
             answer=inner_dict["answer"],
+            user_id=AccountSState.get().account_id,
             assistant_id=inner_dict["form_schema"].chat_gpt_model_type,
         )
         outer_dict["message_area"].empty()
