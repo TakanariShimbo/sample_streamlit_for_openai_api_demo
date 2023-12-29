@@ -8,7 +8,7 @@ from controller import AccountManager
 
 class SignInProcesser(BaseProcesser[None]):
     def main_process(self, inner_dict: Dict[str, Any]) -> None:
-        inner_dict["is_success"] = AccountManager.sign_in(
+        inner_dict["response"] = AccountManager.sign_in(
             account_id=inner_dict["form_schema"].account_id,
             raw_password=inner_dict["form_schema"].raw_password,
         )
@@ -44,8 +44,8 @@ class SignInProcesserManager(BaseProcessersManager):
         return outer_dict
 
     def post_process(self, outer_dict: Dict[str, Any], inner_dict: Dict[str, Any]) -> bool:
-        if not inner_dict["is_success"]:
-            outer_dict["message_area"].warning("Please input form corectly.")
+        if not inner_dict["response"].is_success:
+            outer_dict["message_area"].warning(inner_dict["response"].message)
             return False
         outer_dict["message_area"].empty()
         ComponentSState.set_home_entity()

@@ -5,8 +5,8 @@ from typing import TypeVar, Generic, Optional
 T = TypeVar('T')
 
 
-class BaseResponse(ABC, Generic[T]):
-    def __init__(self, is_success: bool, message: str, contents: Optional[T] = None) -> None:
+class BaseResponse(Generic[T], ABC):
+    def __init__(self, is_success: bool, message: str = "", contents: Optional[T] = None) -> None:
         self._is_success = is_success
         self._message = message
         self._contents = contents
