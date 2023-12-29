@@ -24,7 +24,7 @@ class ChatMessagesManager:
         chat_message_table = ChatMessageTable.load_specified_room_from_database(database_engine=DATABASE_ENGINE, room_id=room_id)
         return cls(chat_message_table=chat_message_table, room_id=room_id)
 
-    def add_prompt_and_answer(self, prompt: str, answer: str, user_id: str = "sample_user", assistant_id: str = "sample_assistant") -> None:
+    def add_prompt_and_answer(self, prompt: str, answer: str, user_id: str, assistant_id: str) -> None:
         prompt_and_answer_entitys = [
             ChatMessageEntity(room_id=self._room_id, role="user", account_id=user_id, content=prompt),
             ChatMessageEntity(room_id=self._room_id, role="assistant", account_id=assistant_id, content=answer),
