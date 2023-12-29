@@ -5,6 +5,9 @@ from model import DATABASE_ENGINE, AccountTable, AccountEntity
 class AccountResponse(BaseResponse[None]):
     pass
 
+class SignInResponse(BaseResponse[AccountEntity]):
+    pass
+
 
 class AccountManager:
     @staticmethod
@@ -19,14 +22,14 @@ class AccountManager:
             return AccountResponse(is_success=False, message=f"Account ID {account_id} has already signed up.")
 
     @staticmethod
-    def sign_in(account_id: str, raw_password: str) -> AccountResponse:
+    def sign_in(account_id: str, raw_password: str) -> SignInResponse:
         target_account_table = AccountTable.load_specified_account_from_database(database_engine=DATABASE_ENGINE, account_id=account_id)
         try:
             target_account_entity = target_account_table.get_entity(column_name="account_id", value=account_id)
         except ValueError:
-            return AccountResponse(is_success=False, message=f"Account ID '{account_id}' hasn't signed up yet.")
+            return SignInResponse(is_success=False, message=f"Account ID '{account_id}' hasn't signed up yet.")
         is_success =  HashHandler.verify(raw_contents=raw_password, hashed_contents=target_account_entity.hashed_password)
         if not is_success:
-            return AccountResponse(is_success=False, message=f"Please input password correctly.")
+            return SignInResponse(is_success=False, message=f"Please input password correctly.")
         
-        return AccountResponse(is_success=True)
+        return SignInResponse(is_success=True, contents=target_account_entity)

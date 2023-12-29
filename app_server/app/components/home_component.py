@@ -6,7 +6,7 @@ from streamlit.delta_generator import DeltaGenerator
 from streamlit_lottie import st_lottie_spinner
 
 from ..base import BaseComponent
-from ..s_states import CreateProcesserSState, EnterProcesserSState
+from ..s_states import AccountSState, CreateProcesserSState, EnterProcesserSState
 from controller import LottieManager
 from model import ChatRoomTable, ChatRoomEntity, DATABASE_ENGINE
 
@@ -62,6 +62,7 @@ class EditActionResults:
 class HomeComponent(BaseComponent):
     @staticmethod
     def init() -> None:
+        AccountSState.init()
         CreateProcesserSState.init()
         EnterProcesserSState.init()
 

@@ -1,6 +1,7 @@
 from typing import Dict, Any, Tuple
 
 from .sign_in_form_schema import SignInFormSchema
+from .account_s_states import AccountSState
 from .component_s_states import ComponentSState
 from ..base import BaseProcesser, BaseProcessersManager, EarlyStopProcessException
 from controller import AccountManager
@@ -47,6 +48,8 @@ class SignInProcesserManager(BaseProcessersManager):
         if not inner_dict["response"].is_success:
             outer_dict["message_area"].warning(inner_dict["response"].message)
             return False
-        outer_dict["message_area"].empty()
+
+        AccountSState.set(value=inner_dict["response"].contents)
         ComponentSState.set_home_entity()
+        outer_dict["message_area"].empty()
         return True

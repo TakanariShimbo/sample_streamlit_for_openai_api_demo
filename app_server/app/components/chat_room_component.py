@@ -4,7 +4,7 @@ import streamlit as st
 from streamlit.delta_generator import DeltaGenerator
 
 from ..base import BaseComponent
-from ..s_states import QueryProcesserSState, ChatMessagesSState
+from ..s_states import AccountSState, QueryProcesserSState, ChatMessagesSState
 from model import CHAT_GPT_MODEL_TYPE_TABLE, ChatGptModelTypeEntity
 
 
@@ -53,6 +53,7 @@ class ActionResults:
 class ChatRoomComponent(BaseComponent):
     @staticmethod
     def init() -> None:
+        AccountSState.init()
         ChatMessagesSState.init()
         QueryProcesserSState.init()
 
