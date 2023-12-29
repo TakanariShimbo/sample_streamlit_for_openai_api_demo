@@ -23,23 +23,23 @@ class ActionResults:
         self._is_pushed = is_pushed
 
     @property
-    def account_id(self):
+    def account_id(self) -> str:
         return self._account_id
 
     @property
-    def raw_password(self):
+    def raw_password(self) -> str:
         return self._raw_password
 
     @property
-    def message_area(self):
+    def message_area(self) -> DeltaGenerator:
         return self._message_area
 
     @property
-    def loading_area(self):
+    def loading_area(self) -> DeltaGenerator:
         return self._loading_area
 
     @property
-    def is_pushed(self):
+    def is_pushed(self) -> bool:
         return self._is_pushed
 
 
