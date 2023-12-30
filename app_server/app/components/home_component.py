@@ -41,7 +41,7 @@ class CreateActionResults:
         return self._is_pushed
 
 
-class EditActionResults:
+class EnterActionResults:
     def __init__(
         self,
         chat_room_entity: ChatRoomEntity,
@@ -88,7 +88,7 @@ class HomeComponent(BaseComponent):
 
     @staticmethod
     def _display_create_form_and_get_results() -> CreateActionResults:
-        st.markdown("#### 🆕 Create Room")
+        st.markdown("#### 🆕 Create")
         with st.form(key="CreateForm", border=True):
             inputed_title = st.text_input(
                 label="Title",
@@ -109,10 +109,10 @@ class HomeComponent(BaseComponent):
         )
 
     @staticmethod
-    def _display_editables_and_get_results() -> Optional[EditActionResults]:
+    def _display_your_rooms_and_get_results() -> Optional[EnterActionResults]:
         selected_chat_room_entity = None
         selected_loading_area = None
-        st.markdown("#### 🧍 Your Room")
+        st.markdown("#### 🧍 Yours")
         your_room_table = ChatRoomTable.load_rooms_including_specified_account_from_database(
             database_engine=DATABASE_ENGINE,
             account_id=AccountSState.get().account_id,
@@ -130,7 +130,7 @@ class HomeComponent(BaseComponent):
 
                 _, loading_area, _ = st.columns([1, 2, 1])
                 _, button_area, _ = st.columns([1, 2, 1])
-                is_pushed = button_area.button(label="Enter", type="primary", key=f"RoomEnterButton{i}", use_container_width=True)
+                is_pushed = button_area.button(label="Edit", type="primary", key=f"RoomEditButton{i}", use_container_width=True)
                 if is_pushed:
                     selected_chat_room_entity = chat_room_entity
                     selected_loading_area = loading_area
@@ -140,11 +140,48 @@ class HomeComponent(BaseComponent):
         if selected_loading_area == None:
             return None
 
-        return EditActionResults(
+        return EnterActionResults(
             chat_room_entity=selected_chat_room_entity,
             loading_area=selected_loading_area,
         )
 
+    @staticmethod
+    def _display_everyone_rooms_and_get_results() -> Optional[EnterActionResults]:
+        selected_chat_room_entity = None
+        selected_loading_area = None
+        st.markdown("#### 🧑‍🤝‍🧑 Everyone")
+        your_room_table = ChatRoomTable.load_rooms_excluding_specified_account_from_database(
+            database_engine=DATABASE_ENGINE,
+            account_id=AccountSState.get().account_id,
+        )
+        for i, chat_room_entity in enumerate(your_room_table.get_all_entities()):
+            with st.container(border=True):
+                contents = dedent(
+                    f"""
+                    ##### 📝 {chat_room_entity.title}  
+                    👤 {chat_room_entity.account_id}   
+                    🕛 {chat_room_entity.created_at}
+                    """
+                )
+                st.markdown(contents)
+
+                _, loading_area, _ = st.columns([1, 2, 1])
+                _, button_area, _ = st.columns([1, 2, 1])
+                is_pushed = button_area.button(label="View", type="primary", key=f"RoomViewButton{i}", use_container_width=True)
+                if is_pushed:
+                    selected_chat_room_entity = chat_room_entity
+                    selected_loading_area = loading_area
+
+        if selected_chat_room_entity == None:
+            return None
+        if selected_loading_area == None:
+            return None
+
+        return EnterActionResults(
+            chat_room_entity=selected_chat_room_entity,
+            loading_area=selected_loading_area,
+        )
+    
     @staticmethod
     def _execute_create_process(create_action_results: CreateActionResults) -> bool:
         if not create_action_results.is_pushed:
@@ -160,15 +197,15 @@ class HomeComponent(BaseComponent):
         return is_success
 
     @staticmethod
-    def _execute_edit_process(edit_action_results: Optional[EditActionResults]) -> bool:
-        if not edit_action_results:
+    def _execute_enter_process(enter_action_results: Optional[EnterActionResults]) -> bool:
+        if not enter_action_results:
             return False
 
-        with edit_action_results.loading_area:
+        with enter_action_results.loading_area:
             with st_lottie_spinner(animation_source=LottieManager.LOADING):
                 processers_manager = EnterProcesserSState.get()
                 is_success = processers_manager.run_all(
-                    room_id=edit_action_results.chat_room_entity.room_id,
+                    room_id=enter_action_results.chat_room_entity.room_id,
                 )
         return is_success
 
@@ -188,14 +225,21 @@ class HomeComponent(BaseComponent):
 
         left, right = st.columns([1, 1])
         with left:
-            edit_action_results = cls._display_editables_and_get_results()
+            edit_action_results = cls._display_your_rooms_and_get_results()
+        with right:
+            view_action_results = cls._display_everyone_rooms_and_get_results()
 
         is_success = cls._execute_create_process(create_action_results=create_action_results)
         if is_success:
             cls.deinit()
             st.rerun()
 
-        is_success = cls._execute_edit_process(edit_action_results=edit_action_results)
+        is_success = cls._execute_enter_process(enter_action_results=edit_action_results)
+        if is_success:
+            cls.deinit()
+            st.rerun()
+
+        is_success = cls._execute_enter_process(enter_action_results=view_action_results)
         if is_success:
             cls.deinit()
             st.rerun()
