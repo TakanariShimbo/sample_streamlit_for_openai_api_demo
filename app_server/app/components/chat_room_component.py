@@ -122,23 +122,16 @@ class ChatRoomComponent(BaseComponent):
     @staticmethod
     def _execute_query_process(action_results: ActionResults, history_area: DeltaGenerator) -> None:
         processer_manager = QueryProcesserSState.get()
-        if action_results.is_run_pushed:
+        if action_results.is_rerun_pushed or action_results.is_cancel_pushed:
+            processer_manager.init_processers()
+
+        if action_results.is_run_pushed or action_results.is_rerun_pushed:
             processer_manager.run_all(
                 message_area=action_results.message_area,
                 history_area=history_area,
                 chat_gpt_model_entity=action_results.chat_gpt_model_entity,
                 prompt=action_results.prompt,
             )
-        elif action_results.is_rerun_pushed:
-            processer_manager.init_processers()
-            processer_manager.run_all(
-                message_area=action_results.message_area,
-                history_area=history_area,
-                chat_gpt_model_entity=action_results.chat_gpt_model_entity,
-                prompt=action_results.prompt,
-            )
-        elif action_results.is_cancel_pushed:
-            processer_manager.init_processers()
 
     @classmethod
     def _on_click_sign_out(cls):
