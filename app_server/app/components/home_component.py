@@ -110,12 +110,14 @@ class HomeComponent(BaseComponent):
 
     @staticmethod
     def _display_editables_and_get_results() -> Optional[EditActionResults]:
-        N = 5
         selected_chat_room_entity = None
         selected_loading_area = None
         st.markdown("#### 🧍 Your Room")
-        chat_room_table = ChatRoomTable.load_from_database(database_engine=DATABASE_ENGINE)
-        for i, chat_room_entity in enumerate(chat_room_table.get_all_entities()[::-1][:N]):
+        your_room_table = ChatRoomTable.load_rooms_including_specified_account_from_database(
+            database_engine=DATABASE_ENGINE,
+            account_id=AccountSState.get().account_id,
+        )
+        for i, chat_room_entity in enumerate(your_room_table.get_all_entities()):
             with st.container(border=True):
                 contents = dedent(
                     f"""

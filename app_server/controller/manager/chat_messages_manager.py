@@ -21,7 +21,7 @@ class ChatMessagesManager:
 
     @classmethod
     def init_as_continue(cls, room_id: str) -> "ChatMessagesManager":
-        chat_message_table = ChatMessageTable.load_specified_room_from_database(database_engine=DATABASE_ENGINE, room_id=room_id)
+        chat_message_table = ChatMessageTable.load_messages_including_specified_room_from_database(database_engine=DATABASE_ENGINE, room_id=room_id)
         return cls(chat_message_table=chat_message_table, room_id=room_id)
 
     def add_prompt_and_answer(self, prompt: str, answer: str, user_id: str, assistant_id: str) -> None:
