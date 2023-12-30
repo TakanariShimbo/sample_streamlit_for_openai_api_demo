@@ -4,7 +4,7 @@ import streamlit as st
 from streamlit.delta_generator import DeltaGenerator
 
 from ..base import BaseComponent
-from ..s_states import AccountSState, QueryProcesserSState, ChatMessagesSState
+from ..s_states import AccountSState, ComponentSState, QueryProcesserSState, ChatMessagesSState
 from model import CHAT_GPT_MODEL_TYPE_TABLE, ChatGptModelTypeEntity
 
 
@@ -57,16 +57,23 @@ class ChatRoomComponent(BaseComponent):
         ChatMessagesSState.init()
         QueryProcesserSState.init()
 
+    @classmethod
+    def _display_sing_out_button(cls) -> None:
+        st.sidebar.button(label="👤 Sign out", key="SignOutButton", on_click=cls._on_click_sign_out, use_container_width=True)
+
+    @classmethod
+    def _display_leave_room_button(cls) -> None:
+        st.sidebar.button(label="🚪 Leave room", key="LeaveRoomButton", on_click=cls._on_click_leave_room, use_container_width=True)
+
     @staticmethod
     def _display_title() -> None:
-        st.markdown("### 💬 ChatRoom")
+        st.markdown("### 💬 Chat Room")
 
     @staticmethod
     def _display_query_form_and_get_results() -> ActionResults:
+        st.markdown("#### 🧠 Query")
         form_area = st.form(key="QueryForm")
         with form_area:
-            st.markdown("#### Form")
-
             selected_chat_gpt_model_entity = st.selectbox(
                 label="Model Type",
                 options=CHAT_GPT_MODEL_TYPE_TABLE.get_all_entities(),
@@ -101,9 +108,9 @@ class ChatRoomComponent(BaseComponent):
 
     @staticmethod
     def _display_history() -> DeltaGenerator:
-        history_area = st.container(border=True)
+        history_area = st.container(border=False)
         with history_area:
-            st.markdown("#### History")
+            st.markdown("#### 📝 History")
             chat_messages_manager = ChatMessagesSState.get()
             for message_entity in chat_messages_manager.get_all_message_entities():
                 if message_entity.role == "system":
@@ -134,7 +141,20 @@ class ChatRoomComponent(BaseComponent):
             processer_manager.init_processers()
 
     @classmethod
+    def _on_click_sign_out(cls):
+        ComponentSState.set_sign_in_entity()
+        cls.deinit()
+        AccountSState.deinit()
+
+    @classmethod
+    def _on_click_leave_room(cls):
+        ComponentSState.set_home_entity()
+        cls.deinit()
+
+    @classmethod
     def main(cls) -> None:
+        cls._display_sing_out_button()
+        cls._display_leave_room_button()
         cls._display_title()
         action_results = cls._display_query_form_and_get_results()
         history_area = cls._display_history()

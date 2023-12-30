@@ -6,7 +6,7 @@ from streamlit.delta_generator import DeltaGenerator
 from streamlit_lottie import st_lottie_spinner
 
 from ..base import BaseComponent
-from ..s_states import AccountSState, CreateProcesserSState, EnterProcesserSState
+from ..s_states import AccountSState, ComponentSState, CreateProcesserSState, EnterProcesserSState
 from controller import LottieManager
 from model import ChatRoomTable, ChatRoomEntity, DATABASE_ENGINE
 
@@ -66,6 +66,10 @@ class HomeComponent(BaseComponent):
         CreateProcesserSState.init()
         EnterProcesserSState.init()
 
+    @classmethod
+    def _display_sing_out_button(cls) -> None:
+        st.sidebar.button(label="👤 Sign out", key="SignOutButton", on_click=cls._on_click_sign_out, use_container_width=True)
+
     @staticmethod
     def _display_title() -> None:
         st.markdown("### 🏠 Home")
@@ -74,7 +78,7 @@ class HomeComponent(BaseComponent):
     def _display_overview() -> None:
         content = dedent(
             f"""
-            #### Overview
+            #### 🔎 Overview
             Welcome to demo site of ChatGPT.   
             Experience the forefront of AI technology and explore the possibilities of the future.  
             AI makes your daily life smarter and easier.  
@@ -84,7 +88,7 @@ class HomeComponent(BaseComponent):
 
     @staticmethod
     def _display_create_form_and_get_results() -> CreateActionResults:
-        st.markdown("#### Create Room")
+        st.markdown("#### 🆕 Create Room")
         with st.form(key="CreateForm", border=True):
             inputed_title = st.text_input(
                 label="Title",
@@ -94,7 +98,7 @@ class HomeComponent(BaseComponent):
             message_area = st.empty()
             _, button_area, _ = st.columns([5, 3, 5])
             with button_area:
-                is_pushed = st.form_submit_button(label="CREATE", type="primary", use_container_width=True)
+                is_pushed = st.form_submit_button(label="Create", type="primary", use_container_width=True)
             _, loading_area, _ = st.columns([1, 1, 1])
 
         return CreateActionResults(
@@ -109,13 +113,13 @@ class HomeComponent(BaseComponent):
         N = 5
         selected_chat_room_entity = None
         selected_loading_area = None
-        st.markdown("#### Enter Room")
+        st.markdown("#### 🧍 Your Room")
         chat_room_table = ChatRoomTable.load_from_database(database_engine=DATABASE_ENGINE)
         for i, chat_room_entity in enumerate(chat_room_table.get_all_entities()[::-1][:N]):
             with st.container(border=True):
                 contents = dedent(
                     f"""
-                    ###### 📝 {chat_room_entity.title}  
+                    ##### 📝 {chat_room_entity.title}  
                     👤 {chat_room_entity.account_id}   
                     🕛 {chat_room_entity.created_at}
                     """
@@ -123,9 +127,8 @@ class HomeComponent(BaseComponent):
                 st.markdown(contents)
 
                 _, loading_area, _ = st.columns([1, 2, 1])
-                _, button_area = st.columns([5, 1])
-                with button_area:
-                    is_pushed = st.button(label="🚪", key=f"RoomEnterButton{i}", use_container_width=True)
+                _, button_area, _ = st.columns([1, 2, 1])
+                is_pushed = button_area.button(label="Enter", type="primary", key=f"RoomEnterButton{i}", use_container_width=True)
                 if is_pushed:
                     selected_chat_room_entity = chat_room_entity
                     selected_loading_area = loading_area
@@ -168,7 +171,14 @@ class HomeComponent(BaseComponent):
         return is_success
 
     @classmethod
+    def _on_click_sign_out(cls) -> None:
+        ComponentSState.set_sign_in_entity()
+        cls.deinit()
+        AccountSState.deinit()
+
+    @classmethod
     def main(cls) -> None:
+        cls._display_sing_out_button()
         cls._display_title()
         cls._display_overview()
 
