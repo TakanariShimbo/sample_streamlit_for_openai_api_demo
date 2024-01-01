@@ -88,7 +88,7 @@ class HomeComponent(BaseComponent):
 
     @staticmethod
     def _display_create_form_and_get_results() -> CreateActionResults:
-        st.markdown("#### 🆕 Create")
+        st.markdown("#### ➕ New")
         with st.form(key="CreateForm", border=True):
             inputed_title = st.text_input(
                 label="Title",
@@ -113,7 +113,7 @@ class HomeComponent(BaseComponent):
         selected_chat_room_entity = None
         selected_loading_area = None
         st.markdown("#### 🧍 Yours")
-        your_room_table = ChatRoomTable.load_rooms_including_specified_account_from_database(
+        your_room_table = ChatRoomTable.load_rooms_with_specified_account_from_database(
             database_engine=DATABASE_ENGINE,
             account_id=AccountSState.get().account_id,
         )
@@ -150,7 +150,7 @@ class HomeComponent(BaseComponent):
         selected_chat_room_entity = None
         selected_loading_area = None
         st.markdown("#### 🧑‍🤝‍🧑 Everyone")
-        your_room_table = ChatRoomTable.load_rooms_excluding_specified_account_from_database(
+        your_room_table = ChatRoomTable.load_rooms_without_specified_account_from_database(
             database_engine=DATABASE_ENGINE,
             account_id=AccountSState.get().account_id,
         )
@@ -206,6 +206,7 @@ class HomeComponent(BaseComponent):
                 processers_manager = EnterProcesserSState.get()
                 is_success = processers_manager.run_all(
                     room_id=enter_action_results.chat_room_entity.room_id,
+                    account_id=enter_action_results.chat_room_entity.account_id,
                 )
         return is_success
 

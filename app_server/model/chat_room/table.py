@@ -12,7 +12,7 @@ class ChatRoomTable(BaseTable[ChatRoomEntity]):
     def get_column_configs() -> List[ColumnConfig]:
         return [
             ColumnConfig(name="room_id", dtype=pd.StringDtype(), unique=True, non_null=True, readonly=False),
-            ColumnConfig(name="account_id", dtype=pd.StringDtype(), unique=True, non_null=True, readonly=False),
+            ColumnConfig(name="account_id", dtype=pd.StringDtype(), unique=False, non_null=True, readonly=False),
             ColumnConfig(name="title", dtype=pd.StringDtype(), unique=False, non_null=True, readonly=False),
             ColumnConfig(name="created_at", dtype=pd.StringDtype(), unique=False, non_null=False, readonly=True),
         ]
@@ -26,13 +26,19 @@ class ChatRoomTable(BaseTable[ChatRoomEntity]):
         return "chat_rooms"
 
     @classmethod
-    def load_rooms_including_specified_account_from_database(cls, database_engine: Engine, account_id: str, limit: int = 5) -> "ChatRoomTable":
+    def load_rooms_with_specified_account_from_database(cls, database_engine: Engine, account_id: str, limit: int = 5) -> "ChatRoomTable":
         table_name = cls.get_database_table_name()
         sql = f"SELECT * FROM {table_name} WHERE account_id = '{account_id}' ORDER BY created_at DESC LIMIT {limit}"
         return cls.load_from_database(database_engine=database_engine, sql=sql)
 
     @classmethod
-    def load_rooms_excluding_specified_account_from_database(cls, database_engine: Engine, account_id: str, limit: int = 5) -> "ChatRoomTable":
+    def load_rooms_without_specified_account_from_database(cls, database_engine: Engine, account_id: str, limit: int = 5) -> "ChatRoomTable":
         table_name = cls.get_database_table_name()
         sql = f"SELECT * FROM {table_name} WHERE account_id != '{account_id}' ORDER BY created_at DESC LIMIT {limit}"
+        return cls.load_from_database(database_engine=database_engine, sql=sql)
+
+    @classmethod
+    def load_specified_room_from_database(cls, database_engine: Engine, room_id: str) -> "ChatRoomTable":
+        table_name = cls.get_database_table_name()
+        sql = f"SELECT * FROM {table_name} WHERE room_id = '{room_id}'"
         return cls.load_from_database(database_engine=database_engine, sql=sql)

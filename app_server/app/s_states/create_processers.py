@@ -3,14 +3,14 @@ from typing import Dict, Any, Tuple
 from .create_form_schema import CreateFormSchema
 from .component_s_states import ComponentSState
 from .account_s_states import AccountSState
-from .chat_messages_s_states import ChatMessagesSState
+from .chat_room_s_states import ChatRoomSState
 from ..base import BaseProcesser, BaseProcessersManager, EarlyStopProcessException
-from controller import ChatMessagesManager
+from controller import ChatRoomManager
 
 
 class CreateProcesser(BaseProcesser[None]):
     def main_process(self, inner_dict: Dict[str, Any]) -> None:
-        inner_dict["chat_message_manager"] = ChatMessagesManager.init_as_new(
+        inner_dict["chat_message_manager"] = ChatRoomManager.init_as_new(
             account_id=inner_dict["form_schema"].account_id,
             title=inner_dict["form_schema"].title,
         )
@@ -50,6 +50,6 @@ class CreateProcesserManager(BaseProcessersManager):
 
     def post_process(self, outer_dict: Dict[str, Any], inner_dict: Dict[str, Any]) -> bool:
         outer_dict["message_area"].empty()
-        ChatMessagesSState.set(value=inner_dict["chat_message_manager"])
+        ChatRoomSState.set(value=inner_dict["chat_message_manager"])
         ComponentSState.set_chat_room_entity()
         return True

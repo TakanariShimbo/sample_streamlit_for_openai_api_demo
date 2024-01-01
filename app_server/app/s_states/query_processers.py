@@ -4,7 +4,7 @@ import streamlit as st
 
 from .query_form_schema import QueryFormSchema
 from .account_s_states import AccountSState
-from .chat_messages_s_states import ChatMessagesSState
+from .chat_room_s_states import ChatRoomSState
 from ..base import BaseProcesser, BaseProcessersManager, EarlyStopProcessException
 from controller import ChatGptManager
 
@@ -41,7 +41,7 @@ class QueryProcesserManager(BaseProcessersManager):
         try:
             inner_dict = {}
             inner_dict["form_schema"] = QueryFormSchema.from_entity(chat_gpt_model_entity=kwargs["chat_gpt_model_entity"], prompt=kwargs["prompt"])
-            inner_dict["message_entities"] = ChatMessagesSState.get().get_all_message_entities()
+            inner_dict["message_entities"] = ChatRoomSState.get().get_all_message_entities()
         except:
             outer_dict["message_area"].warning("Please input form corectly.")
             raise EarlyStopProcessException()
@@ -56,8 +56,8 @@ class QueryProcesserManager(BaseProcessersManager):
         return outer_dict
 
     def post_process(self, outer_dict: Dict[str, Any], inner_dict: Dict[str, Any]) -> bool:
-        chat_messages_manager = ChatMessagesSState.get()
-        chat_messages_manager.add_prompt_and_answer(
+        chat_room_manager = ChatRoomSState.get()
+        chat_room_manager.add_prompt_and_answer(
             prompt=inner_dict["form_schema"].prompt,
             answer=inner_dict["answer"],
             user_id=AccountSState.get().account_id,

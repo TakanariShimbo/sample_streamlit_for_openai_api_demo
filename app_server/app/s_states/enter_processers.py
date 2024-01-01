@@ -1,14 +1,17 @@
 from typing import Dict, Any, Tuple
 
 from .component_s_states import ComponentSState
-from .chat_messages_s_states import ChatMessagesSState
+from .chat_room_s_states import ChatRoomSState
 from ..base import BaseProcesser, BaseProcessersManager
-from controller import ChatMessagesManager
+from controller import ChatRoomManager
 
 
 class EnterProcesser(BaseProcesser[None]):
     def main_process(self, inner_dict: Dict[str, Any]) -> None:
-        inner_dict["chat_message_manager"] = ChatMessagesManager.init_as_continue(room_id=inner_dict["room_id"])
+        inner_dict["chat_message_manager"] = ChatRoomManager.init_as_continue(
+            room_id=inner_dict["room_id"],
+            account_id=inner_dict["account_id"],
+        )
 
     def pre_process(self, outer_dict: Dict[str, Any], inner_dict: Dict[str, Any]) -> None:
         pass
@@ -25,6 +28,7 @@ class EnterProcesserManager(BaseProcessersManager):
         outer_dict = {}
         inner_dict = {}
         inner_dict["room_id"] = kwargs["room_id"]
+        inner_dict["account_id"] = kwargs["account_id"]
         return outer_dict, inner_dict
 
     def pre_process_for_running(self, **kwargs) -> Dict[str, Any]:
@@ -32,6 +36,6 @@ class EnterProcesserManager(BaseProcessersManager):
         return outer_dict
 
     def post_process(self, outer_dict: Dict[str, Any], inner_dict: Dict[str, Any]) -> bool:
-        ChatMessagesSState.set(value=inner_dict["chat_message_manager"])
+        ChatRoomSState.set(value=inner_dict["chat_message_manager"])
         ComponentSState.set_chat_room_entity()
         return True

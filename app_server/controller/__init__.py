@@ -1,2 +1,2 @@
 from .handler import BaseResponse
-from .manager import AccountManager, ChatGptManager, ChatMessagesManager, LottieManager
+from .manager import AccountManager, ChatGptManager, ChatRoomManager, LottieManager

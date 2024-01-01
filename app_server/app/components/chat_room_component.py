@@ -4,7 +4,7 @@ import streamlit as st
 from streamlit.delta_generator import DeltaGenerator
 
 from ..base import BaseComponent
-from ..s_states import AccountSState, ComponentSState, QueryProcesserSState, ChatMessagesSState
+from ..s_states import AccountSState, ComponentSState, QueryProcesserSState, ChatRoomSState
 from model import CHAT_GPT_MODEL_TYPE_TABLE, ChatGptModelTypeEntity
 
 
@@ -54,7 +54,7 @@ class ChatRoomComponent(BaseComponent):
     @staticmethod
     def init() -> None:
         AccountSState.init()
-        ChatMessagesSState.init()
+        ChatRoomSState.init()
         QueryProcesserSState.init()
 
     @classmethod
@@ -111,8 +111,8 @@ class ChatRoomComponent(BaseComponent):
         history_area = st.container(border=False)
         with history_area:
             st.markdown("#### 📝 History")
-            chat_messages_manager = ChatMessagesSState.get()
-            for message_entity in chat_messages_manager.get_all_message_entities():
+            chat_room_manager = ChatRoomSState.get()
+            for message_entity in chat_room_manager.get_all_message_entities():
                 if message_entity.role == "system":
                     continue
                 with st.chat_message(name=message_entity.role):
@@ -149,11 +149,16 @@ class ChatRoomComponent(BaseComponent):
         cls._display_sing_out_button()
         cls._display_leave_room_button()
         cls._display_title()
+
+        is_created_user = ChatRoomSState.get().account_id == AccountSState.get().account_id
+        if not is_created_user:
+            history_area = cls._display_history()
+            return
         action_results = cls._display_query_form_and_get_results()
         history_area = cls._display_history()
         cls._execute_query_process(action_results=action_results, history_area=history_area)
 
     @staticmethod
     def deinit() -> None:
-        ChatMessagesSState.deinit()
+        ChatRoomSState.deinit()
         QueryProcesserSState.deinit()
