@@ -151,12 +151,13 @@ class ChatRoomComponent(BaseComponent):
         cls._display_title()
 
         is_created_user = ChatRoomSState.get().account_id == AccountSState.get().account_id
-        if not is_created_user:
+        if is_created_user:
+            action_results = cls._display_query_form_and_get_results()
+            history_area = cls._display_history()
+            cls._execute_query_process(action_results=action_results, history_area=history_area)
+        else:
             history_area = cls._display_history()
             return
-        action_results = cls._display_query_form_and_get_results()
-        history_area = cls._display_history()
-        cls._execute_query_process(action_results=action_results, history_area=history_area)
 
     @staticmethod
     def deinit() -> None:

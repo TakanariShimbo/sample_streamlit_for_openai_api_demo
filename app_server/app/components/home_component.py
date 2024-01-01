@@ -41,6 +41,24 @@ class CreateActionResults:
         return self._is_pushed
 
 
+class RoomContainerActionResults:
+    def __init__(
+        self,
+        is_pushed: bool,
+        loading_area: DeltaGenerator,
+    ) -> None:
+        self._is_pushed = is_pushed
+        self._loading_area = loading_area
+
+    @property
+    def is_pushed(self) -> bool:
+        return self._is_pushed
+
+    @property
+    def loading_area(self) -> DeltaGenerator:
+        return self._loading_area
+
+
 class EnterActionResults:
     def __init__(
         self,
@@ -109,7 +127,28 @@ class HomeComponent(BaseComponent):
         )
 
     @staticmethod
-    def _display_your_rooms_and_get_results() -> Optional[EnterActionResults]:
+    def _display_room_container_and_get_results(chat_room_entity: ChatRoomEntity, button_key: str) -> RoomContainerActionResults:
+        with st.container(border=True):
+            contents = dedent(
+                f"""
+                ##### 📝 {chat_room_entity.title}  
+                👤 {chat_room_entity.account_id}   
+                🕛 {chat_room_entity.created_at}
+                """
+            )
+            st.markdown(contents)
+
+            _, loading_area, _ = st.columns([1, 2, 1])
+            _, button_area, _ = st.columns([1, 2, 1])
+            is_pushed = button_area.button(label="Edit", type="primary", key=button_key, use_container_width=True)
+
+        return RoomContainerActionResults(
+            is_pushed=is_pushed,
+            loading_area=loading_area,
+        )
+
+    @classmethod
+    def _display_your_rooms_and_get_results(cls) -> Optional[EnterActionResults]:
         selected_chat_room_entity = None
         selected_loading_area = None
         st.markdown("#### 🧍 Yours")
@@ -118,22 +157,13 @@ class HomeComponent(BaseComponent):
             account_id=AccountSState.get().account_id,
         )
         for i, chat_room_entity in enumerate(your_room_table.get_all_entities()):
-            with st.container(border=True):
-                contents = dedent(
-                    f"""
-                    ##### 📝 {chat_room_entity.title}  
-                    👤 {chat_room_entity.account_id}   
-                    🕛 {chat_room_entity.created_at}
-                    """
-                )
-                st.markdown(contents)
-
-                _, loading_area, _ = st.columns([1, 2, 1])
-                _, button_area, _ = st.columns([1, 2, 1])
-                is_pushed = button_area.button(label="Edit", type="primary", key=f"RoomEditButton{i}", use_container_width=True)
-                if is_pushed:
-                    selected_chat_room_entity = chat_room_entity
-                    selected_loading_area = loading_area
+            action_results = cls._display_room_container_and_get_results(
+                chat_room_entity=chat_room_entity,
+                button_key=f"RoomEditButton{i}",
+            )
+            if action_results.is_pushed:
+                selected_chat_room_entity = chat_room_entity
+                selected_loading_area = action_results.loading_area
 
         if selected_chat_room_entity == None:
             return None
@@ -145,8 +175,8 @@ class HomeComponent(BaseComponent):
             loading_area=selected_loading_area,
         )
 
-    @staticmethod
-    def _display_everyone_rooms_and_get_results() -> Optional[EnterActionResults]:
+    @classmethod
+    def _display_everyone_rooms_and_get_results(cls) -> Optional[EnterActionResults]:
         selected_chat_room_entity = None
         selected_loading_area = None
         st.markdown("#### 🧑‍🤝‍🧑 Everyone")
@@ -155,22 +185,13 @@ class HomeComponent(BaseComponent):
             account_id=AccountSState.get().account_id,
         )
         for i, chat_room_entity in enumerate(your_room_table.get_all_entities()):
-            with st.container(border=True):
-                contents = dedent(
-                    f"""
-                    ##### 📝 {chat_room_entity.title}  
-                    👤 {chat_room_entity.account_id}   
-                    🕛 {chat_room_entity.created_at}
-                    """
-                )
-                st.markdown(contents)
-
-                _, loading_area, _ = st.columns([1, 2, 1])
-                _, button_area, _ = st.columns([1, 2, 1])
-                is_pushed = button_area.button(label="View", type="primary", key=f"RoomViewButton{i}", use_container_width=True)
-                if is_pushed:
-                    selected_chat_room_entity = chat_room_entity
-                    selected_loading_area = loading_area
+            action_results = cls._display_room_container_and_get_results(
+                chat_room_entity=chat_room_entity,
+                button_key=f"RoomViewButton{i}",
+            )
+            if action_results.is_pushed:
+                selected_chat_room_entity = chat_room_entity
+                selected_loading_area = action_results.loading_area
 
         if selected_chat_room_entity == None:
             return None
@@ -181,7 +202,7 @@ class HomeComponent(BaseComponent):
             chat_room_entity=selected_chat_room_entity,
             loading_area=selected_loading_area,
         )
-    
+
     @staticmethod
     def _execute_create_process(create_action_results: CreateActionResults) -> bool:
         if not create_action_results.is_pushed:
