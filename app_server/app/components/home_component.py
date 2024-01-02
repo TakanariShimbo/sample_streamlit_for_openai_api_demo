@@ -2,79 +2,13 @@ from textwrap import dedent
 from typing import Optional
 
 import streamlit as st
-from streamlit.delta_generator import DeltaGenerator
 from streamlit_lottie import st_lottie_spinner
 
+from .home_action_results import CreateActionResults, EnterActionResults, RoomContainerActionResults
 from ..base import BaseComponent
 from ..s_states import AccountSState, ComponentSState, CreateProcesserSState, EnterProcesserSState
 from controller import LottieManager
 from model import ChatRoomTable, ChatRoomEntity, DATABASE_ENGINE
-
-
-class CreateActionResults:
-    def __init__(
-        self,
-        title: str,
-        message_area: DeltaGenerator,
-        loading_area: DeltaGenerator,
-        is_pushed: bool,
-    ) -> None:
-        self._title = title
-        self._message_area = message_area
-        self._loading_area = loading_area
-        self._is_pushed = is_pushed
-
-    @property
-    def title(self) -> str:
-        return self._title
-
-    @property
-    def message_area(self) -> DeltaGenerator:
-        return self._message_area
-
-    @property
-    def loading_area(self) -> DeltaGenerator:
-        return self._loading_area
-
-    @property
-    def is_pushed(self) -> bool:
-        return self._is_pushed
-
-
-class RoomContainerActionResults:
-    def __init__(
-        self,
-        is_pushed: bool,
-        loading_area: DeltaGenerator,
-    ) -> None:
-        self._is_pushed = is_pushed
-        self._loading_area = loading_area
-
-    @property
-    def is_pushed(self) -> bool:
-        return self._is_pushed
-
-    @property
-    def loading_area(self) -> DeltaGenerator:
-        return self._loading_area
-
-
-class EnterActionResults:
-    def __init__(
-        self,
-        chat_room_entity: ChatRoomEntity,
-        loading_area: DeltaGenerator,
-    ) -> None:
-        self._chat_room_entity = chat_room_entity
-        self._loading_area = loading_area
-
-    @property
-    def chat_room_entity(self) -> ChatRoomEntity:
-        return self._chat_room_entity
-
-    @property
-    def loading_area(self) -> DeltaGenerator:
-        return self._loading_area
 
 
 class HomeComponent(BaseComponent):
@@ -148,50 +82,42 @@ class HomeComponent(BaseComponent):
         )
 
     @classmethod
-    def _display_your_rooms_and_get_results(cls) -> Optional[EnterActionResults]:
+    def _display_rooms_and_get_results(cls) -> Optional[EnterActionResults]:
         selected_chat_room_entity = None
         selected_loading_area = None
-        st.markdown("#### 🧍 Yours")
-        your_room_table = ChatRoomTable.load_rooms_with_specified_account_from_database(
-            database_engine=DATABASE_ENGINE,
-            account_id=AccountSState.get().account_id,
-        )
-        for i, chat_room_entity in enumerate(your_room_table.get_all_entities()):
-            action_results = cls._display_room_container_and_get_results(
-                chat_room_entity=chat_room_entity,
-                button_key=f"RoomEditButton{i}",
-            )
-            if action_results.is_pushed:
-                selected_chat_room_entity = chat_room_entity
-                selected_loading_area = action_results.loading_area
+        left, right = st.columns([1, 1])
 
-        if selected_chat_room_entity == None:
-            return None
-        if selected_loading_area == None:
-            return None
-
-        return EnterActionResults(
-            chat_room_entity=selected_chat_room_entity,
-            loading_area=selected_loading_area,
-        )
-
-    @classmethod
-    def _display_everyone_rooms_and_get_results(cls) -> Optional[EnterActionResults]:
-        selected_chat_room_entity = None
-        selected_loading_area = None
-        st.markdown("#### 🧑‍🤝‍🧑 Everyone")
-        your_room_table = ChatRoomTable.load_rooms_without_specified_account_from_database(
-            database_engine=DATABASE_ENGINE,
-            account_id=AccountSState.get().account_id,
-        )
-        for i, chat_room_entity in enumerate(your_room_table.get_all_entities()):
-            action_results = cls._display_room_container_and_get_results(
-                chat_room_entity=chat_room_entity,
-                button_key=f"RoomViewButton{i}",
-            )
-            if action_results.is_pushed:
-                selected_chat_room_entity = chat_room_entity
-                selected_loading_area = action_results.loading_area
+        with left:
+            st.markdown("#### 🧍 Yours")
+            with st_lottie_spinner(animation_source=LottieManager.LOADING):
+                your_room_table = ChatRoomTable.load_rooms_with_specified_account_from_database(
+                    database_engine=DATABASE_ENGINE,
+                    account_id=AccountSState.get().account_id,
+                )
+            for i, chat_room_entity in enumerate(your_room_table.get_all_entities()):
+                action_results = cls._display_room_container_and_get_results(
+                    chat_room_entity=chat_room_entity,
+                    button_key=f"RoomEditButton{i}",
+                )
+                if action_results.is_pushed:
+                    selected_chat_room_entity = chat_room_entity
+                    selected_loading_area = action_results.loading_area
+        
+        with right:
+            st.markdown("#### 🧑‍🤝‍🧑 Everyone")
+            with st_lottie_spinner(animation_source=LottieManager.LOADING):
+                your_room_table = ChatRoomTable.load_rooms_without_specified_account_from_database(
+                    database_engine=DATABASE_ENGINE,
+                    account_id=AccountSState.get().account_id,
+                )
+            for i, chat_room_entity in enumerate(your_room_table.get_all_entities()):
+                action_results = cls._display_room_container_and_get_results(
+                    chat_room_entity=chat_room_entity,
+                    button_key=f"RoomViewButton{i}",
+                )
+                if action_results.is_pushed:
+                    selected_chat_room_entity = chat_room_entity
+                    selected_loading_area = action_results.loading_area
 
         if selected_chat_room_entity == None:
             return None
@@ -244,24 +170,14 @@ class HomeComponent(BaseComponent):
         cls._display_overview()
 
         create_action_results = cls._display_create_form_and_get_results()
-
-        left, right = st.columns([1, 1])
-        with left:
-            edit_action_results = cls._display_your_rooms_and_get_results()
-        with right:
-            view_action_results = cls._display_everyone_rooms_and_get_results()
+        enter_action_results = cls._display_rooms_and_get_results()
 
         is_success = cls._execute_create_process(create_action_results=create_action_results)
         if is_success:
             cls.deinit()
             st.rerun()
 
-        is_success = cls._execute_enter_process(enter_action_results=edit_action_results)
-        if is_success:
-            cls.deinit()
-            st.rerun()
-
-        is_success = cls._execute_enter_process(enter_action_results=view_action_results)
+        is_success = cls._execute_enter_process(enter_action_results=enter_action_results)
         if is_success:
             cls.deinit()
             st.rerun()

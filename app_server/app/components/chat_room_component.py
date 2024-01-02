@@ -1,53 +1,10 @@
-from typing import Optional
-
 import streamlit as st
 from streamlit.delta_generator import DeltaGenerator
 
+from .chat_room_action_results import ActionResults
 from ..base import BaseComponent
 from ..s_states import AccountSState, ComponentSState, QueryProcesserSState, ChatRoomSState
-from model import CHAT_GPT_MODEL_TYPE_TABLE, ChatGptModelTypeEntity
-
-
-class ActionResults:
-    def __init__(
-        self,
-        chat_gpt_model_entity: Optional[ChatGptModelTypeEntity],
-        prompt: str,
-        message_area: DeltaGenerator,
-        is_run_pushed: bool,
-        is_rerun_pushed: bool,
-        is_cancel_pushed: bool,
-    ) -> None:
-        self._chat_gpt_model_entity = chat_gpt_model_entity
-        self._prompt = prompt
-        self._message_area = message_area
-        self._is_run_pushed = is_run_pushed
-        self._is_rerun_pushed = is_rerun_pushed
-        self._is_cancel_pushed = is_cancel_pushed
-
-    @property
-    def chat_gpt_model_entity(self) -> Optional[ChatGptModelTypeEntity]:
-        return self._chat_gpt_model_entity
-
-    @property
-    def prompt(self) -> str:
-        return self._prompt
-
-    @property
-    def message_area(self) -> DeltaGenerator:
-        return self._message_area
-
-    @property
-    def is_run_pushed(self) -> bool:
-        return self._is_run_pushed
-
-    @property
-    def is_rerun_pushed(self) -> bool:
-        return self._is_rerun_pushed
-
-    @property
-    def is_cancel_pushed(self) -> bool:
-        return self._is_cancel_pushed
+from model import CHAT_GPT_MODEL_TYPE_TABLE
 
 
 class ChatRoomComponent(BaseComponent):
