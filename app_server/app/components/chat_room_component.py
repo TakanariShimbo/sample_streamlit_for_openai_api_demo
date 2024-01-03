@@ -28,7 +28,7 @@ class ChatRoomComponent(BaseComponent):
 
     @staticmethod
     def _display_query_form_and_get_results() -> ActionResults:
-        st.markdown("#### 🧠 Query")
+        st.markdown("#### ❔ Query")
         form_area = st.form(key="QueryForm")
         with form_area:
             selected_chat_gpt_model_entity = st.selectbox(
