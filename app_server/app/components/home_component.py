@@ -113,7 +113,7 @@ class HomeComponent(BaseComponent):
         with right:
             st.markdown("#### 🧑‍🤝‍🧑 Everyone")
             with st_lottie_spinner(animation_source=LottieManager.LOADING):
-                your_room_table = ChatRoomTable.load_rooms_without_specified_account_from_database(
+                your_room_table = ChatRoomTable.load_public_rooms_without_specified_account_from_database(
                     database_engine=DATABASE_ENGINE,
                     account_id=AccountSState.get().account_id,
                 )

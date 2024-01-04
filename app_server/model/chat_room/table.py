@@ -33,9 +33,9 @@ class ChatRoomTable(BaseTable[ChatRoomEntity]):
         return cls.load_from_database(database_engine=database_engine, sql=sql)
 
     @classmethod
-    def load_rooms_without_specified_account_from_database(cls, database_engine: Engine, account_id: str, limit: int = 5) -> "ChatRoomTable":
+    def load_public_rooms_without_specified_account_from_database(cls, database_engine: Engine, account_id: str, limit: int = 5) -> "ChatRoomTable":
         table_name = cls.get_database_table_name()
-        sql = f"SELECT * FROM {table_name} WHERE account_id != '{account_id}' ORDER BY created_at DESC LIMIT {limit}"
+        sql = f"SELECT * FROM {table_name} WHERE release = 'public' AND account_id != '{account_id}' ORDER BY created_at DESC LIMIT {limit}"
         return cls.load_from_database(database_engine=database_engine, sql=sql)
 
     @classmethod
