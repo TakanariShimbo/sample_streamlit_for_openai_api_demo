@@ -68,20 +68,21 @@ class HomeComponent(BaseComponent):
         )
 
     @staticmethod
-    def _display_room_container_and_get_results(chat_room_entity: ChatRoomEntity, button_key: str) -> RoomContainerActionResults:
+    def _display_room_container_and_get_results(chat_room_entity: ChatRoomEntity, button_label: str, button_key: str) -> RoomContainerActionResults:
         with st.container(border=True):
             contents = dedent(
                 f"""
                 ##### 📝 {chat_room_entity.title}  
-                👤 {chat_room_entity.account_id}   
-                🕛 {chat_room_entity.created_at}
+                👤 {chat_room_entity.account_id}  
+                🕛 {chat_room_entity.created_at}  
+                👀 {chat_room_entity.release}
                 """
             )
             st.markdown(contents)
 
             _, loading_area, _ = st.columns([1, 2, 1])
             _, button_area, _ = st.columns([1, 2, 1])
-            is_pushed = button_area.button(label="Edit", type="primary", key=button_key, use_container_width=True)
+            is_pushed = button_area.button(label=button_label, type="primary", key=button_key, use_container_width=True)
 
         return RoomContainerActionResults(
             is_pushed=is_pushed,
@@ -104,6 +105,7 @@ class HomeComponent(BaseComponent):
             for i, chat_room_entity in enumerate(your_room_table.get_all_entities()):
                 action_results = cls._display_room_container_and_get_results(
                     chat_room_entity=chat_room_entity,
+                    button_label="Edit",
                     button_key=f"RoomEditButton{i}",
                 )
                 if action_results.is_pushed:
@@ -120,6 +122,7 @@ class HomeComponent(BaseComponent):
             for i, chat_room_entity in enumerate(your_room_table.get_all_entities()):
                 action_results = cls._display_room_container_and_get_results(
                     chat_room_entity=chat_room_entity,
+                    button_label="View",
                     button_key=f"RoomViewButton{i}",
                 )
                 if action_results.is_pushed:
