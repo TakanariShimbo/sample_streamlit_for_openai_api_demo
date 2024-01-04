@@ -13,6 +13,7 @@ class CreateProcesser(BaseProcesser[None]):
         inner_dict["chat_message_manager"] = ChatRoomManager.init_as_new(
             account_id=inner_dict["form_schema"].account_id,
             title=inner_dict["form_schema"].title,
+            release=inner_dict["form_schema"].release,
         )
 
     def pre_process(self, outer_dict: Dict[str, Any], inner_dict: Dict[str, Any]) -> None:
@@ -35,6 +36,7 @@ class CreateProcesserManager(BaseProcessersManager):
             inner_dict["form_schema"] = CreateFormSchema.from_entity(
                 account_entity=AccountSState.get(),
                 title=kwargs["title"],
+                release_entity=kwargs["release_entity"]
             )
         except:
             outer_dict["message_area"].warning("Please input form corectly.")

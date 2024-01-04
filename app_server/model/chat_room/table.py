@@ -14,6 +14,7 @@ class ChatRoomTable(BaseTable[ChatRoomEntity]):
             ColumnConfig(name="room_id", dtype=pd.StringDtype(), unique=True, non_null=True, readonly=False),
             ColumnConfig(name="account_id", dtype=pd.StringDtype(), unique=False, non_null=True, readonly=False),
             ColumnConfig(name="title", dtype=pd.StringDtype(), unique=False, non_null=True, readonly=False),
+            ColumnConfig(name="release", dtype=pd.StringDtype(), unique=False, non_null=True, readonly=False),
             ColumnConfig(name="created_at", dtype=pd.StringDtype(), unique=False, non_null=False, readonly=True),
         ]
 

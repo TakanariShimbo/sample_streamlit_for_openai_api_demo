@@ -4,10 +4,11 @@ from ..base import BaseEntity
 
 
 class ChatRoomEntity(BaseEntity):
-    def __init__(self, room_id: str, account_id: str, title: str, created_at: Optional[str] = None) -> None:
+    def __init__(self, room_id: str, account_id: str, title: str, release: str, created_at: Optional[str] = None) -> None:
         self._room_id = room_id
         self._account_id = account_id
         self._title = title
+        self._release = release
         self._created_at = created_at
 
     @property
@@ -23,6 +24,10 @@ class ChatRoomEntity(BaseEntity):
         return self._title
 
     @property
+    def release(self) -> str:
+        return self._release
+
+    @property
     def created_at(self) -> Optional[str]:
         created_at = self._created_at
         if created_at == None:
@@ -34,4 +39,4 @@ class ChatRoomEntity(BaseEntity):
 
     @staticmethod
     def get_column_names() -> List[str]:
-        return ["room_id", "account_id", "title", "created_at"]
+        return ["room_id", "account_id", "title", "release", "created_at"]

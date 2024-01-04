@@ -8,7 +8,7 @@ from .home_action_results import CreateActionResults, EnterActionResults, RoomCo
 from ..base import BaseComponent
 from ..s_states import AccountSState, ComponentSState, CreateProcesserSState, EnterProcesserSState
 from controller import LottieManager
-from model import ChatRoomTable, ChatRoomEntity, DATABASE_ENGINE
+from model import ChatRoomTable, ChatRoomEntity, RELEASE_TYPE_TABLE, DATABASE_ENGINE
 
 
 class HomeComponent(BaseComponent):
@@ -42,6 +42,12 @@ class HomeComponent(BaseComponent):
     def _display_create_form_and_get_results() -> CreateActionResults:
         st.markdown("#### ➕ New")
         with st.form(key="CreateForm", border=True):
+            selected_release_entity = st.selectbox(
+                label="Release Type",
+                options=RELEASE_TYPE_TABLE.get_all_entities(),
+                format_func=lambda enetity: enetity.label_en,
+                key="ReleaseTypeSelectBox",
+            )
             inputed_title = st.text_input(
                 label="Title",
                 placeholder="Input room title here.",
@@ -55,6 +61,7 @@ class HomeComponent(BaseComponent):
 
         return CreateActionResults(
             title=inputed_title,
+            release_entity=selected_release_entity,
             message_area=message_area,
             loading_area=loading_area,
             is_pushed=is_pushed,
@@ -140,6 +147,7 @@ class HomeComponent(BaseComponent):
                 is_success = processers_manager.run_all(
                     message_area=create_action_results.message_area,
                     title=create_action_results.title,
+                    release_entity=create_action_results.release_entity,
                 )
         return is_success
 
@@ -154,6 +162,7 @@ class HomeComponent(BaseComponent):
                 is_success = processers_manager.run_all(
                     room_id=enter_action_results.chat_room_entity.room_id,
                     account_id=enter_action_results.chat_room_entity.account_id,
+                    release=enter_action_results.chat_room_entity.release,
                 )
         return is_success
 

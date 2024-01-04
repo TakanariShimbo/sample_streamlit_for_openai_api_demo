@@ -5,9 +5,10 @@ from model import ChatRoomEntity, ChatRoomTable, ChatMessageEntity, ChatMessageT
 
 
 class ChatRoomManager:
-    def __init__(self, chat_message_table: ChatMessageTable, room_id: str, account_id: str):
+    def __init__(self, chat_message_table: ChatMessageTable, room_id: str, account_id: str, release: str):
         self._table = chat_message_table
         self._room_id = room_id
+        self._release = release
         self._account_id = account_id
 
     @property
@@ -15,19 +16,19 @@ class ChatRoomManager:
         return self._account_id
 
     @classmethod
-    def init_as_new(cls, title: str, account_id: str) -> "ChatRoomManager":
+    def init_as_new(cls, title: str, account_id: str, release: str) -> "ChatRoomManager":
         room_id = str(uuid4())
-        chat_room_entity = ChatRoomEntity(room_id=room_id, account_id=account_id, title=title)
+        chat_room_entity = ChatRoomEntity(room_id=room_id, account_id=account_id, title=title, release=release)
         chat_room_table = ChatRoomTable.load_from_entities(entities=[chat_room_entity])
         chat_room_table.save_to_database(database_engine=DATABASE_ENGINE)
 
         chat_message_table = ChatMessageTable.create_empty_table()
-        return cls(chat_message_table=chat_message_table, room_id=room_id, account_id=account_id)
+        return cls(chat_message_table=chat_message_table, room_id=room_id, account_id=account_id, release=release)
 
     @classmethod
-    def init_as_continue(cls, room_id: str, account_id: str) -> "ChatRoomManager":
+    def init_as_continue(cls, room_id: str, account_id: str, release: str) -> "ChatRoomManager":
         chat_message_table = ChatMessageTable.load_messages_specified_room_from_database(database_engine=DATABASE_ENGINE, room_id=room_id)
-        return cls(chat_message_table=chat_message_table, room_id=room_id, account_id=account_id)
+        return cls(chat_message_table=chat_message_table, room_id=room_id, account_id=account_id, release=release)
 
     def add_prompt_and_answer(self, prompt: str, answer: str, user_id: str, assistant_id: str) -> None:
         prompt_and_answer_entitys = [
