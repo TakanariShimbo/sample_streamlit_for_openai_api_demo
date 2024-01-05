@@ -7,6 +7,7 @@ from .account_s_states import AccountSState
 from .chat_room_s_states import ChatRoomSState
 from ..base import BaseProcesser, BaseProcessersManager, EarlyStopProcessException
 from controller import ChatGptManager
+from model import CHAT_GPT_ROLE_TYPE_TABLE
 
 
 class QueryProcesser(BaseProcesser[str]):
@@ -20,9 +21,9 @@ class QueryProcesser(BaseProcesser[str]):
 
     def pre_process(self, outer_dict: Dict[str, Any], inner_dict: Dict[str, Any]) -> None:
         with outer_dict["history_area"]:
-            with st.chat_message(name="user"):
+            with st.chat_message(name=CHAT_GPT_ROLE_TYPE_TABLE.get_user_entity().key):
                 st.write(inner_dict["form_schema"].prompt)
-            with st.chat_message(name="assistant"):
+            with st.chat_message(name=CHAT_GPT_ROLE_TYPE_TABLE.get_assistant_entity().key):
                 outer_dict["answer_area"] = st.empty()
 
     def post_process(self, outer_dict: Dict[str, Any], inner_dict: Dict[str, Any]) -> None:
