@@ -23,5 +23,8 @@ class ReleaseTypeTable(BaseTable[ReleaseTypeEntity]):
     def get_csv_filepath() -> str:
         return "./model/release_type/data.csv"
 
+    def convert_key_to_label_en(self, release_key: str) -> str:
+        return self.get_entity(column_name="key", value=release_key).label_en
+
 
 RELEASE_TYPE_TABLE = ReleaseTypeTable.load_from_csv()

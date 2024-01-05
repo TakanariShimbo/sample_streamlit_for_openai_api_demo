@@ -26,7 +26,7 @@ class AccountManager:
     def sign_in(account_id: str, raw_password: str) -> SignInResponse:
         target_account_table = AccountTable.load_specified_account_from_database(database_engine=DATABASE_ENGINE, account_id=account_id)
         try:
-            target_account_entity = target_account_table.get_entity(column_name="account_id", value=account_id)
+            target_account_entity = target_account_table.get_specified_accout_entity(account_id=account_id)
         except ValueError:
             return SignInResponse(is_success=False, message=f"Account ID '{account_id}' hasn't signed up yet.")
         is_success =  HashHandler.verify(raw_contents=raw_password, hashed_contents=target_account_entity.hashed_password)

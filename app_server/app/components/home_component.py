@@ -75,7 +75,7 @@ class HomeComponent(BaseComponent):
                 ##### 📝 {chat_room_entity.title}  
                 👤 {chat_room_entity.account_id}  
                 🕛 {chat_room_entity.created_at}  
-                👀 {chat_room_entity.release}
+                👀 {RELEASE_TYPE_TABLE.convert_key_to_label_en(release_key=chat_room_entity.release)}
                 """
             )
             st.markdown(contents)
