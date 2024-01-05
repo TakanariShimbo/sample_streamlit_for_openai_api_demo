@@ -23,5 +23,14 @@ class ChatGptRoleTypeTable(BaseTable[ChatGptRoleTypeEntity]):
     def get_csv_filepath() -> str:
         return "./model/chat_gpt_role_type/data.csv"
 
+    def get_system_entity(self) -> ChatGptRoleTypeEntity:
+        return self.get_entity(column_name="key", value="system")
+
+    def get_user_entity(self) -> ChatGptRoleTypeEntity:
+        return self.get_entity(column_name="key", value="user")
+    
+    def get_assistant_entity(self) -> ChatGptRoleTypeEntity:
+        return self.get_entity(column_name="key", value="assistant")
+
 
 CHAT_GPT_ROLE_TYPE_TABLE = ChatGptRoleTypeTable.load_from_csv()
