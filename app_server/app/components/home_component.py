@@ -19,7 +19,7 @@ class HomeComponent(BaseComponent):
         EnterProcesserSState.init()
 
     @classmethod
-    def _display_sing_out_button(cls) -> None:
+    def _display_sign_out_button(cls) -> None:
         st.sidebar.button(label="👤 Sign out", key="SignOutButton", on_click=cls._on_click_sign_out, use_container_width=True)
 
     @staticmethod
@@ -177,7 +177,7 @@ class HomeComponent(BaseComponent):
 
     @classmethod
     def main(cls) -> None:
-        cls._display_sing_out_button()
+        cls._display_sign_out_button()
         cls._display_title()
         cls._display_overview()
 
