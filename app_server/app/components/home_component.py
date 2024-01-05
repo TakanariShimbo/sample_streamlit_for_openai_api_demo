@@ -1,5 +1,5 @@
 from textwrap import dedent
-from typing import Optional
+from typing import Optional, Literal
 
 import streamlit as st
 from streamlit_lottie import st_lottie_spinner
@@ -68,7 +68,7 @@ class HomeComponent(BaseComponent):
         )
 
     @staticmethod
-    def _display_room_container_and_get_results(chat_room_entity: ChatRoomEntity, button_label: str, button_key: str) -> RoomContainerActionResults:
+    def _display_room_container_and_get_results(chat_room_entity: ChatRoomEntity, chat_room_type: Literal["Edit", "View"], container_id: int) -> RoomContainerActionResults:
         with st.container(border=True):
             contents = dedent(
                 f"""
@@ -82,7 +82,7 @@ class HomeComponent(BaseComponent):
 
             _, loading_area, _ = st.columns([1, 2, 1])
             _, button_area, _ = st.columns([1, 2, 1])
-            is_pushed = button_area.button(label=button_label, type="primary", key=button_key, use_container_width=True)
+            is_pushed = button_area.button(label=chat_room_type, type="primary", key=f"Room{chat_room_type}Button{container_id}", use_container_width=True)
 
         return RoomContainerActionResults(
             is_pushed=is_pushed,
@@ -102,11 +102,11 @@ class HomeComponent(BaseComponent):
                     database_engine=DATABASE_ENGINE,
                     account_id=AccountSState.get().account_id,
                 )
-            for i, chat_room_entity in enumerate(your_room_table.get_all_entities()):
+            for container_id, chat_room_entity in enumerate(your_room_table.get_all_entities()):
                 action_results = cls._display_room_container_and_get_results(
                     chat_room_entity=chat_room_entity,
-                    button_label="Edit",
-                    button_key=f"RoomEditButton{i}",
+                    chat_room_type="Edit",
+                    container_id=container_id,
                 )
                 if action_results.is_pushed:
                     selected_chat_room_entity = chat_room_entity
@@ -119,11 +119,11 @@ class HomeComponent(BaseComponent):
                     database_engine=DATABASE_ENGINE,
                     account_id=AccountSState.get().account_id,
                 )
-            for i, chat_room_entity in enumerate(your_room_table.get_all_entities()):
+            for container_id, chat_room_entity in enumerate(your_room_table.get_all_entities()):
                 action_results = cls._display_room_container_and_get_results(
                     chat_room_entity=chat_room_entity,
-                    button_label="View",
-                    button_key=f"RoomViewButton{i}",
+                    chat_room_type="View",
+                    container_id=container_id,
                 )
                 if action_results.is_pushed:
                     selected_chat_room_entity = chat_room_entity
