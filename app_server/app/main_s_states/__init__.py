@@ -1,4 +1,4 @@
-from .component_s_states import ComponentSState
+from .main_component_s_states import MainComponentSState
 from .account_s_states import AccountSState
 from .sign_in_processer_s_states import SignInProcesserSState
 from .create_processer_s_states import CreateProcesserSState

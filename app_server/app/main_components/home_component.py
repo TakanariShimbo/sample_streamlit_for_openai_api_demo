@@ -6,7 +6,7 @@ from streamlit_lottie import st_lottie_spinner
 
 from .home_action_results import CreateActionResults, EnterActionResults, RoomContainerActionResults
 from ..base import BaseComponent
-from ..main_s_states import AccountSState, ComponentSState, CreateProcesserSState, EnterProcesserSState
+from ..main_s_states import AccountSState, MainComponentSState, CreateProcesserSState, EnterProcesserSState
 from controller import LottieManager
 from model import ChatRoomTable, ChatRoomEntity, RELEASE_TYPE_TABLE, DATABASE_ENGINE
 
@@ -171,7 +171,7 @@ class HomeComponent(BaseComponent):
 
     @classmethod
     def _on_click_sign_out(cls) -> None:
-        ComponentSState.set_sign_in_entity()
+        MainComponentSState.set_sign_in_entity()
         cls.deinit()
         AccountSState.deinit()
 

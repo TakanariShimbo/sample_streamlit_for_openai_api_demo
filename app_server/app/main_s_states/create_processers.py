@@ -1,7 +1,7 @@
 from typing import Dict, Any, Tuple
 
 from .create_form_schema import CreateFormSchema
-from .component_s_states import ComponentSState
+from .main_component_s_states import MainComponentSState
 from .account_s_states import AccountSState
 from .chat_room_s_states import ChatRoomSState
 from ..base import BaseProcesser, BaseProcessersManager, EarlyStopProcessException
@@ -53,5 +53,5 @@ class CreateProcesserManager(BaseProcessersManager):
     def post_process(self, outer_dict: Dict[str, Any], inner_dict: Dict[str, Any]) -> bool:
         outer_dict["message_area"].empty()
         ChatRoomSState.set(value=inner_dict["chat_message_manager"])
-        ComponentSState.set_chat_room_entity()
+        MainComponentSState.set_chat_room_entity()
         return True

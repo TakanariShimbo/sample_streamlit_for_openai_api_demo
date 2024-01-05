@@ -1,6 +1,6 @@
 from typing import Dict, Any, Tuple
 
-from .component_s_states import ComponentSState
+from .main_component_s_states import MainComponentSState
 from .chat_room_s_states import ChatRoomSState
 from ..base import BaseProcesser, BaseProcessersManager
 from controller import ChatRoomManager
@@ -39,5 +39,5 @@ class EnterProcesserManager(BaseProcessersManager):
 
     def post_process(self, outer_dict: Dict[str, Any], inner_dict: Dict[str, Any]) -> bool:
         ChatRoomSState.set(value=inner_dict["chat_message_manager"])
-        ComponentSState.set_chat_room_entity()
+        MainComponentSState.set_chat_room_entity()
         return True

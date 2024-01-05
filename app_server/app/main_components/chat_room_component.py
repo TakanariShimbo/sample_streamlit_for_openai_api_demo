@@ -3,7 +3,7 @@ from streamlit.delta_generator import DeltaGenerator
 
 from .chat_room_action_results import ActionResults
 from ..base import BaseComponent
-from ..main_s_states import AccountSState, ComponentSState, QueryProcesserSState, ChatRoomSState
+from ..main_s_states import AccountSState, MainComponentSState, QueryProcesserSState, ChatRoomSState
 from model import CHAT_GPT_MODEL_TYPE_TABLE
 
 
@@ -92,13 +92,13 @@ class ChatRoomComponent(BaseComponent):
 
     @classmethod
     def _on_click_sign_out(cls):
-        ComponentSState.set_sign_in_entity()
+        MainComponentSState.set_sign_in_entity()
         cls.deinit()
         AccountSState.deinit()
 
     @classmethod
     def _on_click_leave_room(cls):
-        ComponentSState.set_home_entity()
+        MainComponentSState.set_home_entity()
         cls.deinit()
 
     @classmethod
