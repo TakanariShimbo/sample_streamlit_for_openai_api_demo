@@ -1,8 +1,9 @@
-from ..handler import HashHandler, BaseResponse
+from ..base import BaseResponse
+from ..handler import HashHandler
 from model import DATABASE_ENGINE, AccountTable, AccountEntity
 
 
-class AccountResponse(BaseResponse[None]):
+class SignUpResponse(BaseResponse[None]):
     pass
 
 class SignInResponse(BaseResponse[AccountEntity]):
@@ -11,15 +12,15 @@ class SignInResponse(BaseResponse[AccountEntity]):
 
 class AccountManager:
     @staticmethod
-    def sign_up(account_id: str, raw_password: str) -> AccountResponse:
+    def sign_up(account_id: str, raw_password: str) -> SignUpResponse:
         hashed_password = HashHandler.hash(raw_contents=raw_password)
         new_account_entity = AccountEntity(account_id=account_id, hashed_password=hashed_password)
         new_account_table = AccountTable.load_from_entities(entities=[new_account_entity])
         try:
             new_account_table.save_to_database(database_engine=DATABASE_ENGINE)
-            return AccountResponse(is_success=True)
+            return SignUpResponse(is_success=True)
         except:
-            return AccountResponse(is_success=False, message=f"Account ID {account_id} has already signed up.")
+            return SignUpResponse(is_success=False, message=f"Account ID {account_id} has already signed up.")
 
     @staticmethod
     def sign_in(account_id: str, raw_password: str) -> SignInResponse:
