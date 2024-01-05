@@ -3,7 +3,7 @@ from streamlit.delta_generator import DeltaGenerator
 
 from .chat_room_action_results import ActionResults
 from ..base import BaseComponent
-from ..s_states import AccountSState, ComponentSState, QueryProcesserSState, ChatRoomSState
+from ..main_s_states import AccountSState, ComponentSState, QueryProcesserSState, ChatRoomSState
 from model import CHAT_GPT_MODEL_TYPE_TABLE
 
 
