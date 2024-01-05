@@ -1,5 +1,3 @@
-import streamlit as st
-
 from .base import BasePage
 from .s_states import ComponentSState
 from .components import WakeupComponent, SignInComponent, HomeComponent, ChatRoomComponent
@@ -9,7 +7,7 @@ from model import COMPONENT_TYPE_TABLE
 class MainPage(BasePage):
     @staticmethod
     def get_title() -> str:
-        return "ChatGPT Demo"
+        return "ChatGPT"
 
     @staticmethod
     def get_icon() -> str:
