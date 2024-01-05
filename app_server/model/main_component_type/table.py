@@ -21,7 +21,7 @@ class MainComponentTypeTable(BaseTable[MainComponentTypeEntity]):
 
     @staticmethod
     def get_csv_filepath() -> str:
-        return "./model/component_type/data.csv"
+        return "./model/main_component_type/data.csv"
 
     def get_wake_up_entity(self) -> MainComponentTypeEntity:
         return self.get_entity(column_name="key", value="wake_up")
