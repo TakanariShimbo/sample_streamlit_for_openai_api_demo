@@ -48,11 +48,11 @@ class ChatRoomComponent(BaseComponent):
 
             _, left_area, _, center_area, _, right_area, _ = st.columns([1, 3, 1, 3, 1, 3, 1])
             with left_area:
-                is_run_pushed = st.form_submit_button(label="RUN", type="primary", use_container_width=True)
+                is_run_pushed = st.form_submit_button(label="Run", type="primary", use_container_width=True)
             with center_area:
-                is_rerun_pushed = st.form_submit_button(label="RERUN", type="primary", use_container_width=True)
+                is_rerun_pushed = st.form_submit_button(label="Rerun", type="primary", use_container_width=True)
             with right_area:
-                is_cancel_pushed = st.form_submit_button(label="CANCEL", type="secondary", use_container_width=True)
+                is_cancel_pushed = st.form_submit_button(label="Cancel", type="secondary", use_container_width=True)
 
         return ActionResults(
             chat_gpt_model_entity=selected_chat_gpt_model_entity,
