@@ -7,7 +7,7 @@ from model import MAIN_COMPONENT_TYPE_TABLE
 class MainPage(BasePage):
     @staticmethod
     def get_title() -> str:
-        return "ChatGPT"
+        return "Share ChatGPT"
 
     @staticmethod
     def get_icon() -> str:

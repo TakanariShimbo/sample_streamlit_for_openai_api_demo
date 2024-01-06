@@ -31,7 +31,7 @@ class HomeComponent(BaseComponent):
         content = dedent(
             f"""
             #### 🔎 Overview
-            Welcome to demo site of ChatGPT.   
+            Welcome to Share ChatGPT.   
             Experience the forefront of AI technology and explore the possibilities of the future.  
             AI makes your daily life smarter and easier.  
             """

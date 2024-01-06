@@ -24,6 +24,18 @@ class HomeComponent(BaseComponent):
     def _display_title() -> None:
         st.markdown("### 🏠 Home")
 
+    @staticmethod
+    def _display_overview() -> None:
+        content = dedent(
+            f"""
+            #### 🔎 Overview
+            Welcome to Management Share ChatGPT.   
+            Experience the forefront of AI technology and explore the possibilities of the future.  
+            AI makes your daily life smarter and easier.  
+            """
+        )
+        st.markdown(content)
+
     @classmethod
     def _on_click_sign_out(cls) -> None:
         ManagementComponentSState.set_sign_in_entity()
@@ -39,6 +51,7 @@ class HomeComponent(BaseComponent):
         cls._display_sign_out_button()
         cls._display_sign_up_button()
         cls._display_title()
+        cls._display_overview()
 
     @staticmethod
     def deinit() -> None:

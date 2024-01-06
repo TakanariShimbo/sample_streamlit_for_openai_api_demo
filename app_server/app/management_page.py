@@ -7,7 +7,7 @@ from model import MANAGEMENT_COMPONENT_TYPE_TABLE
 class ManagementPage(BasePage):
     @staticmethod
     def get_title() -> str:
-        return "ChatGPT Management"
+        return "Management Share ChatGPT"
 
     @staticmethod
     def get_icon() -> str:
