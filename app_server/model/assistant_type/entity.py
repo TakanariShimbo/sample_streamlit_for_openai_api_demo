@@ -3,7 +3,7 @@ from typing import Any, List
 from ..base import BaseEntity
 
 
-class ChatGptModelTypeEntity(BaseEntity):
+class AssistantTypeEntity(BaseEntity):
     def __init__(self, assistant_id: str, label_en: str, label_jp: str):
         self._assistant_id = assistant_id
         self._label_en = label_en
@@ -22,7 +22,7 @@ class ChatGptModelTypeEntity(BaseEntity):
         return self._label_jp
 
     def check_is_same(self, other: Any) -> bool:
-        if not isinstance(other, ChatGptModelTypeEntity):
+        if not isinstance(other, AssistantTypeEntity):
             return False
         return self.assistant_id == other.assistant_id
 

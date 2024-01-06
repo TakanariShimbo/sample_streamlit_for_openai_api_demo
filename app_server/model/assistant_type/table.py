@@ -2,11 +2,11 @@ from typing import List, Type
 
 import pandas as pd
 
-from .entity import ChatGptModelTypeEntity
+from .entity import AssistantTypeEntity
 from ..base import ColumnConfig, BaseTable
 
 
-class ChatGptModelTypeTable(BaseTable[ChatGptModelTypeEntity]):
+class AssistantTypeTable(BaseTable[AssistantTypeEntity]):
     @staticmethod
     def get_column_configs() -> List[ColumnConfig]:
         return [
@@ -16,12 +16,12 @@ class ChatGptModelTypeTable(BaseTable[ChatGptModelTypeEntity]):
         ]
 
     @staticmethod
-    def get_entiry_class() -> Type[ChatGptModelTypeEntity]:
-        return ChatGptModelTypeEntity
+    def get_entiry_class() -> Type[AssistantTypeEntity]:
+        return AssistantTypeEntity
 
     @staticmethod
     def get_csv_filepath() -> str:
-        return "./model/chat_gpt_model_type/data.csv"
+        return "./model/assistant_type/data.csv"
 
 
-CHAT_GPT_MODEL_TYPE_TABLE = ChatGptModelTypeTable.load_from_csv()
+ASSISTANT_TYPE_TABLE = AssistantTypeTable.load_from_csv()

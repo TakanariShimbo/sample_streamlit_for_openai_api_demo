@@ -2,13 +2,13 @@ from typing import Optional
 
 from streamlit.delta_generator import DeltaGenerator
 
-from model import ChatGptModelTypeEntity
+from model import AssistantTypeEntity
 
 
 class ActionResults:
     def __init__(
         self,
-        chat_gpt_model_entity: Optional[ChatGptModelTypeEntity],
+        chat_gpt_model_entity: Optional[AssistantTypeEntity],
         prompt: str,
         message_area: DeltaGenerator,
         is_run_pushed: bool,
@@ -23,7 +23,7 @@ class ActionResults:
         self._is_cancel_pushed = is_cancel_pushed
 
     @property
-    def chat_gpt_model_entity(self) -> Optional[ChatGptModelTypeEntity]:
+    def chat_gpt_model_entity(self) -> Optional[AssistantTypeEntity]:
         return self._chat_gpt_model_entity
 
     @property

@@ -4,7 +4,7 @@ from streamlit.delta_generator import DeltaGenerator
 from .chat_room_action_results import ActionResults
 from ..base import BaseComponent
 from ..main_s_states import AccountSState, MainComponentSState, QueryProcesserSState, ChatRoomSState
-from model import CHAT_GPT_MODEL_TYPE_TABLE
+from model import ASSISTANT_TYPE_TABLE
 
 
 class ChatRoomComponent(BaseComponent):
@@ -33,7 +33,7 @@ class ChatRoomComponent(BaseComponent):
         with form_area:
             selected_chat_gpt_model_entity = st.selectbox(
                 label="Model Type",
-                options=CHAT_GPT_MODEL_TYPE_TABLE.get_all_entities(),
+                options=ASSISTANT_TYPE_TABLE.get_all_entities(),
                 format_func=lambda enetity: enetity.label_en,
                 key="ChatGptModelTypeSelectBox",
             )

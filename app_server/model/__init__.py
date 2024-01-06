@@ -1,8 +1,8 @@
 from .account import AccountTable, AccountEntity
 from .chat_room import ChatRoomTable, ChatRoomEntity
 from .chat_message import ChatMessageTable, ChatMessageEntity
-from .chat_gpt_model_type import CHAT_GPT_MODEL_TYPE_TABLE, ChatGptModelTypeEntity
-from .chat_gpt_role_type import CHAT_GPT_ROLE_TYPE_TABLE, ChatGptRoleTypeEntity
+from .assistant_type import ASSISTANT_TYPE_TABLE, AssistantTypeEntity
+from .role_type import ROLE_TYPE_TABLE, RoleTypeEntity
 from .release_type import RELEASE_TYPE_TABLE, ReleaseTypeEntity
 from .database import DATABASE_ENGINE
 
