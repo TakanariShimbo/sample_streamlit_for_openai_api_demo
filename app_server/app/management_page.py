@@ -1,6 +1,7 @@
-import streamlit as st
-
 from .base import BasePage
+from .management_s_states import ManagementComponentSState
+from .management_components import SignInComponent, HomeComponent
+from model import MANAGEMENT_COMPONENT_TYPE_TABLE
 
 
 class ManagementPage(BasePage):
@@ -14,8 +15,14 @@ class ManagementPage(BasePage):
 
     @staticmethod
     def init() -> None:
-        pass
+        ManagementComponentSState.init()
 
     @staticmethod
     def main() -> None:
-        st.markdown("## Management")
+        current_component_entity = ManagementComponentSState.get()
+        if current_component_entity == MANAGEMENT_COMPONENT_TYPE_TABLE.get_sign_in_entity():
+            SignInComponent.run()
+        elif current_component_entity == MANAGEMENT_COMPONENT_TYPE_TABLE.get_home_entity():
+            HomeComponent.run()
+        else:
+            raise ValueError("ComponentSState Value Error")
