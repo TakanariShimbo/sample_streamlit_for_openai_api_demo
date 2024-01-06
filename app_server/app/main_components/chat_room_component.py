@@ -24,7 +24,8 @@ class ChatRoomComponent(BaseComponent):
 
     @staticmethod
     def _display_title() -> None:
-        st.markdown("### 💬 Chat Room")
+        current_component_entity = MainComponentSState.get()
+        st.markdown(f"### {current_component_entity.label_en}")
 
     @staticmethod
     def _display_query_form_and_get_results() -> ActionResults:

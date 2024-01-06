@@ -13,7 +13,8 @@ class SignInComponent(BaseComponent):
 
     @staticmethod
     def _display_title() -> None:
-        st.markdown("### 👤 Sign in")
+        current_component_entity = ManagementComponentSState.get()
+        st.markdown(f"### {current_component_entity.label_en}")
 
     @staticmethod
     def _display_sign_in_form_and_get_results() -> ActionResults:

@@ -24,7 +24,8 @@ class HomeComponent(BaseComponent):
 
     @staticmethod
     def _display_title() -> None:
-        st.markdown("### 🏠 Home")
+        current_component_entity = MainComponentSState.get()
+        st.markdown(f"### {current_component_entity.label_en}")
 
     @staticmethod
     def _display_overview() -> None:

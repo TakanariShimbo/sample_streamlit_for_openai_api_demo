@@ -23,7 +23,8 @@ class SignUpComponent(BaseComponent):
 
     @staticmethod
     def _display_title() -> None:
-        st.markdown("### ➕ Sign up")
+        current_component_entity = ManagementComponentSState.get()
+        st.markdown(f"### {current_component_entity.label_en}")
 
     @staticmethod
     def _display_sign_up_form_and_get_results() -> ActionResults:

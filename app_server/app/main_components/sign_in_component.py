@@ -3,7 +3,7 @@ from streamlit_lottie import st_lottie_spinner
 
 from .sign_in_action_results import ActionResults
 from ..base import BaseComponent
-from ..main_s_states import SignInProcesserSState
+from ..main_s_states import MainComponentSState, SignInProcesserSState
 from controller import LottieManager
 
 
@@ -14,7 +14,8 @@ class SignInComponent(BaseComponent):
 
     @staticmethod
     def _display_title() -> None:
-        st.markdown("### 👤 Sign in")
+        current_component_entity = MainComponentSState.get()
+        st.markdown(f"### {current_component_entity.label_en}")
 
     @staticmethod
     def _display_sign_in_form_and_get_results() -> ActionResults:
