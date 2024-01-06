@@ -18,7 +18,7 @@ services:
   #   image: python310_streamlit_for_openai_api:1.0
   #   container_name: container_main_server
   #   ports:
-  #     - 58501:8501
+  #     - 50000:8501
   #   volumes:
   #     - ./app_server:/work
   #   working_dir: /work
