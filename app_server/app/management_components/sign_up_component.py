@@ -42,7 +42,7 @@ class SignUpComponent(BaseComponent):
             message_area = st.empty()
             _, button_area, _ = st.columns([5, 3, 5])
             with button_area:
-                is_pushed = st.form_submit_button(label="Enter", type="primary", use_container_width=True)
+                is_pushed = st.form_submit_button(label="Register", type="primary", use_container_width=True)
             _, loading_area, _ = st.columns([1, 1, 1])
 
         return ActionResults(

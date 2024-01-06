@@ -19,8 +19,8 @@ class ChatRoomComponent(BaseComponent):
         st.sidebar.button(label="👤 Sign out", key="SignOutButton", on_click=cls._on_click_sign_out, use_container_width=True)
 
     @classmethod
-    def _display_leave_room_button(cls) -> None:
-        st.sidebar.button(label="🚪 Leave room", key="LeaveRoomButton", on_click=cls._on_click_leave_room, use_container_width=True)
+    def _display_return_home_button(cls) -> None:
+        st.sidebar.button(label="🏠 Home", key="LeaveRoomButton", on_click=cls._on_click_return_home, use_container_width=True)
 
     @staticmethod
     def _display_title() -> None:
@@ -31,11 +31,11 @@ class ChatRoomComponent(BaseComponent):
         st.markdown("#### ❔ Query")
         form_area = st.form(key="QueryForm")
         with form_area:
-            selected_chat_gpt_model_entity = st.selectbox(
-                label="Model Type",
+            selected_assistant_entity = st.selectbox(
+                label="Assistant Type",
                 options=ASSISTANT_TYPE_TABLE.get_all_entities(),
                 format_func=lambda enetity: enetity.label_en,
-                key="ChatGptModelTypeSelectBox",
+                key="AssistantTypeSelectBox",
             )
 
             inputed_prompt = st.text_area(
@@ -55,7 +55,7 @@ class ChatRoomComponent(BaseComponent):
                 is_cancel_pushed = st.form_submit_button(label="Cancel", type="secondary", use_container_width=True)
 
         return ActionResults(
-            assistant_entity=selected_chat_gpt_model_entity,
+            assistant_entity=selected_assistant_entity,
             prompt=inputed_prompt,
             message_area=message_area,
             is_run_pushed=is_run_pushed,
@@ -97,14 +97,14 @@ class ChatRoomComponent(BaseComponent):
         AccountSState.deinit()
 
     @classmethod
-    def _on_click_leave_room(cls):
+    def _on_click_return_home(cls):
         MainComponentSState.set_home_entity()
         cls.deinit()
 
     @classmethod
     def main(cls) -> None:
         cls._display_sign_out_button()
-        cls._display_leave_room_button()
+        cls._display_return_home_button()
         cls._display_title()
 
         is_created_user = ChatRoomSState.get().account_id == AccountSState.get().account_id
