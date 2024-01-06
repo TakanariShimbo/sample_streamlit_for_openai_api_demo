@@ -4,14 +4,14 @@ from ..base import BaseEntity
 
 
 class ChatGptModelTypeEntity(BaseEntity):
-    def __init__(self, key: str, label_en: str, label_jp: str):
-        self._key = key
+    def __init__(self, assistant_id: str, label_en: str, label_jp: str):
+        self._assistant_id = assistant_id
         self._label_en = label_en
         self._label_jp = label_jp
 
     @property
-    def key(self) -> str:
-        return self._key
+    def assistant_id(self) -> str:
+        return self._assistant_id
 
     @property
     def label_en(self) -> str:
@@ -24,8 +24,8 @@ class ChatGptModelTypeEntity(BaseEntity):
     def check_is_same(self, other: Any) -> bool:
         if not isinstance(other, ChatGptModelTypeEntity):
             return False
-        return self.key == other.key
+        return self.assistant_id == other.assistant_id
 
     @staticmethod
     def get_column_names() -> List[str]:
-        return ["key", "label_en", "label_jp"]
+        return ["assistant_id", "label_en", "label_jp"]

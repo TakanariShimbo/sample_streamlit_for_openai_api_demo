@@ -14,4 +14,4 @@ class CreateFormSchema(BaseModel):
     def from_entity(cls, account_entity: AccountEntity, title: str, release_entity: Optional[ReleaseTypeEntity]) -> "CreateFormSchema":
         if not release_entity:
             raise ValidationError("ReleaseTypeEntity is None.")
-        return cls(account_id=account_entity.account_id, title=title, release=release_entity.key)
+        return cls(account_id=account_entity.account_id, title=title, release=release_entity.release_id)

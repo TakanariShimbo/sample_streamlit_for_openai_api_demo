@@ -10,7 +10,7 @@ class ManagementComponentTypeTable(BaseTable[ManagementComponentTypeEntity]):
     @staticmethod
     def get_column_configs() -> List[ColumnConfig]:
         return [
-            ColumnConfig(name="key", dtype=pd.StringDtype(), unique=True, non_null=True, readonly=False),
+            ColumnConfig(name="component_id", dtype=pd.StringDtype(), unique=True, non_null=True, readonly=False),
             ColumnConfig(name="label_en", dtype=pd.StringDtype(), unique=True, non_null=True, readonly=False),
             ColumnConfig(name="label_jp", dtype=pd.StringDtype(), unique=True, non_null=True, readonly=False),
         ]
@@ -24,13 +24,13 @@ class ManagementComponentTypeTable(BaseTable[ManagementComponentTypeEntity]):
         return "./model/management_component_type/data.csv"
 
     def get_sign_in_entity(self) -> ManagementComponentTypeEntity:
-        return self.get_entity(column_name="key", value="sign_in")
+        return self.get_entity(column_name="component_id", value="sign_in")
     
     def get_home_entity(self) -> ManagementComponentTypeEntity:
-        return self.get_entity(column_name="key", value="home")
+        return self.get_entity(column_name="component_id", value="home")
     
     def get_sign_up_entity(self) -> ManagementComponentTypeEntity:
-        return self.get_entity(column_name="key", value="sign_up")
+        return self.get_entity(column_name="component_id", value="sign_up")
 
 
 MANAGEMENT_COMPONENT_TYPE_TABLE = ManagementComponentTypeTable.load_from_csv()

@@ -10,7 +10,7 @@ class ChatGptRoleTypeTable(BaseTable[ChatGptRoleTypeEntity]):
     @staticmethod
     def get_column_configs() -> List[ColumnConfig]:
         return [
-            ColumnConfig(name="key", dtype=pd.StringDtype(), unique=True, non_null=True, readonly=False),
+            ColumnConfig(name="role_id", dtype=pd.StringDtype(), unique=True, non_null=True, readonly=False),
             ColumnConfig(name="label_en", dtype=pd.StringDtype(), unique=True, non_null=True, readonly=False),
             ColumnConfig(name="label_jp", dtype=pd.StringDtype(), unique=True, non_null=True, readonly=False),
         ]
@@ -24,13 +24,13 @@ class ChatGptRoleTypeTable(BaseTable[ChatGptRoleTypeEntity]):
         return "./model/chat_gpt_role_type/data.csv"
 
     def get_system_entity(self) -> ChatGptRoleTypeEntity:
-        return self.get_entity(column_name="key", value="system")
+        return self.get_entity(column_name="role_id", value="system")
 
     def get_user_entity(self) -> ChatGptRoleTypeEntity:
-        return self.get_entity(column_name="key", value="user")
+        return self.get_entity(column_name="role_id", value="user")
     
     def get_assistant_entity(self) -> ChatGptRoleTypeEntity:
-        return self.get_entity(column_name="key", value="assistant")
+        return self.get_entity(column_name="role_id", value="assistant")
 
 
 CHAT_GPT_ROLE_TYPE_TABLE = ChatGptRoleTypeTable.load_from_csv()

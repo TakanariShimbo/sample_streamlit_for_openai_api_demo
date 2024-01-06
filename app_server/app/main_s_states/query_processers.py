@@ -21,9 +21,9 @@ class QueryProcesser(BaseProcesser[str]):
 
     def pre_process(self, outer_dict: Dict[str, Any], inner_dict: Dict[str, Any]) -> None:
         with outer_dict["history_area"]:
-            with st.chat_message(name=CHAT_GPT_ROLE_TYPE_TABLE.get_user_entity().key):
+            with st.chat_message(name=CHAT_GPT_ROLE_TYPE_TABLE.get_user_entity().role_id):
                 st.write(inner_dict["form_schema"].prompt)
-            with st.chat_message(name=CHAT_GPT_ROLE_TYPE_TABLE.get_assistant_entity().key):
+            with st.chat_message(name=CHAT_GPT_ROLE_TYPE_TABLE.get_assistant_entity().role_id):
                 outer_dict["answer_area"] = st.empty()
 
     def post_process(self, outer_dict: Dict[str, Any], inner_dict: Dict[str, Any]) -> None:

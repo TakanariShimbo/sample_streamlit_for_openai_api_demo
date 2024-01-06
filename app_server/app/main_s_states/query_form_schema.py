@@ -13,4 +13,4 @@ class QueryFormSchema(BaseModel):
     def from_entity(cls, chat_gpt_model_entity: Optional[ChatGptModelTypeEntity], prompt: str) -> "QueryFormSchema":
         if not chat_gpt_model_entity:
             raise ValidationError("ChatGptModelEntity is None.")
-        return cls(chat_gpt_model_type=chat_gpt_model_entity.key, prompt=prompt)
+        return cls(chat_gpt_model_type=chat_gpt_model_entity.assistant_id, prompt=prompt)
