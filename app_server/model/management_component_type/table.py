@@ -28,6 +28,9 @@ class ManagementComponentTypeTable(BaseTable[ManagementComponentTypeEntity]):
     
     def get_home_entity(self) -> ManagementComponentTypeEntity:
         return self.get_entity(column_name="key", value="home")
+    
+    def get_sign_up_entity(self) -> ManagementComponentTypeEntity:
+        return self.get_entity(column_name="key", value="sign_up")
 
 
 MANAGEMENT_COMPONENT_TYPE_TABLE = ManagementComponentTypeTable.load_from_csv()
