@@ -16,6 +16,10 @@ class HomeComponent(BaseComponent):
     def _display_sign_out_button(cls) -> None:
         st.sidebar.button(label="👤 Sign out", key="SignOutButton", on_click=cls._on_click_sign_out, use_container_width=True)
 
+    @classmethod
+    def _display_sign_up_button(cls) -> None:
+        st.sidebar.button(label="➕ Sign up", key="SignUpButton", on_click=cls._on_click_sign_up, use_container_width=True)
+
     @staticmethod
     def _display_title() -> None:
         st.markdown("### 🏠 Home")
@@ -26,8 +30,14 @@ class HomeComponent(BaseComponent):
         cls.deinit()
 
     @classmethod
+    def _on_click_sign_up(cls) -> None:
+        ManagementComponentSState.set_sign_up_entity()
+        cls.deinit()
+
+    @classmethod
     def main(cls) -> None:
         cls._display_sign_out_button()
+        cls._display_sign_up_button()
         cls._display_title()
 
     @staticmethod
