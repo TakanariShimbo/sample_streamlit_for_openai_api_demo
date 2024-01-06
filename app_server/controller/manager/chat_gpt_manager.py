@@ -8,7 +8,7 @@ class ChatGptManager:
     @staticmethod
     def query_streamly_answer_and_display(
         prompt: str,
-        model_type: str,
+        assistant_id: str,
         message_entities: List[ChatMessageEntity],
         callback_func: Callable[[str], None],
     ) -> str:
@@ -17,7 +17,7 @@ class ChatGptManager:
         answer = ChatGptHandler.query_streamly_answer_and_display(
             client=client,
             prompt=prompt,
-            model_type=model_type,
+            assistant_id=assistant_id,
             message_prams=message_params,
             callback_func=callback_func,
         )

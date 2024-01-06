@@ -14,7 +14,7 @@ class QueryProcesser(BaseProcesser[str]):
     def main_process(self, inner_dict: Dict[str, Any]) -> None:
         inner_dict["answer"] = ChatGptManager.query_streamly_answer_and_display(
             prompt=inner_dict["form_schema"].prompt,
-            model_type=inner_dict["form_schema"].chat_gpt_model_type,
+            assistant_id=inner_dict["form_schema"].assistant_id,
             callback_func=self.add_queue,
             message_entities=inner_dict["message_entities"],
         )
@@ -41,7 +41,7 @@ class QueryProcesserManager(BaseProcessersManager):
 
         try:
             inner_dict = {}
-            inner_dict["form_schema"] = QueryFormSchema.from_entity(chat_gpt_model_entity=kwargs["chat_gpt_model_entity"], prompt=kwargs["prompt"])
+            inner_dict["form_schema"] = QueryFormSchema.from_entity(assistant_entity=kwargs["assistant_entity"], prompt=kwargs["prompt"])
             inner_dict["message_entities"] = ChatRoomSState.get().get_all_message_entities()
         except:
             outer_dict["message_area"].warning("Please input form corectly.")
@@ -62,7 +62,7 @@ class QueryProcesserManager(BaseProcessersManager):
             prompt=inner_dict["form_schema"].prompt,
             answer=inner_dict["answer"],
             account_id=AccountSState.get().account_id,
-            assistant_id=inner_dict["form_schema"].chat_gpt_model_type,
+            assistant_id=inner_dict["form_schema"].assistant_id,
         )
         outer_dict["message_area"].empty()
         return True

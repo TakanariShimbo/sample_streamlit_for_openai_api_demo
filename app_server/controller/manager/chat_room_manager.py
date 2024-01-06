@@ -5,30 +5,34 @@ from model import ChatRoomEntity, ChatRoomTable, ChatMessageEntity, ChatMessageT
 
 
 class ChatRoomManager:
-    def __init__(self, chat_message_table: ChatMessageTable, room_id: str, account_id: str, release: str):
+    def __init__(self, chat_message_table: ChatMessageTable, room_id: str, account_id: str, release_id: str):
         self._table = chat_message_table
         self._room_id = room_id
-        self._release = release
+        self._release_id = release_id
         self._account_id = account_id
 
     @property
     def account_id(self) -> str:
         return self._account_id
 
+    @property
+    def release_id(self) -> str:
+        return self._release_id
+
     @classmethod
-    def init_as_new(cls, title: str, account_id: str, release: str) -> "ChatRoomManager":
+    def init_as_new(cls, title: str, account_id: str, release_id: str) -> "ChatRoomManager":
         room_id = str(uuid4())
-        chat_room_entity = ChatRoomEntity(room_id=room_id, account_id=account_id, title=title, release=release)
+        chat_room_entity = ChatRoomEntity(room_id=room_id, account_id=account_id, title=title, release=release_id)
         chat_room_table = ChatRoomTable.load_from_entities(entities=[chat_room_entity])
         chat_room_table.save_to_database(database_engine=DATABASE_ENGINE)
 
         chat_message_table = ChatMessageTable.create_empty_table()
-        return cls(chat_message_table=chat_message_table, room_id=room_id, account_id=account_id, release=release)
+        return cls(chat_message_table=chat_message_table, room_id=room_id, account_id=account_id, release_id=release_id)
 
     @classmethod
-    def init_as_continue(cls, room_id: str, account_id: str, release: str) -> "ChatRoomManager":
+    def init_as_continue(cls, room_id: str, account_id: str, release_id: str) -> "ChatRoomManager":
         chat_message_table = ChatMessageTable.load_messages_specified_room_from_database(database_engine=DATABASE_ENGINE, room_id=room_id)
-        return cls(chat_message_table=chat_message_table, room_id=room_id, account_id=account_id, release=release)
+        return cls(chat_message_table=chat_message_table, room_id=room_id, account_id=account_id, release_id=release_id)
 
     def add_prompt_and_answer(self, prompt: str, answer: str, account_id: str, assistant_id: str) -> None:
         prompt_and_answer_entitys = [

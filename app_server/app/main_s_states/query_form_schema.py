@@ -6,11 +6,11 @@ from model import AssistantTypeEntity
 
 
 class QueryFormSchema(BaseModel):
-    chat_gpt_model_type: str
+    assistant_id: str
     prompt: str = Field(min_length=1)
 
     @classmethod
-    def from_entity(cls, chat_gpt_model_entity: Optional[AssistantTypeEntity], prompt: str) -> "QueryFormSchema":
-        if not chat_gpt_model_entity:
-            raise ValidationError("ChatGptModelEntity is None.")
-        return cls(chat_gpt_model_type=chat_gpt_model_entity.assistant_id, prompt=prompt)
+    def from_entity(cls, assistant_entity: Optional[AssistantTypeEntity], prompt: str) -> "QueryFormSchema":
+        if not assistant_entity:
+            raise ValidationError("AssistantTypeEntity is None.")
+        return cls(assistant_id=assistant_entity.assistant_id, prompt=prompt)

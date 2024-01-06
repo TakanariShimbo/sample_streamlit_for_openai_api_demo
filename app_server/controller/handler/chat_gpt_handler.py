@@ -29,11 +29,11 @@ class ChatGptHandler(OpenAiHandler):
         cls,
         client: OpenAI,
         prompt: str,
-        model_type: str = "gpt-3.5-turbo",
+        assistant_id: str = "gpt-3.5-turbo",
         message_prams: Optional[List[ChatCompletionMessageParam]] = None,
     ) -> str:
         response = client.chat.completions.create(
-            model=model_type,
+            model=assistant_id,
             messages=cls.get_message_params_added_prompt(prompt=prompt, message_prams=message_prams),
         )
 
@@ -47,11 +47,11 @@ class ChatGptHandler(OpenAiHandler):
         cls,
         client: OpenAI,
         prompt: str,
-        model_type: str = "gpt-3.5-turbo",
+        assistant_id: str = "gpt-3.5-turbo",
         message_prams: Optional[List[ChatCompletionMessageParam]] = None,
         callback_func: Callable[[str], None] = print,
     ) -> str:
-        streamly_answer = cls.query_streamly_answer(client=client, prompt=prompt, model_type=model_type, message_prams=message_prams)
+        streamly_answer = cls.query_streamly_answer(client=client, prompt=prompt, assistant_id=assistant_id, message_prams=message_prams)
         answer = cls.display_streamly_answer(streamly_answer=streamly_answer, callback_func=callback_func)
         return answer
 
@@ -60,11 +60,11 @@ class ChatGptHandler(OpenAiHandler):
         cls,
         client: OpenAI,
         prompt: str,
-        model_type: str = "gpt-3.5-turbo",
+        assistant_id: str = "gpt-3.5-turbo",
         message_prams: Optional[List[ChatCompletionMessageParam]] = None,
     ) -> Stream[ChatCompletionChunk]:
         streamly_answer = client.chat.completions.create(
-            model=model_type,
+            model=assistant_id,
             messages=cls.get_message_params_added_prompt(prompt=prompt, message_prams=message_prams),
             stream=True,
         )
