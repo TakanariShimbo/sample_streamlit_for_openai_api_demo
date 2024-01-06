@@ -4,6 +4,7 @@ from streamlit_lottie import st_lottie_spinner
 from .sign_up_action_results import ActionResults
 from ..base import BaseComponent
 from ..management_s_states import ManagementComponentSState, SignUpProcesserSState
+from model import AccountTable, DATABASE_ENGINE
 from controller import LottieManager
 
 
@@ -18,7 +19,7 @@ class SignUpComponent(BaseComponent):
 
     @classmethod
     def _display_return_home_button(cls) -> None:
-        st.sidebar.button(label="🏠 Return Home", key="ReturnHomeButton", on_click=cls._on_click_return_home, use_container_width=True)
+        st.sidebar.button(label="🏠 Home", key="ReturnHomeButton", on_click=cls._on_click_return_home, use_container_width=True)
 
     @staticmethod
     def _display_title() -> None:
@@ -66,6 +67,11 @@ class SignUpComponent(BaseComponent):
                     raw_password=action_results.raw_password,
                 )
 
+    @staticmethod
+    def _display_account_table() -> None:
+        account_table = AccountTable.load_from_database(database_engine=DATABASE_ENGINE)
+        st.dataframe(account_table.df, use_container_width=True)
+
     @classmethod
     def _on_click_sign_out(cls):
         ManagementComponentSState.set_sign_in_entity()
@@ -83,6 +89,7 @@ class SignUpComponent(BaseComponent):
         cls._display_title()
         action_results = cls._display_sign_up_form_and_get_results()
         cls._execute_sign_up_process(action_results=action_results)
+        cls._display_account_table()
 
     @staticmethod
     def deinit() -> None:
