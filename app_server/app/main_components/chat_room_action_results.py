@@ -8,14 +8,14 @@ from model import AssistantTypeEntity
 class ActionResults:
     def __init__(
         self,
-        chat_gpt_model_entity: Optional[AssistantTypeEntity],
+        assistant_entity: Optional[AssistantTypeEntity],
         prompt: str,
         message_area: DeltaGenerator,
         is_run_pushed: bool,
         is_rerun_pushed: bool,
         is_cancel_pushed: bool,
     ) -> None:
-        self._chat_gpt_model_entity = chat_gpt_model_entity
+        self._assistant_entity = assistant_entity
         self._prompt = prompt
         self._message_area = message_area
         self._is_run_pushed = is_run_pushed
@@ -23,8 +23,8 @@ class ActionResults:
         self._is_cancel_pushed = is_cancel_pushed
 
     @property
-    def chat_gpt_model_entity(self) -> Optional[AssistantTypeEntity]:
-        return self._chat_gpt_model_entity
+    def assistant_entity(self) -> Optional[AssistantTypeEntity]:
+        return self._assistant_entity
 
     @property
     def prompt(self) -> str:

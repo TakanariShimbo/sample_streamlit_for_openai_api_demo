@@ -93,9 +93,9 @@ class HomeComponent(BaseComponent):
     def _display_rooms_and_get_results(cls) -> Optional[EnterActionResults]:
         selected_chat_room_entity = None
         selected_loading_area = None
-        left, right = st.columns([1, 1])
+        left_area, right_area = st.columns([1, 1])
 
-        with left:
+        with left_area:
             st.markdown("#### 🧍 Yours")
             with st_lottie_spinner(animation_source=LottieManager.LOADING):
                 your_room_table = ChatRoomTable.load_rooms_with_specified_account_from_database(
@@ -112,7 +112,7 @@ class HomeComponent(BaseComponent):
                     selected_chat_room_entity = chat_room_entity
                     selected_loading_area = action_results.loading_area
         
-        with right:
+        with right_area:
             st.markdown("#### 🧑‍🤝‍🧑 Everyone")
             with st_lottie_spinner(animation_source=LottieManager.LOADING):
                 your_room_table = ChatRoomTable.load_public_rooms_without_specified_account_from_database(

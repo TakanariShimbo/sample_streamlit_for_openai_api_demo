@@ -55,7 +55,7 @@ class ChatRoomComponent(BaseComponent):
                 is_cancel_pushed = st.form_submit_button(label="Cancel", type="secondary", use_container_width=True)
 
         return ActionResults(
-            chat_gpt_model_entity=selected_chat_gpt_model_entity,
+            assistant_entity=selected_chat_gpt_model_entity,
             prompt=inputed_prompt,
             message_area=message_area,
             is_run_pushed=is_run_pushed,
@@ -86,7 +86,7 @@ class ChatRoomComponent(BaseComponent):
             processer_manager.run_all(
                 message_area=action_results.message_area,
                 history_area=history_area,
-                chat_gpt_model_entity=action_results.chat_gpt_model_entity,
+                assistant_entity=action_results.assistant_entity,
                 prompt=action_results.prompt,
             )
 
