@@ -47,7 +47,7 @@ class CreateProcesserManager(BaseProcessersManager):
         outer_dict = {}
         outer_dict["message_area"] = kwargs["message_area"]
 
-        kwargs["message_area"].warning("RUNNING")
+        kwargs["message_area"].warning("Running.")
         return outer_dict
 
     def post_process(self, outer_dict: Dict[str, Any], inner_dict: Dict[str, Any]) -> bool:

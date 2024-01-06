@@ -53,7 +53,7 @@ class QueryProcesserManager(BaseProcessersManager):
         outer_dict["message_area"] = kwargs["message_area"]
         outer_dict["history_area"] = kwargs["history_area"]
 
-        kwargs["message_area"].warning("RUNNING")
+        kwargs["message_area"].warning("Running.")
         return outer_dict
 
     def post_process(self, outer_dict: Dict[str, Any], inner_dict: Dict[str, Any]) -> bool:
