@@ -11,12 +11,12 @@ services:
     volumes:
       - ./db_server/storage:/var/lib/postgresql/data
 
-  # service_app_server:
+  # service_main_server:
   #   build: 
   #     context: ./app_server
   #     dockerfile: Dockerfile
   #   image: python310_streamlit_for_openai_api:1.0
-  #   container_name: container_app_server
+  #   container_name: container_main_server
   #   ports:
   #     - 58501:8501
   #   volumes:
