@@ -11,7 +11,7 @@ class EnterProcesser(BaseProcesser[None]):
         inner_dict["chat_message_manager"] = ChatRoomManager.init_as_continue(
             room_id=inner_dict["room_id"],
             account_id=inner_dict["account_id"],
-            release_id=inner_dict["release"],
+            release_id=inner_dict["release_id"],
         )
 
     def pre_process(self, outer_dict: Dict[str, Any], inner_dict: Dict[str, Any]) -> None:
@@ -30,7 +30,7 @@ class EnterProcesserManager(BaseProcessersManager):
         inner_dict = {}
         inner_dict["room_id"] = kwargs["room_id"]
         inner_dict["account_id"] = kwargs["account_id"]
-        inner_dict["release"] = kwargs["release"]
+        inner_dict["release_id"] = kwargs["release_id"]
         return outer_dict, inner_dict
 
     def pre_process_for_running(self, **kwargs) -> Dict[str, Any]:

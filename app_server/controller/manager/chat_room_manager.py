@@ -22,7 +22,7 @@ class ChatRoomManager:
     @classmethod
     def init_as_new(cls, title: str, account_id: str, release_id: str) -> "ChatRoomManager":
         room_id = str(uuid4())
-        chat_room_entity = ChatRoomEntity(room_id=room_id, account_id=account_id, title=title, release=release_id)
+        chat_room_entity = ChatRoomEntity(room_id=room_id, account_id=account_id, title=title, release_id=release_id)
         chat_room_table = ChatRoomTable.load_from_entities(entities=[chat_room_entity])
         chat_room_table.save_to_database(database_engine=DATABASE_ENGINE)
 
@@ -36,8 +36,8 @@ class ChatRoomManager:
 
     def add_prompt_and_answer(self, prompt: str, answer: str, account_id: str, assistant_id: str) -> None:
         prompt_and_answer_entitys = [
-            ChatMessageEntity(room_id=self._room_id, role=ROLE_TYPE_TABLE.get_user_entity().role_id, sender_id=account_id, content=prompt),
-            ChatMessageEntity(room_id=self._room_id, role=ROLE_TYPE_TABLE.get_assistant_entity().role_id, sender_id=assistant_id, content=answer),
+            ChatMessageEntity(room_id=self._room_id, role_id=ROLE_TYPE_TABLE.get_user_entity().role_id, sender_id=account_id, content=prompt),
+            ChatMessageEntity(room_id=self._room_id, role_id=ROLE_TYPE_TABLE.get_assistant_entity().role_id, sender_id=assistant_id, content=answer),
         ]
         appended_table = ChatMessageTable.load_from_entities(entities=prompt_and_answer_entitys)
         appended_table.save_to_database(database_engine=DATABASE_ENGINE)

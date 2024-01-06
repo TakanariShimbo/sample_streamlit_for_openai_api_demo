@@ -70,9 +70,9 @@ class ChatRoomComponent(BaseComponent):
             st.markdown("#### 📝 History")
             chat_room_manager = ChatRoomSState.get()
             for message_entity in chat_room_manager.get_all_message_entities():
-                if message_entity.role == "system":
+                if message_entity.role_id == "system":
                     continue
-                with st.chat_message(name=message_entity.role):
+                with st.chat_message(name=message_entity.role_id):
                     st.write(message_entity.content)
         return history_area
 

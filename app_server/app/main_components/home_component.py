@@ -75,7 +75,7 @@ class HomeComponent(BaseComponent):
                 ##### 📝 {chat_room_entity.title}  
                 👤 {chat_room_entity.account_id}  
                 🕛 {chat_room_entity.created_at}  
-                👀 {RELEASE_TYPE_TABLE.convert_id_to_label_en(release_id=chat_room_entity.release)}
+                👀 {RELEASE_TYPE_TABLE.convert_id_to_label_en(release_id=chat_room_entity.release_id)}
                 """
             )
             st.markdown(contents)
@@ -165,7 +165,7 @@ class HomeComponent(BaseComponent):
                 is_success = processers_manager.run_all(
                     room_id=enter_action_results.chat_room_entity.room_id,
                     account_id=enter_action_results.chat_room_entity.account_id,
-                    release=enter_action_results.chat_room_entity.release,
+                    release_id=enter_action_results.chat_room_entity.release_id,
                 )
         return is_success
 

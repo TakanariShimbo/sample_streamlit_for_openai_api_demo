@@ -13,7 +13,7 @@ class ChatGptManager:
         callback_func: Callable[[str], None],
     ) -> str:
         client = ChatGptHandler.generate_client(api_key=DEFAULT_OPENAI_API_KEY)
-        message_params = [convert_entity_to_message_param(role=message_entity.role, content=message_entity.content) for message_entity in message_entities]
+        message_params = [convert_entity_to_message_param(role=message_entity.role_id, content=message_entity.content) for message_entity in message_entities]
         answer = ChatGptHandler.query_streamly_answer_and_display(
             client=client,
             prompt=prompt,
