@@ -61,7 +61,7 @@ class QueryProcesserManager(BaseProcessersManager):
         chat_room_manager.add_prompt_and_answer(
             prompt=inner_dict["form_schema"].prompt,
             answer=inner_dict["answer"],
-            user_id=AccountSState.get().account_id,
+            account_id=AccountSState.get().account_id,
             assistant_id=inner_dict["form_schema"].chat_gpt_model_type,
         )
         outer_dict["message_area"].empty()

@@ -17,7 +17,7 @@ CREATE TABLE chat_rooms (
 CREATE TABLE chat_messages (
     message_serial SERIAL PRIMARY KEY,
     room_id VARCHAR(255) NOT NULL,
-    account_id VARCHAR(255) NOT NULL,
+    sender_id VARCHAR(255) NOT NULL,
     role VARCHAR(255) NOT NULL,
     content TEXT NOT NULL,
     sent_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
