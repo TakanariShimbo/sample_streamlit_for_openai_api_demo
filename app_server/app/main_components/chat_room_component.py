@@ -20,7 +20,7 @@ class ChatRoomComponent(BaseComponent):
 
     @classmethod
     def _display_return_home_button(cls) -> None:
-        st.sidebar.button(label="🏠 Home", key="LeaveRoomButton", on_click=cls._on_click_return_home, use_container_width=True)
+        st.sidebar.button(label="🏠 Home", key="ReturnHomeButton", on_click=cls._on_click_return_home, use_container_width=True)
 
     @staticmethod
     def _display_title() -> None:
