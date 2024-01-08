@@ -101,12 +101,15 @@ class BaseTable(Generic[E], ABC):
         self._df.loc[:, columns].to_sql(name=self.get_database_table_name(), con=database_engine, if_exists="append", index=False)
 
     def _upsert_to_database(self, database_engine: Engine) -> None:
-        columns = [config.name for config in self.get_column_configs() if not config.auto_assigned]
-        self._df.loc[:, columns].to_sql(name=self.get_temp_database_table_name(), con=database_engine, if_exists="replace", index=False)
+        truncate_sql = self._get_truncate_sql(table_name=self.get_temp_database_table_name())
+        self.execute_sqls(database_engine=database_engine, sqls=[truncate_sql])
 
-        upsert_sql = self._generate_upsert_sql(
-            target_table=self.get_database_table_name(),
-            temp_table=self.get_temp_database_table_name(),
+        columns = [config.name for config in self.get_column_configs() if not config.auto_assigned]
+        self._df.loc[:, columns].to_sql(name=self.get_temp_database_table_name(), con=database_engine, if_exists="append", index=False)
+
+        upsert_sql = self._get_upsert_sql(
+            table_name=self.get_database_table_name(),
+            temp_table_name=self.get_temp_database_table_name(),
             columns=columns,
         )
         self.execute_sqls(database_engine=database_engine, sqls=[upsert_sql])
@@ -126,16 +129,20 @@ class BaseTable(Generic[E], ABC):
             conn.commit()
 
     @staticmethod
-    def _generate_upsert_sql(target_table: str, temp_table: str, columns: List[str]) -> str:
+    def _get_truncate_sql(table_name: str) -> str:
+        return f"TRUNCATE TABLE {table_name};"
+
+    @staticmethod
+    def _get_upsert_sql(table_name: str, temp_table_name: str, columns: List[str]) -> str:
         columns_str = ', '.join(columns)
         target_column = columns[0]
         update_str = ', '.join([f"{col} = EXCLUDED.{col}" for col in columns[1::]])
 
         upsert_sql = dedent(
             f"""
-            INSERT INTO {target_table} ({columns_str})
+            INSERT INTO {table_name} ({columns_str})
             SELECT {columns_str}
-            FROM {temp_table}
+            FROM {temp_table_name}
             ON CONFLICT ({target_column}) 
             DO UPDATE SET 
                 {update_str}
