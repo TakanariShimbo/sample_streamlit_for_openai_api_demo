@@ -1,5 +1,5 @@
 from abc import ABC, abstractmethod
-from typing import List, Any, TypeVar, Generic, Optional, Type
+from typing import List, Any, TypeVar, Generic, Optional, Type, Literal
 
 import pandas as pd
 from sqlalchemy import Engine, TextClause
@@ -83,7 +83,13 @@ class BaseTable(Generic[E], ABC):
             filepath = self.get_csv_filepath()
         self._df.to_csv(filepath, index=False, mode="a")
 
-    def save_to_database(self, database_engine: Engine) -> None:
+    def save_to_database(self, database_engine: Engine, mode: Literal["insert"] = "insert") -> None:
+        if mode == "insert":
+            self._insert_to_database(database_engine=database_engine)
+        else:
+            raise NotImplementedError("Not implemented")
+
+    def _insert_to_database(self, database_engine: Engine) -> None:
         table_name = self.get_database_table_name()
         columns = [config.name for config in self.get_column_configs() if not config.readonly]
         self._df.loc[:, columns].to_sql(name=table_name, con=database_engine, if_exists="append", index=False)
