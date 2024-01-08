@@ -1,7 +1,8 @@
 from typing import List, Type
+from textwrap import dedent
 
 import pandas as pd
-from sqlalchemy import Engine
+from sqlalchemy import Engine, text, TextClause
 
 from .entity import AccountEntity
 from ..base import ColumnConfig, BaseTable
@@ -23,6 +24,20 @@ class AccountTable(BaseTable[AccountEntity]):
     @staticmethod
     def get_database_table_name() -> str:
         return "accounts"
+
+    @staticmethod
+    def get_table_creation_sql(table_name: str) -> TextClause:
+        return text(
+            dedent(
+                f"""
+                CREATE TABLE {table_name} (
+                    account_id VARCHAR(255) PRIMARY KEY,
+                    hashed_password VARCHAR(255) NOT NULL,
+                    registered_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+                );
+                """
+            )
+        )
 
     @classmethod
     def load_specified_account_from_database(cls, database_engine: Engine, account_id: str) -> "AccountTable":

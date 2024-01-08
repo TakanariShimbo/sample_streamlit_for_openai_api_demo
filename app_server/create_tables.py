@@ -1,0 +1,6 @@
+from model import DATABASE_ENGINE, AccountTable, ChatRoomTable, ChatMessageTable
+
+
+AccountTable.create_table_on_database(database_engine=DATABASE_ENGINE)
+ChatRoomTable.create_table_on_database(database_engine=DATABASE_ENGINE)
+ChatMessageTable.create_table_on_database(database_engine=DATABASE_ENGINE)

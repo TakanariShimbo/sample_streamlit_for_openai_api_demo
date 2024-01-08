@@ -1,8 +1,9 @@
 from abc import ABC, abstractmethod
+from textwrap import dedent
 from typing import List, Any, TypeVar, Generic, Optional, Type
 
 import pandas as pd
-from sqlalchemy import Engine
+from sqlalchemy import Engine, text, TextClause
 
 from . import ColumnConfig
 from . import BaseEntity
@@ -55,6 +56,16 @@ class BaseTable(Generic[E], ABC):
         series_dict = {config.name: pd.Series(dtype=config.dtype) for config in cls.get_column_configs()}
         df = pd.DataFrame(series_dict)
         return cls(df)
+    
+    @classmethod
+    def create_table_on_database(cls: Type[T], database_engine: Engine) -> None:
+        table_name = f"{cls.get_database_table_name()}"
+        temp_table_name = f"{cls.get_database_table_name()}_temp"
+
+        with database_engine.connect() as conn:
+            conn.execute(statement=cls.get_table_creation_sql(table_name=table_name))
+            conn.execute(statement=cls.get_table_creation_sql(table_name=temp_table_name))
+            conn.commit()
 
     def get_all_entities(self) -> List[E]:
         return [self.get_entiry_class().init_from_series(series=row) for _, row in self._df.iterrows()]
@@ -101,4 +112,8 @@ class BaseTable(Generic[E], ABC):
 
     @staticmethod
     def get_database_table_name() -> str:
+        raise NotImplementedError("Not implemented")
+
+    @staticmethod
+    def get_table_creation_sql(table_name: str) -> TextClause:
         raise NotImplementedError("Not implemented")
