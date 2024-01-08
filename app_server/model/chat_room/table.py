@@ -28,7 +28,7 @@ class ChatRoomTable(BaseTable[ChatRoomEntity]):
         return "chat_rooms"
 
     @staticmethod
-    def get_table_creation_sql(table_name: str) -> str:
+    def get_database_table_creation_sql(table_name: str) -> str:
         return dedent(
             f"""
             CREATE TABLE {table_name} (

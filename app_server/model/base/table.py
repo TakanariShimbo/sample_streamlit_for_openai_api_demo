@@ -64,8 +64,8 @@ class BaseTable(Generic[E], ABC):
         cls._execute_sqls(
             database_engine=database_engine, 
             sqls=[
-                cls.get_table_creation_sql(table_name=table_name), 
-                cls.get_table_creation_sql(table_name=temp_table_name),
+                cls.get_database_table_creation_sql(table_name=table_name), 
+                cls.get_database_table_creation_sql(table_name=temp_table_name),
             ]
         )
 
@@ -130,5 +130,5 @@ class BaseTable(Generic[E], ABC):
         raise NotImplementedError("Not implemented")
 
     @staticmethod
-    def get_table_creation_sql(table_name: str) -> str:
+    def get_database_table_creation_sql(table_name: str) -> str:
         raise NotImplementedError("Not implemented")
