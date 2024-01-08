@@ -1,4 +1,5 @@
 from abc import ABC, abstractmethod
+from textwrap import dedent
 from typing import List, Any, TypeVar, Generic, Optional, Type, Literal
 
 import pandas as pd
@@ -87,21 +88,28 @@ class BaseTable(Generic[E], ABC):
             filepath = self.get_csv_filepath()
         self._df.to_csv(filepath, index=False, mode="a")
 
-    def save_to_database(self, database_engine: Engine, mode: Literal["insert"] = "insert") -> None:
+    def save_to_database(self, database_engine: Engine, mode: Literal["insert", "upsert"] = "insert") -> None:
         if mode == "insert":
             self._insert_to_database(database_engine=database_engine)
+        elif mode == "upsert":
+            self._upsert_to_database(database_engine=database_engine)
         else:
             raise NotImplementedError("Not implemented")
 
     def _insert_to_database(self, database_engine: Engine) -> None:
-        table_name = self.get_database_table_name()
         columns = [config.name for config in self.get_column_configs() if not config.auto_assigned]
-        self._df.loc[:, columns].to_sql(name=table_name, con=database_engine, if_exists="append", index=False)
+        self._df.loc[:, columns].to_sql(name=self.get_database_table_name(), con=database_engine, if_exists="append", index=False)
 
     def _upsert_to_database(self, database_engine: Engine) -> None:
-        table_name = self.get_database_table_name()
         columns = [config.name for config in self.get_column_configs() if not config.auto_assigned]
-        self._df.loc[:, columns].to_sql(name=table_name, con=database_engine, if_exists="replace", index=False)
+        self._df.loc[:, columns].to_sql(name=self.get_temp_database_table_name(), con=database_engine, if_exists="replace", index=False)
+
+        upsert_sql = self._generate_upsert_sql(
+            target_table=self.get_database_table_name(),
+            temp_table=self.get_temp_database_table_name(),
+            columns=columns,
+        )
+        self.execute_sqls(database_engine=database_engine, sqls=[upsert_sql])
 
     def _validate(self, df: pd.DataFrame) -> None:
         for config in self.get_column_configs():
@@ -116,6 +124,24 @@ class BaseTable(Generic[E], ABC):
             for sql in sqls:
                 conn.execute(statement=text(sql))
             conn.commit()
+
+    @staticmethod
+    def _generate_upsert_sql(target_table: str, temp_table: str, columns: List[str]) -> str:
+        columns_str = ', '.join(columns)
+        target_column = columns[0]
+        update_str = ', '.join([f"{col} = EXCLUDED.{col}" for col in columns[1::]])
+
+        upsert_sql = dedent(
+            f"""
+            INSERT INTO {target_table} ({columns_str})
+            SELECT {columns_str}
+            FROM {temp_table}
+            ON CONFLICT ({target_column}) 
+            DO UPDATE SET 
+                {update_str}
+            """
+        )
+        return upsert_sql
 
     @staticmethod
     @abstractmethod
