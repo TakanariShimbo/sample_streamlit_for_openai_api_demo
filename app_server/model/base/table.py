@@ -1,9 +1,8 @@
 from abc import ABC, abstractmethod
-from textwrap import dedent
 from typing import List, Any, TypeVar, Generic, Optional, Type
 
 import pandas as pd
-from sqlalchemy import Engine, text, TextClause
+from sqlalchemy import Engine, TextClause
 
 from . import ColumnConfig
 from . import BaseEntity
@@ -43,7 +42,7 @@ class BaseTable(Generic[E], ABC):
         return cls(df)
 
     @classmethod
-    def load_from_database(cls: Type[T], database_engine: Engine, sql: Optional[str] = None):
+    def load_from_database(cls: Type[T], database_engine: Engine, sql: Optional[str] = None) -> T:
         if sql == None:
             table_name = cls.get_database_table_name()
             sql = f"SELECT * FROM {table_name}"
@@ -79,12 +78,12 @@ class BaseTable(Generic[E], ABC):
             raise ValueError(f"Multiple rows found for {column_name}={value}")
         return self.get_entiry_class().init_from_series(series=matching_df.iloc[0])
 
-    def save_to_csv(self, filepath: Optional[str] = None):
+    def save_to_csv(self, filepath: Optional[str] = None) -> None:
         if filepath == None:
             filepath = self.get_csv_filepath()
         self._df.to_csv(filepath, index=False, mode="a")
 
-    def save_to_database(self, database_engine: Engine):
+    def save_to_database(self, database_engine: Engine) -> None:
         table_name = self.get_database_table_name()
         columns = [config.name for config in self.get_column_configs() if not config.readonly]
         self._df.loc[:, columns].to_sql(name=table_name, con=database_engine, if_exists="append", index=False)
