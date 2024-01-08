@@ -2,7 +2,7 @@ from textwrap import dedent
 from typing import List, Type
 
 import pandas as pd
-from sqlalchemy import Engine, text, TextClause
+from sqlalchemy import Engine
 
 from .entity import ChatRoomEntity
 from ..base import ColumnConfig, BaseTable
@@ -28,20 +28,18 @@ class ChatRoomTable(BaseTable[ChatRoomEntity]):
         return "chat_rooms"
 
     @staticmethod
-    def get_table_creation_sql(table_name: str) -> TextClause:
-        return text(
-            dedent(
-                f"""
-                CREATE TABLE {table_name} (
-                    room_id VARCHAR(255) PRIMARY KEY,
-                    account_id VARCHAR(255) NOT NULL,
-                    title VARCHAR(255) NOT NULL,
-                    release_id VARCHAR(255) NOT NULL,
-                    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-                    FOREIGN KEY (account_id) REFERENCES accounts (account_id) ON DELETE CASCADE
-                );
-                """
-            )
+    def get_table_creation_sql(table_name: str) -> str:
+        return dedent(
+            f"""
+            CREATE TABLE {table_name} (
+                room_id VARCHAR(255) PRIMARY KEY,
+                account_id VARCHAR(255) NOT NULL,
+                title VARCHAR(255) NOT NULL,
+                release_id VARCHAR(255) NOT NULL,
+                created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+                FOREIGN KEY (account_id) REFERENCES accounts (account_id) ON DELETE CASCADE
+            );
+            """
         )
 
     @classmethod

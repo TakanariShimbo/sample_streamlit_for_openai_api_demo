@@ -2,7 +2,7 @@ from abc import ABC, abstractmethod
 from typing import List, Any, TypeVar, Generic, Optional, Type, Literal
 
 import pandas as pd
-from sqlalchemy import Engine, TextClause
+from sqlalchemy import Engine, text
 
 from . import ColumnConfig
 from . import BaseEntity
@@ -61,10 +61,13 @@ class BaseTable(Generic[E], ABC):
         table_name = f"{cls.get_database_table_name()}"
         temp_table_name = f"{cls.get_database_table_name()}_temp"
 
-        with database_engine.connect() as conn:
-            conn.execute(statement=cls.get_table_creation_sql(table_name=table_name))
-            conn.execute(statement=cls.get_table_creation_sql(table_name=temp_table_name))
-            conn.commit()
+        cls._execute_sqls(
+            database_engine=database_engine, 
+            sqls=[
+                cls.get_table_creation_sql(table_name=table_name), 
+                cls.get_table_creation_sql(table_name=temp_table_name),
+            ]
+        )
 
     def get_all_entities(self) -> List[E]:
         return [self.get_entiry_class().init_from_series(series=row) for _, row in self._df.iterrows()]
@@ -102,6 +105,13 @@ class BaseTable(Generic[E], ABC):
                 raise ValueError(f"Column {config.name} has null values")
 
     @staticmethod
+    def _execute_sqls(database_engine: Engine, sqls: List[str]) -> Any:
+        with database_engine.connect() as conn:
+            for sql in sqls:
+                conn.execute(statement=text(sql))
+            conn.commit()
+
+    @staticmethod
     @abstractmethod
     def get_column_configs() -> List[ColumnConfig]:
         raise NotImplementedError("Subclasses must implement this method")
@@ -120,5 +130,5 @@ class BaseTable(Generic[E], ABC):
         raise NotImplementedError("Not implemented")
 
     @staticmethod
-    def get_table_creation_sql(table_name: str) -> TextClause:
+    def get_table_creation_sql(table_name: str) -> str:
         raise NotImplementedError("Not implemented")
