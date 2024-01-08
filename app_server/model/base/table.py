@@ -61,7 +61,7 @@ class BaseTable(Generic[E], ABC):
         table_name = f"{cls.get_database_table_name()}"
         temp_table_name = f"{cls.get_database_table_name()}_temp"
 
-        cls._execute_sqls(
+        cls.execute_sqls(
             database_engine=database_engine, 
             sqls=[
                 cls.get_database_table_creation_sql(table_name=table_name), 
@@ -105,7 +105,7 @@ class BaseTable(Generic[E], ABC):
                 raise ValueError(f"Column {config.name} has null values")
 
     @staticmethod
-    def _execute_sqls(database_engine: Engine, sqls: List[str]) -> Any:
+    def execute_sqls(database_engine: Engine, sqls: List[str]) -> None:
         with database_engine.connect() as conn:
             for sql in sqls:
                 conn.execute(statement=text(sql))
