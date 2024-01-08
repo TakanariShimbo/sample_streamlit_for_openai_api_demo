@@ -8,13 +8,13 @@ class ColumnConfig:
         dtype: ExtensionDtype,
         unique: bool = False,
         non_null: bool = False,
-        readonly: bool = False,
+        auto_assigned: bool = False,
     ):
         self._name = name
         self._dtype = dtype
         self._unique = unique
         self._non_null = non_null
-        self._readonly = readonly
+        self._auto_assigned = auto_assigned
 
     @property
     def name(self) -> str:
@@ -33,5 +33,5 @@ class ColumnConfig:
         return self._non_null
 
     @property
-    def readonly(self) -> bool:
-        return self._readonly
+    def auto_assigned(self) -> bool:
+        return self._auto_assigned

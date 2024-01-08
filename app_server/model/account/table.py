@@ -12,9 +12,9 @@ class AccountTable(BaseTable[AccountEntity]):
     @staticmethod
     def get_column_configs() -> List[ColumnConfig]:
         return [
-            ColumnConfig(name="account_id", dtype=pd.StringDtype(), unique=True, non_null=True, readonly=False),
-            ColumnConfig(name="hashed_password", dtype=pd.StringDtype(), unique=False, non_null=True, readonly=False),
-            ColumnConfig(name="registered_at", dtype=pd.StringDtype(), unique=False, non_null=False, readonly=True),
+            ColumnConfig(name="account_id", dtype=pd.StringDtype(), unique=True, non_null=True, auto_assigned=False),
+            ColumnConfig(name="hashed_password", dtype=pd.StringDtype(), unique=False, non_null=True, auto_assigned=False),
+            ColumnConfig(name="registered_at", dtype=pd.StringDtype(), unique=False, non_null=False, auto_assigned=True),
         ]
 
     @staticmethod

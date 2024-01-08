@@ -58,16 +58,17 @@ class BaseTable(Generic[E], ABC):
     
     @classmethod
     def create_table_on_database(cls: Type[T], database_engine: Engine) -> None:
-        table_name = f"{cls.get_database_table_name()}"
-        temp_table_name = f"{cls.get_database_table_name()}_temp"
-
         cls.execute_sqls(
             database_engine=database_engine, 
             sqls=[
-                cls.get_database_table_creation_sql(table_name=table_name), 
-                cls.get_database_table_creation_sql(table_name=temp_table_name),
+                cls.get_database_table_creation_sql(table_name=cls.get_database_table_name()), 
+                cls.get_database_table_creation_sql(table_name=cls.get_temp_database_table_name()),
             ]
         )
+
+    @classmethod
+    def get_temp_database_table_name(cls: Type[T]) -> str:
+        return f"{cls.get_database_table_name()}_temp"
 
     def get_all_entities(self) -> List[E]:
         return [self.get_entiry_class().init_from_series(series=row) for _, row in self._df.iterrows()]
@@ -94,8 +95,13 @@ class BaseTable(Generic[E], ABC):
 
     def _insert_to_database(self, database_engine: Engine) -> None:
         table_name = self.get_database_table_name()
-        columns = [config.name for config in self.get_column_configs() if not config.readonly]
+        columns = [config.name for config in self.get_column_configs() if not config.auto_assigned]
         self._df.loc[:, columns].to_sql(name=table_name, con=database_engine, if_exists="append", index=False)
+
+    def _upsert_to_database(self, database_engine: Engine) -> None:
+        table_name = self.get_database_table_name()
+        columns = [config.name for config in self.get_column_configs() if not config.auto_assigned]
+        self._df.loc[:, columns].to_sql(name=table_name, con=database_engine, if_exists="replace", index=False)
 
     def _validate(self, df: pd.DataFrame) -> None:
         for config in self.get_column_configs():
