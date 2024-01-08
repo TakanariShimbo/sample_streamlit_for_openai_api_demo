@@ -28,10 +28,10 @@ class ChatMessageEntity(BaseEntity):
         return self._content
 
     @property
-    def sent_at(self) -> Optional[str]:
+    def sent_at(self) -> str:
         sent_at = self._sent_at
         if sent_at == None:
-            return sent_at
+            raise ValueError("Not accessible due to have not constracted yet.")
         return sent_at.split(sep=" ")[0]
 
     def check_is_same(self, other: Any) -> bool:

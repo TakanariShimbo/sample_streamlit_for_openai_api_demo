@@ -18,10 +18,10 @@ class AccountEntity(BaseEntity):
         return self._hashed_password
 
     @property
-    def registered_at(self) -> Optional[str]:
+    def registered_at(self) -> str:
         registered_at = self._registered_at
         if registered_at == None:
-            return registered_at
+            raise ValueError("Not accessible due to have not constracted yet.")
         return registered_at.split(sep=" ")[0]
 
     def check_is_same(self, other: Any) -> bool:
