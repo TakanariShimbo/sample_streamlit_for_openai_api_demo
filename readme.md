@@ -7,7 +7,8 @@ docker-compose up -d
 
 2. create_table
 ```
-execute sql at ./db_server/create_tables.sql
+cd app_server
+python create_tables.py
 ```
 
 3. build main server
