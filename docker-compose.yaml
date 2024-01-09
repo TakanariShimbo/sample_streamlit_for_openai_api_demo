@@ -22,6 +22,21 @@ services:
   #   volumes:
   #     - ./app_server:/work
   #   working_dir: /work
-  #   command: ["streamlit", "run", "server.py"]
+  #   command: ["streamlit", "run", "main_server.py"]
+  #   depends_on:
+  #     - service_db_server
+
+  # service_management_server:
+  #   build: 
+  #     context: ./app_server
+  #     dockerfile: Dockerfile
+  #   image: python310_streamlit_for_openai_api:1.0
+  #   container_name: container_management_server
+  #   ports:
+  #     - 50001:8501
+  #   volumes:
+  #     - ./app_server:/work
+  #   working_dir: /work
+  #   command: ["streamlit", "run", "management_server.py"]
   #   depends_on:
   #     - service_db_server
