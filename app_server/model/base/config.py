@@ -1,6 +1,7 @@
 from abc import ABC, abstractmethod
-from typing import List
+from typing import Dict, List
 
+from pandas.api.extensions import ExtensionDtype
 from sqlalchemy import Engine, text, CursorResult
 
 from . import ColumnConfig
@@ -40,6 +41,10 @@ class BaseConfig(ABC):
                 results.append(result)
             conn.commit()
         return results
+
+    @classmethod
+    def _get_dtype_dict(cls) -> Dict[str, ExtensionDtype]:
+        return {config.name: config.dtype for config in cls._get_column_configs()}
 
     @classmethod
     def _get_temp_database_table_name(cls) -> str:

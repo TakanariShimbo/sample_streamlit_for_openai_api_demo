@@ -1,9 +1,10 @@
 from abc import ABC, abstractmethod
 from textwrap import dedent
-from typing import List, Any, TypeVar, Generic, Optional, Type, Literal
+from typing import Any, Dict, List, Generic, Literal, Optional, TypeVar, Type
 
 import pandas as pd
-from sqlalchemy import Engine, text, CursorResult
+from pandas.api.extensions import ExtensionDtype
+from sqlalchemy import Engine, CursorResult
 
 from .column_config import ColumnConfig
 from .config import BaseConfig
@@ -49,6 +50,10 @@ class BaseTable(Generic[C, E], ABC):
     @classmethod
     def _execute_sqls(cls, database_engine: Engine, sqls: List[str]) -> List[CursorResult]:
         return cls._get_config_class()._execute_sqls(database_engine=database_engine, sqls=sqls)
+
+    @classmethod
+    def _get_dtype_dict(cls) -> Dict[str, ExtensionDtype]:
+        return cls._get_config_class()._get_dtype_dict()
 
     def __init__(self, df: pd.DataFrame) -> None:
         self._validate_columns(df=df)
