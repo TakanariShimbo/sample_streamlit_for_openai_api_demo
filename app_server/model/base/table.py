@@ -52,12 +52,20 @@ class BaseTable(Generic[C, E], ABC):
         return cls._get_config_class()._execute_sqls(database_engine=database_engine, sqls=sqls)
 
     @classmethod
+    def _get_column_names(cls, ignore_auto_assigned: bool) -> List[str]:
+        return cls._get_config_class()._get_column_names(ignore_auto_assigned=ignore_auto_assigned)
+
+    @classmethod
     def _get_dtype_dict(cls) -> Dict[str, ExtensionDtype]:
         return cls._get_config_class()._get_dtype_dict()
 
     def __init__(self, df: pd.DataFrame) -> None:
-        self._validate_columns(df=df)
+        self._validate_column_names(df=df)
         self._df = df
+
+    def _validate_column_names(self, df: pd.DataFrame):
+        if set(df.columns) != set(self._get_column_names(ignore_auto_assigned=False)):
+            raise ValueError("DataFrame columns do not match expected columns.")
 
     @property
     def df(self) -> pd.DataFrame:
@@ -70,34 +78,8 @@ class BaseTable(Generic[C, E], ABC):
 
     @classmethod
     def load_from_entities(cls: Type[T], entities: List[E]) -> T:
-        entities_data = [entity.to_dict() for entity in entities]
-        dtype_dict = {config.name: config.dtype for config in cls._get_column_configs()}
-        df = pd.DataFrame(entities_data).astype(dtype_dict)
-        return cls(df)
-
-    @classmethod
-    def load_from_csv(cls: Type[T], filepath: Optional[str] = None) -> T:
-        if filepath == None:
-            filepath = cls._get_csv_filepath()
-        dtype_dict = {config.name: config.dtype for config in cls._get_column_configs()}
-        df = pd.read_csv(filepath, dtype=dtype_dict)
-        cls._validate_unique(df=df)
-        cls._validate_non_null(df=df)
-        return cls(df)
-
-    @classmethod
-    def load_from_database(cls: Type[T], database_engine: Engine, sql: Optional[str] = None) -> T:
-        if sql == None:
-            table_name = cls._get_database_table_name()
-            sql = f"SELECT * FROM {table_name}"
-        dtype_dict = {config.name: config.dtype for config in cls._get_column_configs()}
-        df = pd.read_sql_query(sql=sql, con=database_engine, dtype=dtype_dict)
-        return cls(df)
-
-    @classmethod
-    def create_empty_table(cls: Type[T]) -> T:
-        series_dict = {config.name: pd.Series(dtype=config.dtype) for config in cls._get_column_configs()}
-        df = pd.DataFrame(series_dict)
+        entities_data = [entity.to_dict(ignore_auto_assigned=False) for entity in entities]
+        df = pd.DataFrame(entities_data).astype(cls._get_dtype_dict())
         return cls(df)
 
     @classmethod
@@ -112,6 +94,29 @@ class BaseTable(Generic[C, E], ABC):
             if config.non_null and df[config.name].isnull().any():
                 raise ValueError(f"Column {config.name} has null values")
 
+    @classmethod
+    def load_from_csv(cls: Type[T], filepath: Optional[str] = None) -> T:
+        if filepath == None:
+            filepath = cls._get_csv_filepath()
+        df = pd.read_csv(filepath, dtype=cls._get_dtype_dict())
+        cls._validate_unique(df=df)
+        cls._validate_non_null(df=df)
+        return cls(df)
+
+    @classmethod
+    def load_from_database(cls: Type[T], database_engine: Engine, sql: Optional[str] = None) -> T:
+        if sql == None:
+            table_name = cls._get_database_table_name()
+            sql = f"SELECT * FROM {table_name}"
+        df = pd.read_sql_query(sql=sql, con=database_engine, dtype=cls._get_dtype_dict())
+        return cls(df)
+
+    @classmethod
+    def create_empty_table(cls: Type[T]) -> T:
+        series_dict = {name: pd.Series(dtype=dtype) for name, dtype in cls._get_dtype_dict().items()}
+        df = pd.DataFrame(series_dict)
+        return cls(df)
+
     def get_all_entities(self) -> List[E]:
         return [self._get_entiry_class().init_from_series(series=row) for _, row in self._df.iterrows()]
 
@@ -124,10 +129,44 @@ class BaseTable(Generic[C, E], ABC):
             raise ValueError(f"Multiple rows found for {column_name}={value}")
         return self._get_entiry_class().init_from_series(series=matching_df.iloc[0])
 
-    def save_to_csv(self, filepath: Optional[str] = None) -> None:
-        if filepath == None:
-            filepath = self._get_csv_filepath()
-        self._df.to_csv(filepath, index=False, mode="a")
+    @classmethod
+    def _get_truncate_temp_sql(cls) -> str:
+        temp_table_name = cls._get_temp_database_table_name()
+        return f"TRUNCATE TABLE {temp_table_name};"
+
+    @classmethod
+    def _get_upsert_sql(cls) -> str:
+        table_name = cls._get_database_table_name()
+        temp_table_name = cls._get_temp_database_table_name()
+        column_names = cls._get_column_names(ignore_auto_assigned=True)
+
+        key_column_name = column_names[0]
+        column_names_str = ", ".join(column_names)
+        update_column_names_str = ", ".join([f"{col} = EXCLUDED.{col}" for col in column_names[1::]])
+
+        upsert_sql = dedent(
+            f"""
+            INSERT INTO {table_name} ({column_names_str})
+            SELECT {column_names_str}
+            FROM {temp_table_name}
+            ON CONFLICT ({key_column_name}) 
+            DO UPDATE SET 
+                {update_column_names_str}
+            """
+        )
+        return upsert_sql
+
+    def _insert_to_database(self, database_engine: Engine) -> None:
+        column_names = self._get_column_names(ignore_auto_assigned=True)
+        self._df.loc[:, column_names].to_sql(name=self._get_database_table_name(), con=database_engine, if_exists="append", index=False)
+
+    def _upsert_to_database(self, database_engine: Engine) -> None:
+        self._execute_sql(database_engine=database_engine, sql=self._get_truncate_temp_sql())
+
+        column_names = self._get_column_names(ignore_auto_assigned=True)
+        self._df.loc[:, column_names].to_sql(name=self._get_temp_database_table_name(), con=database_engine, if_exists="append", index=False)
+
+        self._execute_sql(database_engine=database_engine, sql=self._get_upsert_sql())
 
     def save_to_database(self, database_engine: Engine, mode: Literal["insert", "upsert"] = "insert") -> None:
         if mode == "insert":
@@ -137,47 +176,7 @@ class BaseTable(Generic[C, E], ABC):
         else:
             raise NotImplementedError("Not implemented")
 
-    def _insert_to_database(self, database_engine: Engine) -> None:
-        columns = [config.name for config in self._get_column_configs() if not config.auto_assigned]
-        self._df.loc[:, columns].to_sql(name=self._get_database_table_name(), con=database_engine, if_exists="append", index=False)
-
-    def _upsert_to_database(self, database_engine: Engine) -> None:
-        truncate_sql = self._get_truncate_sql(table_name=self._get_temp_database_table_name())
-        self._execute_sqls(database_engine=database_engine, sqls=[truncate_sql])
-
-        columns = [config.name for config in self._get_column_configs() if not config.auto_assigned]
-        self._df.loc[:, columns].to_sql(name=self._get_temp_database_table_name(), con=database_engine, if_exists="append", index=False)
-
-        upsert_sql = self._get_upsert_sql(
-            table_name=self._get_database_table_name(),
-            temp_table_name=self._get_temp_database_table_name(),
-            columns=columns,
-        )
-        self._execute_sqls(database_engine=database_engine, sqls=[upsert_sql])
-
-    def _validate_columns(self, df: pd.DataFrame):
-        columns = [config.name for config in self._get_column_configs()]
-        if set(df.columns) != set(columns):
-            raise ValueError("DataFrame columns do not match expected columns.")
-
-    @staticmethod
-    def _get_truncate_sql(table_name: str) -> str:
-        return f"TRUNCATE TABLE {table_name};"
-
-    @staticmethod
-    def _get_upsert_sql(table_name: str, temp_table_name: str, columns: List[str]) -> str:
-        columns_str = ", ".join(columns)
-        target_column = columns[0]
-        update_str = ", ".join([f"{col} = EXCLUDED.{col}" for col in columns[1::]])
-
-        upsert_sql = dedent(
-            f"""
-            INSERT INTO {table_name} ({columns_str})
-            SELECT {columns_str}
-            FROM {temp_table_name}
-            ON CONFLICT ({target_column}) 
-            DO UPDATE SET 
-                {update_str}
-            """
-        )
-        return upsert_sql
+    def save_to_csv(self, filepath: Optional[str] = None) -> None:
+        if filepath == None:
+            filepath = self._get_csv_filepath()
+        self._df.to_csv(filepath, index=False, mode="a")

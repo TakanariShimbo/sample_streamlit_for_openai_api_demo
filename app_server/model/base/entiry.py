@@ -1,4 +1,5 @@
 from abc import ABC, abstractmethod
+from textwrap import dedent
 from typing import Any, Dict, List, Generic, TypeVar, Type
 
 import pandas as pd
@@ -48,6 +49,10 @@ class BaseEntity(Generic[C], ABC):
         return cls._get_config_class()._execute_sqls(database_engine=database_engine, sqls=sqls)
 
     @classmethod
+    def _get_column_names(cls, ignore_auto_assigned: bool) -> List[str]:
+        return cls._get_config_class()._get_column_names(ignore_auto_assigned=ignore_auto_assigned)
+
+    @classmethod
     def _get_dtype_dict(cls) -> Dict[str, ExtensionDtype]:
         return cls._get_config_class()._get_dtype_dict()
 
@@ -56,14 +61,28 @@ class BaseEntity(Generic[C], ABC):
 
     @classmethod
     def init_from_series(cls: Type[E], series: pd.Series) -> E:
-        kwargs = {column_config.name: series[column_config.name] for column_config in cls._get_column_configs()}
+        kwargs = {name: series[name] for name in cls._get_column_names(ignore_auto_assigned=False)}
         return cls(**kwargs)
 
-    def to_dict(self) -> Dict[str, Any]:
+    def to_dict(self, ignore_auto_assigned: bool) -> Dict[str, Any]:
         entity_dict = {}
-        for column_config in self._get_column_configs():
+        for name in self._get_column_names(ignore_auto_assigned=ignore_auto_assigned):
             try:
-                entity_dict[column_config.name] = getattr(self, column_config.name)
+                entity_dict[name] = getattr(self, name)
             except ValueError:
-                entity_dict[column_config.name] = None
+                entity_dict[name] = None
         return entity_dict
+
+    @staticmethod
+    def _get_insert_sql(table_name: str, columns: List[str]) -> str:
+        columns_str = ", ".join(columns)
+        target_column = columns[0]
+        update_str = ", ".join([f"{col} = EXCLUDED.{col}" for col in columns[1::]])
+
+        insert_sql = dedent(
+            f"""
+            INSERT INTO {table_name} ({columns_str})
+            VALUES ();
+            """
+        )
+        return insert_sql
