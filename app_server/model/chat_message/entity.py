@@ -47,8 +47,4 @@ class ChatMessageEntity(BaseEntity):
 
     @staticmethod
     def get_columns() -> List[str]:
-        return ["room_id", "sender_id", "role_id", "content", "sent_at"]
-
-    @staticmethod
-    def get_saving_columns() -> List[str]:
-        return ["room_id", "sender_id", "role_id", "content"]
+        return ["message_serial_id", "room_id", "sender_id", "role_id", "content", "sent_at"]

@@ -40,7 +40,3 @@ class ChatRoomEntity(BaseEntity):
     @staticmethod
     def get_columns() -> List[str]:
         return ["room_id", "account_id", "title", "release_id", "created_at"]
-
-    @staticmethod
-    def get_saving_columns() -> List[str]:
-        return ["room_id", "account_id", "title", "release_id"]
