@@ -1,6 +1,6 @@
 from abc import ABC, abstractmethod
 from textwrap import dedent
-from typing import Any, Dict, List, Generic, TypeVar, Type
+from typing import Any, Dict, List, Literal, Generic, TypeVar, Type
 
 import pandas as pd
 from pandas.api.extensions import ExtensionDtype
@@ -73,16 +73,26 @@ class BaseEntity(Generic[C], ABC):
                 entity_dict[name] = None
         return entity_dict
 
-    @staticmethod
-    def _get_insert_sql(table_name: str, columns: List[str]) -> str:
-        columns_str = ", ".join(columns)
-        target_column = columns[0]
-        update_str = ", ".join([f"{col} = EXCLUDED.{col}" for col in columns[1::]])
+    def _get_insert_sql(self) -> str:
+        table_name = self._get_database_table_name()
+        names = []
+        values = []
+        for name, value in self.to_dict(ignore_auto_assigned=True).items():
+            names.append(name)
+            values.append(value)
+        names_str = ", ".join(names)
+        values_str = ", ".join(values)
 
         insert_sql = dedent(
             f"""
-            INSERT INTO {table_name} ({columns_str})
-            VALUES ();
+            INSERT INTO {table_name} ({names_str})
+            VALUES ({values_str});
             """
         )
         return insert_sql
+
+    def save_to_database(self, database_engine: Engine, mode: Literal["insert"] = "insert") -> None:
+        if mode == "insert":
+            self._execute_sql(database_engine=database_engine, sql=self._get_insert_sql())
+        else:
+            raise NotImplementedError("Not implemented")
