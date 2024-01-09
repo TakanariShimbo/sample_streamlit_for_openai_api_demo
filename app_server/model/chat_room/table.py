@@ -12,11 +12,11 @@ class ChatRoomTable(BaseTable[ChatRoomEntity]):
     @staticmethod
     def get_column_configs() -> List[ColumnConfig]:
         return [
-            ColumnConfig(name="room_id", dtype=pd.StringDtype(), unique=True, non_null=True, auto_assigned=False),
-            ColumnConfig(name="account_id", dtype=pd.StringDtype(), unique=False, non_null=True, auto_assigned=False),
-            ColumnConfig(name="title", dtype=pd.StringDtype(), unique=False, non_null=True, auto_assigned=False),
-            ColumnConfig(name="release_id", dtype=pd.StringDtype(), unique=False, non_null=True, auto_assigned=False),
-            ColumnConfig(name="created_at", dtype=pd.StringDtype(), unique=False, non_null=False, auto_assigned=True),
+            ColumnConfig(name="room_id", dtype=pd.StringDtype(), auto_assigned=False),
+            ColumnConfig(name="account_id", dtype=pd.StringDtype(), auto_assigned=False),
+            ColumnConfig(name="title", dtype=pd.StringDtype(), auto_assigned=False),
+            ColumnConfig(name="release_id", dtype=pd.StringDtype(), auto_assigned=False),
+            ColumnConfig(name="created_at", dtype=pd.StringDtype(), auto_assigned=True),
         ]
 
     @staticmethod

@@ -15,7 +15,7 @@ T = TypeVar("T", bound="BaseTable")
 
 class BaseTable(Generic[E], ABC):
     def __init__(self, df: pd.DataFrame) -> None:
-        self._validate(df)
+        self._validate_columns(df=df)
         self._df = df
 
     @property
@@ -40,6 +40,8 @@ class BaseTable(Generic[E], ABC):
             filepath = cls.get_csv_filepath()
         dtype_dict = {config.name: config.dtype for config in cls.get_column_configs()}
         df = pd.read_csv(filepath, dtype=dtype_dict)
+        cls._validate_unique(df=df)
+        cls._validate_non_null(df=df)
         return cls(df)
 
     @classmethod
@@ -66,6 +68,18 @@ class BaseTable(Generic[E], ABC):
                 cls.get_database_table_creation_sql(table_name=cls.get_temp_database_table_name()),
             ]
         )
+
+    @classmethod
+    def _validate_unique(cls: Type[T], df: pd.DataFrame) -> None:
+        for config in cls.get_column_configs():
+            if config.unique and df[config.name].duplicated().any():
+                raise ValueError(f"Column {config.name} has duplicate values")
+
+    @classmethod
+    def _validate_non_null(cls: Type[T], df: pd.DataFrame) -> None:
+        for config in cls.get_column_configs():
+            if config.non_null and df[config.name].isnull().any():
+                raise ValueError(f"Column {config.name} has null values")
 
     @classmethod
     def get_temp_database_table_name(cls: Type[T]) -> str:
@@ -114,12 +128,10 @@ class BaseTable(Generic[E], ABC):
         )
         self.execute_sqls(database_engine=database_engine, sqls=[upsert_sql])
 
-    def _validate(self, df: pd.DataFrame) -> None:
-        for config in self.get_column_configs():
-            if config.unique and df[config.name].duplicated().any():
-                raise ValueError(f"Column {config.name} has duplicate values")
-            if config.non_null and df[config.name].isnull().any():
-                raise ValueError(f"Column {config.name} has null values")
+    def _validate_columns(self, df: pd.DataFrame):
+        columns = [config.name for config in self.get_column_configs()]
+        if set(df.columns) != set(columns):
+            raise ValueError("DataFrame columns do not match expected columns.")
 
     @staticmethod
     def execute_sqls(database_engine: Engine, sqls: List[str]) -> None:
