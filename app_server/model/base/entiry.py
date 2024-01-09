@@ -78,8 +78,8 @@ class BaseEntity(Generic[C], ABC):
         names = []
         values = []
         for name, value in self.to_dict(ignore_auto_assigned=True).items():
-            names.append(name)
-            values.append(value)
+            names.append(f"'{name}'")
+            values.append(f"'{value}'")
         names_str = ", ".join(names)
         values_str = ", ".join(values)
 

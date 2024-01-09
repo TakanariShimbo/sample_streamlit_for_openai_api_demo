@@ -22,9 +22,8 @@ class ChatRoomManager:
     @classmethod
     def init_as_new(cls, title: str, account_id: str, release_id: str) -> "ChatRoomManager":
         room_id = str(uuid4())
-        chat_room_entity = ChatRoomEntity(room_id=room_id, account_id=account_id, title=title, release_id=release_id)
-        chat_room_table = ChatRoomTable.load_from_entities(entities=[chat_room_entity])
-        chat_room_table.save_to_database(database_engine=DATABASE_ENGINE)
+        new_chat_room_entity = ChatRoomEntity(room_id=room_id, account_id=account_id, title=title, release_id=release_id)
+        new_chat_room_entity.save_to_database(database_engine=DATABASE_ENGINE)
 
         chat_message_table = ChatMessageTable.create_empty_table()
         return cls(chat_message_table=chat_message_table, room_id=room_id, account_id=account_id, release_id=release_id)
