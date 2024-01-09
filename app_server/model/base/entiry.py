@@ -1,6 +1,6 @@
 from abc import ABC, abstractmethod
 from textwrap import dedent
-from typing import Any, Dict, List, Literal, Generic, TypeVar, Type
+from typing import Any, Dict, List, Literal, Generic, Optional, Tuple, TypeVar, Type
 
 import pandas as pd
 from pandas.api.extensions import ExtensionDtype
@@ -41,8 +41,8 @@ class BaseEntity(Generic[C], ABC):
         return cls._get_config_class()._get_temp_database_table_name()
 
     @classmethod
-    def _execute_sql(cls, database_engine: Engine, sql: str) -> CursorResult:
-        return cls._get_config_class()._execute_sql(database_engine=database_engine, sql=sql)
+    def _execute_sql(cls, database_engine: Engine, sql: str, params: Optional[Dict[str, Any]] = None) -> CursorResult:
+        return cls._get_config_class()._execute_sql(database_engine=database_engine, sql=sql, params=params)
     
     @classmethod
     def _execute_sqls(cls, database_engine: Engine, sqls: List[str]) -> List[CursorResult]:
@@ -73,13 +73,13 @@ class BaseEntity(Generic[C], ABC):
                 entity_dict[name] = None
         return entity_dict
 
-    def _get_insert_sql(self) -> str:
+    def _get_insert_sql(self) -> Tuple[str, Dict[str, Any]]:
         table_name = self._get_database_table_name()
         names = []
         values = []
-        for name, value in self.to_dict(ignore_auto_assigned=True).items():
+        for name in self._get_column_names(ignore_auto_assigned=True):
             names.append(f"{name}")
-            values.append(f"'{value}'")
+            values.append(f":{name}")
         names_str = ", ".join(names)
         values_str = ", ".join(values)
 
@@ -89,10 +89,11 @@ class BaseEntity(Generic[C], ABC):
             VALUES ({values_str});
             """
         )
-        return insert_sql
+        return insert_sql, self.to_dict(ignore_auto_assigned=True)
 
     def save_to_database(self, database_engine: Engine, mode: Literal["insert"] = "insert") -> None:
         if mode == "insert":
-            self._execute_sql(database_engine=database_engine, sql=self._get_insert_sql())
+            sql, params = self._get_insert_sql()
+            self._execute_sql(database_engine=database_engine, sql=sql, params=params)
         else:
             raise NotImplementedError("Not implemented")

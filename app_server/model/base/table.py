@@ -44,8 +44,8 @@ class BaseTable(Generic[C, E], ABC):
         return cls._get_config_class()._get_temp_database_table_name()
 
     @classmethod
-    def _execute_sql(cls, database_engine: Engine, sql: str) -> CursorResult:
-        return cls._get_config_class()._execute_sql(database_engine=database_engine, sql=sql)
+    def _execute_sql(cls, database_engine: Engine, sql: str, params: Optional[Dict[str, Any]] = None) -> CursorResult:
+        return cls._get_config_class()._execute_sql(database_engine=database_engine, sql=sql, params=params)
     
     @classmethod
     def _execute_sqls(cls, database_engine: Engine, sqls: List[str]) -> List[CursorResult]:

@@ -1,5 +1,5 @@
 from abc import ABC, abstractmethod
-from typing import Dict, List
+from typing import Any, Dict, List, Optional
 
 from pandas.api.extensions import ExtensionDtype
 from sqlalchemy import Engine, text, CursorResult
@@ -26,9 +26,9 @@ class BaseConfig(ABC):
         raise NotImplementedError("Not implemented")
 
     @staticmethod
-    def _execute_sql(database_engine: Engine, sql: str) -> CursorResult:
+    def _execute_sql(database_engine: Engine, sql: str, params: Optional[Dict[str, Any]] = None) -> CursorResult:
         with database_engine.connect() as conn:
-            result = conn.execute(statement=text(sql))
+            result = conn.execute(statement=text(sql), parameters=params)
             conn.commit()
         return result
 
