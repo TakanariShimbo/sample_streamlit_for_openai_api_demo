@@ -12,6 +12,7 @@ class ChatMessageTable(BaseTable[ChatMessageEntity]):
     @staticmethod
     def get_column_configs() -> List[ColumnConfig]:
         return [
+            ColumnConfig(name="message_serial_id", dtype=pd.Int64Dtype(), unique=False, non_null=False, auto_assigned=True),
             ColumnConfig(name="room_id", dtype=pd.StringDtype(), unique=False, non_null=True, auto_assigned=False),
             ColumnConfig(name="sender_id", dtype=pd.StringDtype(), unique=False, non_null=True, auto_assigned=False),
             ColumnConfig(name="role_id", dtype=pd.StringDtype(), unique=False, non_null=True, auto_assigned=False),
@@ -32,7 +33,7 @@ class ChatMessageTable(BaseTable[ChatMessageEntity]):
         return dedent(
             f"""
             CREATE TABLE {table_name} (
-                message_serial SERIAL PRIMARY KEY,
+                message_serial_id SERIAL PRIMARY KEY,
                 room_id VARCHAR(255) NOT NULL,
                 sender_id VARCHAR(255) NOT NULL,
                 role_id VARCHAR(255) NOT NULL,

@@ -21,7 +21,7 @@ class AccountEntity(BaseEntity):
     def registered_at(self) -> str:
         registered_at = self._registered_at
         if registered_at == None:
-            raise ValueError("Not accessible due to have not constracted yet.")
+            raise ValueError("Not accessible due to have not constracted.")
         return registered_at.split(sep=" ")[0]
 
     def check_is_same(self, other: Any) -> bool:

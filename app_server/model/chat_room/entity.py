@@ -31,7 +31,7 @@ class ChatRoomEntity(BaseEntity):
     def created_at(self) -> str:
         created_at = self._created_at
         if created_at == None:
-            raise ValueError("Not accessible due to have not constracted yet.")
+            raise ValueError("Not accessible due to have not constracted.")
         return created_at.split(sep=" ")[0]
 
     def check_is_same(self, other: Any) -> bool:
