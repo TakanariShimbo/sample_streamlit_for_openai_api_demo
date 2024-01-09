@@ -58,15 +58,15 @@ class BaseTable(Generic[E], ABC):
         series_dict = {config.name: pd.Series(dtype=config.dtype) for config in cls.get_column_configs()}
         df = pd.DataFrame(series_dict)
         return cls(df)
-    
+
     @classmethod
     def create_table_on_database(cls: Type[T], database_engine: Engine) -> None:
         cls.execute_sqls(
-            database_engine=database_engine, 
+            database_engine=database_engine,
             sqls=[
-                cls.get_database_table_creation_sql(table_name=cls.get_database_table_name()), 
+                cls.get_database_table_creation_sql(table_name=cls.get_database_table_name()),
                 cls.get_database_table_creation_sql(table_name=cls.get_temp_database_table_name()),
-            ]
+            ],
         )
 
     @classmethod
@@ -146,9 +146,9 @@ class BaseTable(Generic[E], ABC):
 
     @staticmethod
     def _get_upsert_sql(table_name: str, temp_table_name: str, columns: List[str]) -> str:
-        columns_str = ', '.join(columns)
+        columns_str = ", ".join(columns)
         target_column = columns[0]
-        update_str = ', '.join([f"{col} = EXCLUDED.{col}" for col in columns[1::]])
+        update_str = ", ".join([f"{col} = EXCLUDED.{col}" for col in columns[1::]])
 
         upsert_sql = dedent(
             f"""
