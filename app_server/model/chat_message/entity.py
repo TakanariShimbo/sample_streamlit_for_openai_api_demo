@@ -38,7 +38,7 @@ class ChatMessageEntity(BaseEntity):
         return False
 
     @staticmethod
-    def get_loading_columns() -> List[str]:
+    def get_columns() -> List[str]:
         return ["room_id", "sender_id", "role_id", "content", "sent_at"]
 
     @staticmethod

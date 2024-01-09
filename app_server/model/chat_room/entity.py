@@ -38,7 +38,7 @@ class ChatRoomEntity(BaseEntity):
         return False
 
     @staticmethod
-    def get_loading_columns() -> List[str]:
+    def get_columns() -> List[str]:
         return ["room_id", "account_id", "title", "release_id", "created_at"]
 
     @staticmethod

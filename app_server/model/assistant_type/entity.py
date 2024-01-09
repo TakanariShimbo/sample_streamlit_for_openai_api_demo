@@ -27,5 +27,5 @@ class AssistantTypeEntity(BaseEntity):
         return self.assistant_id == other.assistant_id
 
     @staticmethod
-    def get_loading_columns() -> List[str]:
+    def get_columns() -> List[str]:
         return ["assistant_id", "label_en", "label_jp"]
