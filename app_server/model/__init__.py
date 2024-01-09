@@ -1,6 +1,6 @@
-from .account import AccountTable, AccountEntity
-from .chat_room import ChatRoomTable, ChatRoomEntity
-from .chat_message import ChatMessageTable, ChatMessageEntity
+from .account import AccountTable, AccountEntity, AccountConfig
+from .chat_room import ChatRoomTable, ChatRoomEntity, ChatRoomConfig
+from .chat_message import ChatMessageTable, ChatMessageEntity, ChatMessageConfig
 from .assistant_type import ASSISTANT_TYPE_TABLE, AssistantTypeEntity
 from .role_type import ROLE_TYPE_TABLE, RoleTypeEntity
 from .release_type import RELEASE_TYPE_TABLE, ReleaseTypeEntity
