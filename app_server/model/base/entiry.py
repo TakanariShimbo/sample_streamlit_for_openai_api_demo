@@ -1,34 +1,43 @@
 from abc import ABC, abstractmethod
-from typing import Any, Dict, List, Type, TypeVar
+from typing import Any, Dict, List, Type, TypeVar, Generic
+
 import pandas as pd
 
+from .column_config import ColumnConfig
+from .config import BaseConfig
 
+
+C = TypeVar("C", bound=BaseConfig)
 E = TypeVar("E", bound="BaseEntity")
 
 
-class BaseEntity(ABC):
-    def __eq__(self, other):
-        return self.check_is_same(other=other)
+class BaseEntity(Generic[C], ABC):
+    @staticmethod
+    @abstractmethod
+    def _get_config_class() -> Type[C]:
+        raise NotImplementedError("Subclasses must implement this method")
 
-    def to_dict(self) -> Dict[str, Any]:
-        entity_dict = {}
-        for name in self.get_columns():
-            try:
-                entity_dict[name] = getattr(self, name)
-            except ValueError:
-                entity_dict[name] = None
-        return entity_dict
+    @abstractmethod
+    def _check_is_same(self, other: Any) -> bool:
+        raise NotImplementedError("Subclasses must implement this method")
+
+    @classmethod
+    def _get_column_configs(cls) -> List[ColumnConfig]:
+        return cls._get_config_class()._get_column_configs()
+
+    def __eq__(self, other):
+        return self._check_is_same(other=other)
 
     @classmethod
     def init_from_series(cls: Type[E], series: pd.Series) -> E:
-        kwargs = {name: series[name] for name in cls.get_columns()}
+        kwargs = {column_config.name: series[column_config.name] for column_config in cls._get_column_configs()}
         return cls(**kwargs)
 
-    @abstractmethod
-    def check_is_same(self, other: Any) -> bool:
-        raise NotImplementedError("Subclasses must implement this method")
-
-    @staticmethod
-    @abstractmethod
-    def get_columns() -> List[str]:
-        raise NotImplementedError("Subclasses must implement this method")
+    def to_dict(self) -> Dict[str, Any]:
+        entity_dict = {}
+        for column_config in self._get_column_configs():
+            try:
+                entity_dict[column_config.name] = getattr(self, column_config.name)
+            except ValueError:
+                entity_dict[column_config.name] = None
+        return entity_dict

@@ -1,6 +1,7 @@
-from typing import Any, List, Optional
+from typing import Any, Optional, Type
 
 from ..base import BaseEntity
+from .config import ChatMessageConfig
 
 
 class ChatMessageEntity(BaseEntity):
@@ -42,9 +43,9 @@ class ChatMessageEntity(BaseEntity):
             raise ValueError("Not accessible due to have not constracted.")
         return sent_at.split(sep=" ")[0]
 
-    def check_is_same(self, other: Any) -> bool:
+    def _check_is_same(self, other: Any) -> bool:
         return False
 
     @staticmethod
-    def get_columns() -> List[str]:
-        return ["message_serial_id", "room_id", "sender_id", "role_id", "content", "sent_at"]
+    def _get_config_class() -> Type[ChatMessageConfig]:
+        return ChatMessageConfig

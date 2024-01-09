@@ -1,9 +1,10 @@
-from typing import Any, List, Optional
+from typing import Any, Optional, Type
 
 from ..base import BaseEntity
+from .config import AccountConfig
 
 
-class AccountEntity(BaseEntity):
+class AccountEntity(BaseEntity[AccountConfig]):
     def __init__(self, account_id: str, hashed_password: str, registered_at: Optional[str] = None) -> None:
         self._account_id = account_id
         self._hashed_password = hashed_password
@@ -24,10 +25,9 @@ class AccountEntity(BaseEntity):
             raise ValueError("Not accessible due to have not constracted.")
         return registered_at.split(sep=" ")[0]
 
-    def check_is_same(self, other: Any) -> bool:
+    def _check_is_same(self, other: Any) -> bool:
         return False
 
     @staticmethod
-    def get_columns() -> List[str]:
-        return ["account_id", "hashed_password", "registered_at"]
-
+    def _get_config_class() -> Type[AccountConfig]:
+        return AccountConfig

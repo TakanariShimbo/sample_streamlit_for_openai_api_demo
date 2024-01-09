@@ -1,27 +1,18 @@
-from typing import List, Type
+from typing import Type
 
-import pandas as pd
-
+from ..base import BaseTable
+from .config import RoleTypeConfig
 from .entity import RoleTypeEntity
-from ..base import ColumnConfig, BaseTable
 
 
-class RoleTypeTable(BaseTable[RoleTypeEntity]):
+class RoleTypeTable(BaseTable[RoleTypeConfig, RoleTypeEntity]):
     @staticmethod
-    def get_column_configs() -> List[ColumnConfig]:
-        return [
-            ColumnConfig(name="role_id", dtype=pd.StringDtype(), unique=True, non_null=True, auto_assigned=False),
-            ColumnConfig(name="label_en", dtype=pd.StringDtype(), unique=True, non_null=True, auto_assigned=False),
-            ColumnConfig(name="label_jp", dtype=pd.StringDtype(), unique=True, non_null=True, auto_assigned=False),
-        ]
-
+    def _get_config_class() -> Type[RoleTypeConfig]:
+        return RoleTypeConfig
+    
     @staticmethod
-    def get_entiry_class() -> Type[RoleTypeEntity]:
+    def _get_entiry_class() -> Type[RoleTypeEntity]:
         return RoleTypeEntity
-
-    @staticmethod
-    def get_csv_filepath() -> str:
-        return "./model/role_type/data.csv"
 
     def get_system_entity(self) -> RoleTypeEntity:
         return self.get_entity(column_name="role_id", value="system")

@@ -1,9 +1,10 @@
-from typing import Any, List
+from typing import Any, Type
 
 from ..base import BaseEntity
+from .config import MainComponentTypeConfig
 
 
-class MainComponentTypeEntity(BaseEntity):
+class MainComponentTypeEntity(BaseEntity[MainComponentTypeConfig]):
     def __init__(self, component_id: str, label_en: str, label_jp: str):
         self._component_id = component_id
         self._label_en = label_en
@@ -21,11 +22,11 @@ class MainComponentTypeEntity(BaseEntity):
     def label_jp(self) -> str:
         return self._label_jp
 
-    def check_is_same(self, other: Any) -> bool:
+    def _check_is_same(self, other: Any) -> bool:
         if not isinstance(other, MainComponentTypeEntity):
             return False
         return self.component_id == other.component_id
 
     @staticmethod
-    def get_columns() -> List[str]:
-        return ["component_id", "label_en", "label_jp"]
+    def _get_config_class() -> Type[MainComponentTypeConfig]:
+        return MainComponentTypeConfig

@@ -1,27 +1,18 @@
 from typing import List, Type
 
-import pandas as pd
-
+from ..base import BaseTable
+from .config import ReleaseTypeConfig
 from .entity import ReleaseTypeEntity
-from ..base import ColumnConfig, BaseTable
 
 
-class ReleaseTypeTable(BaseTable[ReleaseTypeEntity]):
+class ReleaseTypeTable(BaseTable[ReleaseTypeConfig, ReleaseTypeEntity]):
     @staticmethod
-    def get_column_configs() -> List[ColumnConfig]:
-        return [
-            ColumnConfig(name="release_id", dtype=pd.StringDtype(), unique=True, non_null=True, auto_assigned=False),
-            ColumnConfig(name="label_en", dtype=pd.StringDtype(), unique=True, non_null=True, auto_assigned=False),
-            ColumnConfig(name="label_jp", dtype=pd.StringDtype(), unique=True, non_null=True, auto_assigned=False),
-        ]
-
+    def _get_config_class() -> Type[ReleaseTypeConfig]:
+        return ReleaseTypeConfig
+    
     @staticmethod
-    def get_entiry_class() -> Type[ReleaseTypeEntity]:
+    def _get_entiry_class() -> Type[ReleaseTypeEntity]:
         return ReleaseTypeEntity
-
-    @staticmethod
-    def get_csv_filepath() -> str:
-        return "./model/release_type/data.csv"
 
     def convert_id_to_label_en(self, release_id: str) -> str:
         return self.get_entity(column_name="release_id", value=release_id).label_en

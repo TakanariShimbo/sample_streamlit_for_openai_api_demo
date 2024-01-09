@@ -1,9 +1,10 @@
-from typing import Any, List
+from typing import Any, Type
 
 from ..base import BaseEntity
+from .config import RoleTypeConfig
 
 
-class RoleTypeEntity(BaseEntity):
+class RoleTypeEntity(BaseEntity[RoleTypeConfig]):
     def __init__(self, role_id: str, label_en: str, label_jp: str):
         self._role_id = role_id
         self._label_en = label_en
@@ -21,11 +22,11 @@ class RoleTypeEntity(BaseEntity):
     def label_jp(self) -> str:
         return self._label_jp
 
-    def check_is_same(self, other: Any) -> bool:
+    def _check_is_same(self, other: Any) -> bool:
         if not isinstance(other, RoleTypeEntity):
             return False
         return self.role_id == other.role_id
 
     @staticmethod
-    def get_columns() -> List[str]:
-        return ["role_id", "label_en", "label_jp"]
+    def _get_config_class() -> Type[RoleTypeConfig]:
+        return RoleTypeConfig

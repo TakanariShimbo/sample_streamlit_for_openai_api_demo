@@ -1,9 +1,10 @@
-from typing import Any, List, Optional
+from typing import Any, Optional, Type
 
 from ..base import BaseEntity
+from .config import ChatRoomConfig
 
 
-class ChatRoomEntity(BaseEntity):
+class ChatRoomEntity(BaseEntity[ChatRoomConfig]):
     def __init__(self, room_id: str, account_id: str, title: str, release_id: str, created_at: Optional[str] = None) -> None:
         self._room_id = room_id
         self._account_id = account_id
@@ -34,9 +35,9 @@ class ChatRoomEntity(BaseEntity):
             raise ValueError("Not accessible due to have not constracted.")
         return created_at.split(sep=" ")[0]
 
-    def check_is_same(self, other: Any) -> bool:
+    def _check_is_same(self, other: Any) -> bool:
         return False
 
     @staticmethod
-    def get_columns() -> List[str]:
-        return ["room_id", "account_id", "title", "release_id", "created_at"]
+    def _get_config_class() -> Type[ChatRoomConfig]:
+        return ChatRoomConfig

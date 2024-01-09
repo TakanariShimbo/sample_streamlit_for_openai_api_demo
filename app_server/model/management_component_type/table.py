@@ -1,34 +1,25 @@
-from typing import List, Type
+from typing import Type
 
-import pandas as pd
-
+from ..base import BaseTable
+from .config import ManagementComponentTypeConfig
 from .entity import ManagementComponentTypeEntity
-from ..base import ColumnConfig, BaseTable
 
 
-class ManagementComponentTypeTable(BaseTable[ManagementComponentTypeEntity]):
+class ManagementComponentTypeTable(BaseTable[ManagementComponentTypeConfig, ManagementComponentTypeEntity]):
     @staticmethod
-    def get_column_configs() -> List[ColumnConfig]:
-        return [
-            ColumnConfig(name="component_id", dtype=pd.StringDtype(), unique=True, non_null=True, auto_assigned=False),
-            ColumnConfig(name="label_en", dtype=pd.StringDtype(), unique=True, non_null=True, auto_assigned=False),
-            ColumnConfig(name="label_jp", dtype=pd.StringDtype(), unique=True, non_null=True, auto_assigned=False),
-        ]
+    def _get_config_class() -> Type[ManagementComponentTypeConfig]:
+        return ManagementComponentTypeConfig
 
     @staticmethod
-    def get_entiry_class() -> Type[ManagementComponentTypeEntity]:
+    def _get_entiry_class() -> Type[ManagementComponentTypeEntity]:
         return ManagementComponentTypeEntity
-
-    @staticmethod
-    def get_csv_filepath() -> str:
-        return "./model/management_component_type/data.csv"
 
     def get_sign_in_entity(self) -> ManagementComponentTypeEntity:
         return self.get_entity(column_name="component_id", value="sign_in")
-    
+
     def get_home_entity(self) -> ManagementComponentTypeEntity:
         return self.get_entity(column_name="component_id", value="home")
-    
+
     def get_sign_up_entity(self) -> ManagementComponentTypeEntity:
         return self.get_entity(column_name="component_id", value="sign_up")
 

@@ -1,61 +1,35 @@
-from textwrap import dedent
-from typing import List, Type
+from typing import Type
 
-import pandas as pd
 from sqlalchemy import Engine
 
+from ..base import BaseTable
+from .config import ChatRoomConfig
 from .entity import ChatRoomEntity
-from ..base import ColumnConfig, BaseTable
 
 
-class ChatRoomTable(BaseTable[ChatRoomEntity]):
+class ChatRoomTable(BaseTable[ChatRoomConfig, ChatRoomEntity]):
     @staticmethod
-    def get_column_configs() -> List[ColumnConfig]:
-        return [
-            ColumnConfig(name="room_id", dtype=pd.StringDtype(), auto_assigned=False),
-            ColumnConfig(name="account_id", dtype=pd.StringDtype(), auto_assigned=False),
-            ColumnConfig(name="title", dtype=pd.StringDtype(), auto_assigned=False),
-            ColumnConfig(name="release_id", dtype=pd.StringDtype(), auto_assigned=False),
-            ColumnConfig(name="created_at", dtype=pd.StringDtype(), auto_assigned=True),
-        ]
+    def _get_config_class() -> Type[ChatRoomConfig]:
+        return ChatRoomConfig
 
     @staticmethod
-    def get_entiry_class() -> Type[ChatRoomEntity]:
+    def _get_entiry_class() -> Type[ChatRoomEntity]:
         return ChatRoomEntity
-
-    @staticmethod
-    def get_database_table_name() -> str:
-        return "chat_rooms"
-
-    @staticmethod
-    def get_database_table_creation_sql(table_name: str) -> str:
-        return dedent(
-            f"""
-            CREATE TABLE {table_name} (
-                room_id VARCHAR(255) PRIMARY KEY,
-                account_id VARCHAR(255) NOT NULL,
-                title VARCHAR(255) NOT NULL,
-                release_id VARCHAR(255) NOT NULL,
-                created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-                FOREIGN KEY (account_id) REFERENCES accounts (account_id) ON DELETE CASCADE
-            );
-            """
-        )
 
     @classmethod
     def load_rooms_with_specified_account_from_database(cls, database_engine: Engine, account_id: str, limit: int = 5) -> "ChatRoomTable":
-        table_name = cls.get_database_table_name()
+        table_name = cls._get_database_table_name()
         sql = f"SELECT * FROM {table_name} WHERE account_id = '{account_id}' ORDER BY created_at DESC LIMIT {limit}"
         return cls.load_from_database(database_engine=database_engine, sql=sql)
 
     @classmethod
     def load_public_rooms_without_specified_account_from_database(cls, database_engine: Engine, account_id: str, limit: int = 5) -> "ChatRoomTable":
-        table_name = cls.get_database_table_name()
+        table_name = cls._get_database_table_name()
         sql = f"SELECT * FROM {table_name} WHERE release_id = 'public' AND account_id != '{account_id}' ORDER BY created_at DESC LIMIT {limit}"
         return cls.load_from_database(database_engine=database_engine, sql=sql)
 
     @classmethod
     def load_specified_room_from_database(cls, database_engine: Engine, room_id: str) -> "ChatRoomTable":
-        table_name = cls.get_database_table_name()
+        table_name = cls._get_database_table_name()
         sql = f"SELECT * FROM {table_name} WHERE room_id = '{room_id}'"
         return cls.load_from_database(database_engine=database_engine, sql=sql)
