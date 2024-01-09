@@ -28,5 +28,9 @@ class AccountEntity(BaseEntity):
         return False
 
     @staticmethod
-    def get_column_names() -> List[str]:
+    def get_loading_columns() -> List[str]:
         return ["account_id", "hashed_password", "registered_at"]
+    
+    @staticmethod
+    def get_saving_columns() -> List[str]:
+        return ["account_id", "hashed_password"]

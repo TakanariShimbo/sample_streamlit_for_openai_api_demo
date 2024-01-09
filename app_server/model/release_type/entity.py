@@ -27,5 +27,5 @@ class ReleaseTypeEntity(BaseEntity):
         return self.release_id == other.release_id
 
     @staticmethod
-    def get_column_names() -> List[str]:
+    def get_loading_columns() -> List[str]:
         return ["release_id", "label_en", "label_jp"]

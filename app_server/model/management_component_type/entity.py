@@ -27,5 +27,5 @@ class ManagementComponentTypeEntity(BaseEntity):
         return self.component_id == other.component_id
 
     @staticmethod
-    def get_column_names() -> List[str]:
+    def get_loading_columns() -> List[str]:
         return ["component_id", "label_en", "label_jp"]

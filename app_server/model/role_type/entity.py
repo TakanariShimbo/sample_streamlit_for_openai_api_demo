@@ -27,5 +27,5 @@ class RoleTypeEntity(BaseEntity):
         return self.role_id == other.role_id
 
     @staticmethod
-    def get_column_names() -> List[str]:
+    def get_loading_columns() -> List[str]:
         return ["role_id", "label_en", "label_jp"]
